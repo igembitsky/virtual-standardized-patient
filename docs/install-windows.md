@@ -70,6 +70,6 @@ To add a shortcut: right-click `start-windows.bat`, choose **Show more options**
 | The download does not start | Press the Start button, type `PowerShell`, and open it. Type `ollama pull qwen3:4b-instruct`. Press Enter. Wait for `success` |
 | The browser does not open | Open your browser and go to `http://127.0.0.1:8756/` |
 
-Other problems are listed in the README under [If something goes wrong](../README.md#if-something-goes-wrong).
+Other problems are listed on [If something goes wrong](troubleshooting.md).
 
 [← Back to the README](../README.md)

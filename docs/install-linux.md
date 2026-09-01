@@ -84,6 +84,6 @@ Then:
 | The download does not start | In a terminal, run `ollama pull qwen3:4b-instruct`. Wait for `success` |
 | The browser does not open | Open your browser and go to `http://127.0.0.1:8756/` |
 
-Other problems are listed in the README under [If something goes wrong](../README.md#if-something-goes-wrong).
+Other problems are listed on [If something goes wrong](troubleshooting.md).
 
 [← Back to the README](../README.md)
