@@ -215,8 +215,9 @@ at the top of the page.
 
 Copyright 2026 Igor Gembitsky. MIT licence. See [`LICENSE`](LICENSE).
 
-The cases are used under the Creative Commons Attribution licence. Each case file names its
-authors, its licence, and the changes made. For example:
+The cases are used under the Creative Commons Attribution licence. See
+[`cases/LICENSE.md`](cases/LICENSE.md). Each case file names its authors, its licence, and the
+changes made. For example:
 
 > Falcone J, Ogilvie J. *Three Adult Acute Abdominal Pain Objective Structured Clinical
 > Examination (OSCE) Cases for Medical Student Assessment in the Surgery Clerkship.*
