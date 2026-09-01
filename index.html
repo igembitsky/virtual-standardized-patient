@@ -1,0 +1,1876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual Standardized Patient Simulator</title>
+<style>
+:root{
+  --ground:#EFF1EE; --panel:#FFFFFF; --sunk:#E7EBE6; --ink:#151A17; --body:#333B36;
+  --muted:#5E6862; --faint:#6E7871; --line:#D9DFD8;
+  --green:#0B6B4F; --green-soft:#DEEDE6; --green-ink:#075139;
+  --blue:#1E4C7A; --blue-soft:#E3EAF3;
+  --amber:#8A5A0B; --amber-soft:#FAF0DC;
+  --code:#6A3BA6; --code-soft:#EFE7F8; --btn-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(20,35,28,.05),0 14px 34px -16px rgba(20,35,28,.2);
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#131614; --panel:#1B1F1C; --sunk:#0D100E; --ink:#EAEEE8; --body:#C7CFC9;
+  --muted:#949D96; --faint:#9AA39C; --line:#2B322D;
+  --green:#5CC79E; --green-soft:#123024; --green-ink:#84DDBA;
+  --blue:#8FBBE6; --blue-soft:#15222F; --amber:#E0A85C; --amber-soft:#2E2213;
+  --code:#C4A5F0; --code-soft:#241B33; --btn-ink:#08211A;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 34px -16px rgba(0,0,0,.55);
+}}
+:root[data-theme="dark"]{
+  --ground:#131614; --panel:#1B1F1C; --sunk:#0D100E; --ink:#EAEEE8; --body:#C7CFC9;
+  --muted:#949D96; --faint:#9AA39C; --line:#2B322D;
+  --green:#5CC79E; --green-soft:#123024; --green-ink:#84DDBA;
+  --blue:#8FBBE6; --blue-soft:#15222F; --amber:#E0A85C; --amber-soft:#2E2213;
+  --code:#C4A5F0; --code-soft:#241B33; --btn-ink:#08211A;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 34px -16px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+/* 1.125rem, not 18px, so the reader's own browser font size still works. */
+body{margin:0;background:var(--ground);color:var(--body);font-family:var(--sans);
+  font-size:1.125rem;line-height:1.7;-webkit-font-smoothing:antialiased}
+h1{font-size:1.95rem;line-height:1.15;color:var(--ink);margin:0 0 10px;font-weight:700;
+  letter-spacing:-.02em}
+h2{font-size:1.35rem;color:var(--ink);margin:0 0 8px;font-weight:600;line-height:1.3}
+h3{font-size:1.12rem;color:var(--ink);margin:26px 0 8px;font-weight:600}
+p{margin:0 0 16px;max-width:62ch}
+a{color:var(--green-ink)}
+code{font-family:var(--mono);font-size:.86em;background:var(--sunk);padding:2px 6px;
+  border-radius:5px;border:1px solid var(--line);color:var(--ink)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
+summary:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+/* Focus is moved to the heading on every screen change so a screen reader announces it.
+   That move must not draw a ring, which would look like a fault to everyone else. */
+h1[tabindex="-1"]:focus,.back[tabindex="-1"]:focus{outline:none}
+
+/* ---------- shell ---------- */
+.top{display:flex;align-items:center;gap:14px;padding:12px 22px;background:var(--panel);
+  border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;flex-wrap:wrap}
+.brand{font-weight:700;color:var(--ink);font-size:1rem;letter-spacing:-.01em}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--amber);flex:0 0 auto}
+.dot.ok{background:var(--green)}
+.dot.bad{background:#c0392b}
+.top .status{font-size:.85rem;color:var(--muted)}
+.top .grow{flex:1}
+.clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1rem;
+  color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;
+  padding:4px 12px}
+.clock.low{color:var(--amber);border-color:var(--amber)}
+.wrap{max-width:1080px;margin:0 auto;padding:30px 22px 70px}
+.wrap.narrow{max-width:760px}
+
+/* ---------- buttons ---------- */
+.btn{background:var(--green);color:var(--btn-ink);border:1px solid var(--green);
+  border-radius:9px;padding:11px 20px;font-weight:600;font-size:1rem}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--muted)}
+.btn.small{padding:7px 14px;font-size:.9rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.back{background:none;border:0;color:var(--green-ink);font-weight:600;font-size:.95rem;
+  padding:6px 0;margin:0 0 14px;display:inline-block}
+
+/* ---------- welcome ---------- */
+.lede{font-size:1.1rem;color:var(--muted);max-width:54ch;margin-bottom:26px}
+.steps{display:flex;flex-direction:column}
+.steps > div{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:18px 0;
+  border-bottom:1px solid var(--line);align-items:start}
+.steps > div:last-child{border-bottom:0}
+.sn{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+  background:var(--green);color:var(--btn-ink);font-size:1.05rem;font-weight:700}
+.steps b{display:block;color:var(--ink);font-size:1.14rem;margin-bottom:5px;font-weight:600}
+.steps ul{margin:0;padding-left:20px}
+.steps li{font-size:1rem;line-height:1.6;margin-bottom:4px;max-width:56ch}
+
+details.fold{border:1px solid var(--line);border-radius:10px;margin-top:14px;
+  background:var(--panel);overflow:hidden}
+details.fold summary{cursor:pointer;padding:16px 20px;font-size:1.06rem;font-weight:600;
+  color:var(--ink);list-style:none;display:flex;align-items:center;gap:12px}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold summary::before{content:"+";font-family:var(--mono);font-size:1.2rem;
+  color:var(--green);width:20px;flex:0 0 auto;font-weight:400}
+details.fold[open] summary::before{content:"\2212"}
+details.fold[open] summary{border-bottom:1px solid var(--line)}
+.foldbody{padding:20px}
+.foldbody p{font-size:1rem;margin:0 0 16px}
+.foldbody p:last-child{margin-bottom:0}
+.foldbody ul{margin:0 0 16px;padding-left:22px;max-width:62ch}
+.foldbody li{font-size:1rem;line-height:1.65;margin-bottom:8px}
+
+/* ---------- the technology fold ---------- */
+.tech{container-type:inline-size}
+.foldbody .tech-eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--green-ink);font-weight:600;margin:0 0 4px}
+.foldbody .tech-title{font-size:1.2rem;font-weight:600;color:var(--ink);line-height:1.3;
+  margin:0 0 22px;max-width:none}
+.hue-a{--h:var(--amber);--hs:var(--amber-soft)}
+.hue-c{--h:var(--code);--hs:var(--code-soft)}
+.hue-g{--h:var(--green);--hs:var(--green-soft)}
+.hue-b{--h:var(--blue);--hs:var(--blue-soft)}
+.tech-deck{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr 34px 1fr;
+  grid-template-rows:auto auto 1fr}
+.tech-card{display:grid;grid-row:1/-1;grid-template-rows:subgrid;background:var(--panel);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0}
+.tech-band{background:var(--hs);color:var(--h);padding:14px 16px 12px;display:flex;
+  align-items:center;gap:10px;border-bottom:1px solid var(--line)}
+.tech-band .tech-ico{width:30px;height:30px;border-radius:8px;background:var(--panel);
+  display:grid;place-items:center;flex:0 0 auto}
+.tech-band svg{width:18px;height:18px;display:block}
+.tech-band b{font-size:1.02rem;font-weight:700;color:var(--ink);line-height:1.2}
+.foldbody .tech-role{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--h);font-weight:600;line-height:1.4;margin:0;padding:14px 16px 0;max-width:none}
+.tech-role code{text-transform:none;letter-spacing:0}
+.foldbody .tech-what{font-size:.92rem;line-height:1.55;color:var(--body);margin:0;
+  padding:6px 16px 16px;max-width:none}
+.tech-gap{grid-row:1/-1;display:flex;align-items:center;justify-content:center}
+.tech-gap svg{width:18px;height:18px;color:var(--faint);display:block}
+.tech-play{margin:30px 0 0;padding:24px 0 0;border-top:1px solid var(--line)}
+.tech-play .tech-eyebrow{margin-bottom:14px}
+.tech-steps{display:grid;grid-template-columns:36px 1fr auto;gap:0 16px;align-items:start}
+.tech-steps > div{display:contents}
+.tech-n{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;
+  background:var(--green);color:var(--btn-ink);font-size:.95rem;font-weight:700;margin-top:2px}
+.tech-txt{padding:0 0 16px;border-bottom:1px solid var(--line);margin-bottom:16px;min-width:0}
+.tech-txt b{display:block;color:var(--ink);font-size:1.02rem;font-weight:600;line-height:1.4;margin-bottom:3px}
+.tech-txt span{display:block;font-size:.93rem;line-height:1.55;color:var(--body);max-width:60ch}
+.tech-who{display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding:4px 0 16px;
+  border-bottom:1px solid var(--line);margin-bottom:16px}
+.tech-steps > div:last-child .tech-txt,.tech-steps > div:last-child .tech-who{border-bottom:0;
+  margin-bottom:0;padding-bottom:0}
+.tech-chip{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;
+  color:var(--ink);background:var(--hs);border-radius:999px;padding:3px 10px 3px 8px;
+  white-space:nowrap;line-height:1.5}
+.tech-chip i{width:8px;height:8px;border-radius:50%;background:var(--h);flex:0 0 auto}
+.tech-facts{display:grid;grid-template-columns:repeat(4,1fr);margin:26px 0 0;padding:18px 0 0;
+  border-top:1px solid var(--line)}
+.tech-facts div{font-size:.9rem;line-height:1.45;color:var(--body);padding-right:14px;
+  display:flex;gap:8px;align-items:flex-start}
+.tech-facts b{display:block;color:var(--ink);font-weight:600}
+.tech-facts svg{width:16px;height:16px;color:var(--green);flex:0 0 auto;margin-top:5px}
+@container (max-width:720px){
+  .tech-deck{grid-template-columns:1fr;grid-template-rows:none}
+  .tech-card{grid-row:auto;grid-template-rows:none}
+  .tech-gap{grid-row:auto;height:40px}
+  .tech-gap svg{transform:rotate(90deg)}
+  .tech-steps{grid-template-columns:36px 1fr}
+  .tech-who{grid-column:2;flex-direction:row;flex-wrap:wrap;padding-top:0}
+  .tech-txt{border-bottom:0;margin-bottom:0;padding-bottom:10px}
+  .tech-facts{grid-template-columns:1fr 1fr;gap:12px 0}
+}
+@container (max-width:420px){.tech-facts{grid-template-columns:1fr}}
+
+/* ---------- temperature unit switch ---------- */
+.labrow{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.labrow .lab{margin:0}
+.units{display:inline-flex;margin-left:auto;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.units button{background:transparent;border:0;color:var(--muted);font-family:var(--mono);
+  font-size:.78rem;font-weight:500;padding:3px 9px;line-height:1.5}
+.units button[aria-pressed="true"]{background:var(--green);color:var(--btn-ink)}
+
+/* ---------- examine control ---------- */
+.exbtn{display:inline-flex;align-items:center;gap:8px}
+.exbtn svg{width:16px;height:16px;display:block}
+.exbtn[aria-expanded="true"]{background:var(--code-soft);border-color:var(--code);color:var(--ink)}
+.expop{position:absolute;right:16px;bottom:calc(100% + 8px);width:min(440px,calc(100% - 32px));
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;z-index:5;
+  box-shadow:0 2px 6px rgba(20,35,28,.08),0 24px 48px -18px rgba(20,35,28,.35);
+  display:flex;flex-direction:column;overflow:hidden}
+.expop .search{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.expop .search svg{width:18px;height:18px;color:var(--muted);flex:0 0 auto;display:block}
+.expop .search input{flex:1;border:0;background:transparent;font:inherit;font-size:1rem;
+  color:var(--ink);outline:none;padding:0;min-width:0}
+.expop .list{max-height:min(40vh,320px);overflow:auto;padding:6px 0}
+.expop .grp{font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);padding:10px 14px 4px}
+.expop .it{padding:8px 14px;font-size:.98rem;color:var(--ink);cursor:pointer}
+.expop .it:hover,.expop .it.on{background:var(--green-soft)}
+.expop .empty{padding:16px 14px;font-size:.95rem;color:var(--muted)}
+
+/* ---------- tables ---------- */
+table{border-collapse:collapse;width:100%;font-size:.98rem;margin:14px 0}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);
+  vertical-align:top;line-height:1.55}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  font-weight:600;background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+.boxed{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.sm{font-size:.84rem;color:var(--muted)}
+
+/* ---------- case library ---------- */
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
+.cc{border:1px solid var(--line);border-radius:11px;padding:17px;background:var(--panel);
+  text-align:left;width:100%;color:inherit;box-shadow:var(--shadow);display:flex;
+  flex-direction:column;gap:4px}
+.cc:hover{border-color:var(--green)}
+.cc .cn{font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--faint)}
+.cc h3{font-size:1.08rem;margin:2px 0 0;color:var(--ink)}
+.cc .desc{font-size:.92rem;color:var(--muted);line-height:1.5}
+.cc .meta{font-family:var(--mono);font-size:10.5px;color:var(--faint);line-height:1.7;
+  margin-top:auto;padding-top:8px}
+.cc .badge{font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600;
+  align-self:flex-start;margin-top:6px}
+.cc .badge.done{background:var(--green-soft);color:var(--green-ink)}
+.cc .badge.new{background:var(--sunk);color:var(--muted)}
+.cc.add{border-style:dashed;box-shadow:none;background:transparent}
+
+/* ---------- case card ---------- */
+.vitals{display:grid;grid-template-columns:auto 1fr;gap:8px 22px;font-size:1rem;margin:0}
+.vitals dt{color:var(--muted)}
+.vitals dd{margin:0;font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.vitals dd.hot{color:var(--amber);font-weight:500}
+.flag{font-family:var(--sans);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+  background:var(--amber-soft);color:var(--amber);padding:1px 7px;border-radius:999px;
+  font-weight:600;vertical-align:1px}
+
+/* ---------- consultation ---------- */
+.consult{display:grid;grid-template-columns:minmax(0,1fr) 306px;gap:18px;align-items:start}
+@media (max-width:860px){.consult{grid-template-columns:1fr}}
+.chatbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+#log{padding:18px;overflow-y:auto;height:min(56vh,540px);display:flex;
+  flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:.97rem;line-height:1.55;
+  white-space:pre-wrap;word-wrap:break-word;animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.msg{animation:none}}
+.msg.me{align-self:flex-end;background:var(--blue-soft);color:var(--ink)}
+.msg.pt{align-self:flex-start;background:var(--green-soft);color:var(--ink)}
+.msg.sys{align-self:stretch;max-width:none;background:var(--code-soft);color:var(--ink);
+  border-left:3px solid var(--code);border-radius:0 10px 10px 0}
+.msg.err{align-self:stretch;max-width:none;background:var(--amber-soft);color:var(--ink);
+  border-left:3px solid var(--amber);border-radius:0 10px 10px 0}
+.msg .who{display:block;font-family:var(--mono);font-size:.63rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.msg.sys .who{color:var(--code)}
+.composer{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--line);flex-wrap:wrap;position:relative}
+.composer input{flex:1 1 200px;min-width:0;border:1.5px solid var(--muted);border-radius:9px;padding:11px 14px;
+  font-size:1rem;background:var(--ground);color:var(--ink)}
+.side{display:flex;flex-direction:column;gap:16px}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px;
+  box-shadow:var(--shadow)}
+.pane .lab{font-family:var(--mono);font-size:.69rem;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 10px}
+.pane .who2{font-size:1.05rem;color:var(--ink);font-weight:600;margin:0}
+.pane .sub{font-size:.9rem;color:var(--muted);margin:0 0 4px}
+.pane .place{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--faint);margin:6px 0 10px}
+textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);border-radius:9px;
+  padding:11px 13px;font-size:.95rem;line-height:1.65;background:var(--ground);color:var(--ink);
+  resize:vertical;font-family:inherit}
+.hint{font-size:.85rem;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.dots{font-size:.94rem;letter-spacing:3px;color:var(--green)}
+.dots i{color:var(--line);font-style:normal}
+.typing::after{content:"";display:inline-block;width:9px;height:9px;margin-left:8px;
+  border:2px solid var(--muted);border-top-color:transparent;border-radius:50%;
+  animation:sp .7s linear infinite;vertical-align:-1px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ---------- note ---------- */
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:700px){.slots{grid-template-columns:1fr}}
+.slot input{width:100%;border:1.5px solid var(--muted);border-radius:8px;padding:10px 13px;
+  font-size:1rem;margin-bottom:9px;background:var(--panel);color:var(--ink)}
+.notecarry{background:var(--sunk);border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;margin:0 0 18px;font-size:.95rem;line-height:1.7;white-space:pre-wrap;
+  color:var(--ink)}
+
+/* ---------- result ---------- */
+.verdict{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:11px;
+  margin-bottom:20px;background:var(--amber-soft);border-left:5px solid var(--amber)}
+.verdict.pass{background:var(--green-soft);border-left-color:var(--green)}
+.verdict .big{font-family:var(--mono);font-size:1.6rem;font-weight:500;color:var(--amber);
+  flex:0 0 auto}
+.ck.yes .b{color:var(--btn-ink)}
+.sn{color:var(--btn-ink)}
+.verdict.pass .big{color:var(--green-ink)}
+.verdict span{font-size:1rem;line-height:1.55}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.ck{display:flex;gap:10px;align-items:flex-start;font-size:.98rem;padding:5px 0;line-height:1.5}
+.ck .b{width:20px;height:20px;border-radius:5px;flex:0 0 auto;margin-top:2px;display:grid;
+  place-items:center;font-size:.75rem;font-weight:700;color:var(--btn-ink);line-height:1}
+.ck.yes .b{background:var(--green)}
+.ck.no .b{background:transparent;border:1.5px solid var(--amber);color:var(--amber)}
+.ck.yes span{color:var(--ink)}
+.tags span{display:inline-block;font-size:.82rem;padding:3px 10px;border-radius:999px;
+  margin:2px 4px 2px 0;background:var(--green-soft);color:var(--green-ink);font-weight:600}
+.tags span.no{background:var(--sunk);color:var(--muted);font-weight:500}
+.teach{background:var(--amber-soft);border-radius:10px;padding:16px 18px;margin:20px 0;
+  font-size:1rem;line-height:1.65;color:var(--ink)}
+.transcript{background:var(--sunk);border:1px solid var(--line);border-radius:10px;
+  padding:16px;margin-top:14px;font-size:.92rem;line-height:1.6;max-height:340px;overflow-y:auto}
+.transcript b{color:var(--ink)}
+
+/* ---------- history ---------- */
+.hist tr.row{cursor:pointer}
+.hist tr.row:hover td{background:var(--sunk)}
+.hist .go{color:var(--green-ink);font-weight:600;white-space:nowrap;background:none;
+  border:0;padding:4px 2px;font-size:.95rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+  clip-path:inset(50%);white-space:nowrap}
+.pill{display:inline-block;font-family:var(--mono);font-size:.69rem;padding:3px 9px;
+  border-radius:999px;font-weight:500}
+.pill.p{background:var(--green-soft);color:var(--green-ink)}
+.pill.f{background:var(--amber-soft);color:var(--amber)}
+.empty{color:var(--muted);padding:26px 0;text-align:center}
+
+/* ---------- notices ---------- */
+.warn{background:var(--amber-soft);border-left:4px solid var(--amber);padding:15px 18px;
+  border-radius:0 10px 10px 0;margin:22px 0}
+.warn p{font-size:.97rem;margin:0 0 9px;color:var(--ink);max-width:none}
+.warn p:last-child{margin-bottom:0}
+.warn strong{color:var(--amber)}
+.warnlist{margin:6px 0 0;padding-left:22px}
+.warnlist li{font-size:.97rem;line-height:1.6;margin-bottom:6px;color:var(--ink)}
+.warnlist li:last-child{margin-bottom:0}
+.pre{background:var(--sunk);border:1px solid var(--line);border-radius:9px;padding:16px 18px;
+  font-family:var(--mono);font-size:.78rem;line-height:1.65;overflow-x:auto;white-space:pre;
+  color:var(--ink);position:relative}
+.cite{font-size:.92rem;line-height:1.75;background:var(--sunk);border:1px solid var(--line);
+  border-radius:9px;padding:15px 17px;max-width:none;color:var(--body)}
+
+/* ---------- footer ---------- */
+.foot{border-top:1px solid var(--line);margin-top:50px;padding:22px 0 0;font-size:.88rem;
+  color:var(--faint);display:flex;gap:8px 20px;flex-wrap:wrap;align-items:baseline}
+.foot a{color:var(--muted)}
+.foot .who{color:var(--muted)}
+.hide{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="dot" id="dot"></span>
+  <span class="brand">Virtual Standardized Patient</span>
+  <span class="status" id="status" role="status" aria-live="polite">starting…</span>
+  <span class="grow"></span>
+  <span class="clock hide" id="clock" role="timer" aria-live="off" aria-label="Time remaining">00:00</span>
+  <span class="sr" id="announce" role="status" aria-live="assertive"></span>
+  <button class="btn ghost small hide" id="quit">Finish and write my note</button>
+</header>
+
+<!-- ============ WELCOME ============ -->
+<main class="wrap" id="s-welcome">
+  <h1>Virtual Standardized Patient Simulator</h1>
+  <p class="lede">Practise a clinical consultation with a patient who lives on your own computer.
+    It is free, and it works with the internet switched off.</p>
+
+  <div class="steps">
+    <div><span class="sn">1</span>
+      <div><b>Choose a patient</b>
+        <ul>
+          <li>You get their age, complaint and vital signs.</li>
+          <li>The clock starts when you are ready.</li>
+        </ul></div></div>
+    <div><span class="sn">2</span>
+      <div><b>Take the history</b>
+        <ul>
+          <li>Ask what you would ask in clinic.</li>
+          <li>Press <strong>Examine</strong> to examine the patient.</li>
+          <li>Keep notes as you go.</li>
+        </ul></div></div>
+    <div><span class="sn">3</span>
+      <div><b>Submit your diagnosis</b>
+        <ul>
+          <li>Three diagnoses and three tests, against the clock.</li>
+          <li>Your answer is shown beside the case authors'.</li>
+        </ul></div></div>
+  </div>
+
+  <details class="fold">
+    <summary>Explore the technology behind it</summary>
+    <div class="foldbody"><div class="tech">
+      <p class="tech-eyebrow">Four parts</p>
+      <p class="tech-title">All open source. All free. All on your own computer.</p>
+      <div class="tech-deck">
+        <div class="tech-card hue-a">
+          <div class="tech-band"><span class="tech-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span><b>The case files</b></div>
+          <p class="tech-role">Plain text, one per patient</p>
+          <p class="tech-what">The patient&rsquo;s story, the vital signs, what the examination finds, and the answer key. Write your own and drop it in.</p>
+        </div>
+        <div class="tech-gap" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 3l6 6-6 6"/></svg></div>
+        <div class="tech-card hue-c">
+          <div class="tech-band"><span class="tech-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5M13 5l-2 14"/></svg></span><b>This program</b></div>
+          <p class="tech-role">Custom code, written with Claude Code</p>
+          <p class="tech-what">One web page that ties the other parts together. It runs the clock, shows the examination findings, passes your questions on, and grades your answer.</p>
+        </div>
+        <div class="tech-gap" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 3l6 6-6 6"/></svg></div>
+        <div class="tech-card hue-g">
+          <div class="tech-band"><span class="tech-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17v3h16v-3M12 4v11M7 10l5 5 5-5"/></svg></span><b>Ollama</b></div>
+          <p class="tech-role">Model manager</p>
+          <p class="tech-what">Downloads an open source AI model and runs it on your computer. No account. No key. No internet after the first download.</p>
+        </div>
+        <div class="tech-gap" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 3l6 6-6 6"/></svg></div>
+        <div class="tech-card hue-b">
+          <div class="tech-band"><span class="tech-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="6" width="16" height="12" rx="3"/><path d="M9 11h.01M15 11h.01M9 15h6M12 2v4"/></svg></span><b>The model</b></div>
+          <p class="tech-role"><code id="techModel">qwen3:4b-instruct</code></p>
+          <p class="tech-what">A small open source AI model from Alibaba. 2.5&nbsp;GB, downloaded once. It has one job here: it speaks as the patient.</p>
+        </div>
+      </div>
+      <div class="tech-play">
+        <p class="tech-eyebrow">What happens, step by step</p>
+        <div class="tech-steps">
+          <div><span class="tech-n">1</span>
+            <div class="tech-txt"><b>You open the program.</b><span>It opens in your browser and checks that Ollama is running with a model ready. This is the code that brings everything together.</span></div>
+            <div class="tech-who"><span class="tech-chip hue-c"><i></i>Program</span><span class="tech-chip hue-g"><i></i>Ollama</span></div></div>
+          <div><span class="tech-n">2</span>
+            <div class="tech-txt"><b>You choose a patient.</b><span>The program reads that patient&rsquo;s case file: who they are, their vital signs, and what an examination would find. The clock starts.</span></div>
+            <div class="tech-who"><span class="tech-chip hue-c"><i></i>Program</span><span class="tech-chip hue-a"><i></i>Case file</span></div></div>
+          <div><span class="tech-n">3</span>
+            <div class="tech-txt"><b>You ask a question.</b><span>The program sends it, with the patient&rsquo;s script, to Ollama. Ollama runs the model. The model answers in the patient&rsquo;s words.</span></div>
+            <div class="tech-who"><span class="tech-chip hue-c"><i></i>Program</span><span class="tech-chip hue-g"><i></i>Ollama</span><span class="tech-chip hue-b"><i></i>Model</span></div></div>
+          <div><span class="tech-n">4</span>
+            <div class="tech-txt"><b>You examine the patient.</b><span>Press <strong>Examine</strong> and choose a part. The findings come straight from the case file. The model is not asked, so the findings are always right.</span></div>
+            <div class="tech-who"><span class="tech-chip hue-c"><i></i>Program</span><span class="tech-chip hue-a"><i></i>Case file</span></div></div>
+          <div><span class="tech-n">5</span>
+            <div class="tech-txt"><b>You are graded.</b><span>When the clock stops, you give three diagnoses and three tests. The program checks them against the answer key in the case file and shows you both.</span></div>
+            <div class="tech-who"><span class="tech-chip hue-c"><i></i>Program</span><span class="tech-chip hue-a"><i></i>Case file</span></div></div>
+        </div>
+      </div>
+      <div class="tech-facts">
+          <div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5"/></svg><span><b>Free</b>Every part is licensed for free use, by anyone, for any purpose.</span></div>
+          <div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5"/></svg><span><b>Private</b>Nothing leaves your computer. There is no server.</span></div>
+          <div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5"/></svg><span><b>One download</b>Then each new patient is a small text file.</span></div>
+          <div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8l3.5 3.5L13 5"/></svg><span><b>Swappable</b>Any model, any case, any language, your own pass rule.</span></div>
+      </div>
+    </div></div>
+  </details>
+
+  <details class="fold">
+    <summary>Where the patient cases come from</summary>
+    <div class="foldbody">
+      <p><b>They are published, peer reviewed teaching cases.</b></p>
+      <p>Adapted from Objective Structured Clinical Examination cases in
+        <a href="https://www.mededportal.org/" target="_blank" rel="noopener">MedEdPORTAL</a>,
+        the open access journal of the Association of American Medical Colleges.</p>
+      <ul>
+        <li>Written by clinicians and reviewed before publication.</li>
+        <li>Each arrives with a patient script, a checklist, and the authors' own answer key.</li>
+        <li>The words the patient speaks are the authors' words.</li>
+      </ul>
+      <div id="creditList"></div>
+    </div>
+  </details>
+
+  <div class="warn">
+    <p><strong>Before you start</strong></p>
+    <ul class="warnlist">
+      <li>This is a demonstration of a teaching tool.</li>
+      <li>The patients are invented.</li>
+      <li>The model is small and can make mistakes while sounding certain.</li>
+      <li>Nothing here is medical advice. It is for education only.</li>
+    </ul>
+  </div>
+
+  <div class="row" style="margin-top:24px">
+    <button class="btn" data-go="library">Choose a patient</button>
+    <button class="btn ghost" data-go="history">My encounters</button>
+    <button class="btn ghost" data-go="terms">Terms of use</button>
+  </div>
+</main>
+
+<!-- ============ LIBRARY ============ -->
+<main class="wrap hide" id="s-library">
+  <button class="back" data-go="welcome">&lsaquo; Back</button>
+  <h1>Choose a patient</h1>
+  <p class="lede" id="libCount"></p>
+  <div class="cases" id="caseList"></div>
+</main>
+
+<!-- ============ WRITE YOUR OWN ============ -->
+<main class="wrap narrow hide" id="s-author">
+  <button class="back" data-go="library">&lsaquo; Back</button>
+  <h1>Write your own patient</h1>
+  <p>Give the instructions below to any AI assistant, with your source case. It writes the file
+    for you.</p>
+
+  <h3>1. Copy this</h3>
+  <div class="pre" id="authorPrompt"></div>
+  <div class="row" style="margin-top:10px">
+    <button class="btn small" id="copyPrompt">Copy the instructions</button>
+  </div>
+
+  <h3>2. Paste your source under it, and send</h3>
+  <p>A published case, a teaching case from your school, or a patient you know well. If the patient
+    is real, change the details so nobody can be recognised.</p>
+
+  <h3>3. Save the answer</h3>
+  <p>Save it as a text file in the <code>cases</code> folder, next to the ones that came with the
+    program. Reload this page and it appears in the library.</p>
+
+  <h3>4. Try it, then fix it</h3>
+  <p>If a fact comes out that should have stayed hidden, add <code>(only if asked)</code> to that
+    line. If a question is not counted, add another matching word. The file is plain English.</p>
+
+  <div class="warn">
+    <p style="margin:0">Keep the authors and licence of any published source in the
+      <code>[CREDIT]</code> section.</p>
+  </div>
+</main>
+
+<!-- ============ CASE CARD ============ -->
+<main class="wrap narrow hide" id="s-card">
+  <button class="back" data-go="library">&lsaquo; Back</button>
+  <p class="pane place" id="cardSetting"></p>
+  <h1 id="cardName"></h1>
+  <p class="lede" id="cardComplaint"></p>
+  <div class="pane" style="max-width:420px">
+    <div class="labrow"><p class="lab">Vital signs</p><span class="units" role="group" aria-label="Temperature unit"><button type="button" data-u="C" aria-pressed="false">°C</button><button type="button" data-u="F" aria-pressed="false">°F</button></span></div>
+    <dl class="vitals" id="cardVitals"></dl>
+  </div>
+  <h3>Your task</h3>
+  <p id="cardTask"></p>
+  <p class="sm" id="cardTiming"></p>
+  <div class="row" style="margin-top:20px">
+    <button class="btn" id="startBtn">Start the clock</button>
+    <p class="hint hide" id="startBlocked">Ollama is not running, so the patient cannot answer.
+      Open the Ollama app, then reload this page.</p>
+  </div>
+  <p class="cite" style="margin-top:26px" id="cardCredit"></p>
+</main>
+
+<!-- ============ CONSULTATION ============ -->
+<main class="wrap hide" id="s-consult">
+  <div class="consult">
+    <section class="chatbox">
+      <div id="log" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Consultation"></div>
+      <form class="composer" id="askForm">
+        <label class="sr" for="ask">Your question to the patient</label>
+        <input id="ask" type="text" autocomplete="off" placeholder="Ask the patient a question">
+        <button class="btn ghost exbtn" id="exBtn" type="button" aria-expanded="false" aria-controls="exPop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3v6a6 6 0 0 0 12 0V3M12 15v3a3 3 0 0 0 6 0v-1"/><circle cx="18" cy="16" r="2"/></svg>
+          Examine</button>
+        <button class="btn" id="send">Send</button>
+        <div class="expop hide" id="exPop" role="dialog" aria-label="Examine the patient">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input id="exQ" type="text" placeholder="What do you want to examine?" aria-label="Search examinations" autocomplete="off">
+          </div>
+          <div class="list" id="exList" role="listbox"></div>
+        </div>
+      </form>
+    </section>
+    <aside class="side">
+      <div class="pane">
+        <p class="who2" id="sideName"></p>
+        <p class="sub" id="sideAge"></p>
+        <p class="sub" id="sideComplaint"></p>
+        <p class="place" id="sidePlace"></p>
+        <div class="labrow" style="margin-top:12px"><p class="lab">Vitals</p><span class="units" role="group" aria-label="Temperature unit"><button type="button" data-u="C" aria-pressed="false">°C</button><button type="button" data-u="F" aria-pressed="false">°F</button></span></div>
+        <dl class="vitals" id="sideVitals" style="font-size:.95rem"></dl>
+      </div>
+      <div class="pane">
+        <p class="lab">Your notes</p>
+        <label class="sr" for="notes">Your private notes</label>
+        <textarea id="notes" placeholder="Type as you go…"></textarea>
+        <p class="hint">You keep these. The patient is gone once you finish.</p>
+      </div>
+      <div class="pane">
+        <p class="lab" id="dotsLab">Questions covered</p>
+        <p class="dots" id="dots" role="status" aria-live="polite" aria-labelledby="dotsLab"></p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ============ NOTE ============ -->
+<main class="wrap narrow hide" id="s-note">
+  <h1>Write your note</h1>
+  <p class="lede" id="noteLede"></p>
+  <div class="notecarry" id="noteCarry"></div>
+  <div class="slots">
+    <div class="slot">
+      <p class="lab">Diagnoses, most likely first</p>
+      <div id="dxSlots"></div>
+    </div>
+    <div class="slot">
+      <p class="lab">Tests</p>
+      <div id="txSlots"></div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:20px">
+    <button class="btn" id="markBtn">Mark my answer</button>
+  </div>
+</main>
+
+<!-- ============ RESULT ============ -->
+<main class="wrap hide" id="s-result">
+  <button class="back" id="resultBack">&lsaquo; Back</button>
+  <div id="resultBody"></div>
+  <div class="row" style="margin-top:24px">
+    <button class="btn" id="againBtn">Try this case again</button>
+    <button class="btn ghost" data-go="library">Another patient</button>
+    <button class="btn ghost" id="reportBtn">Download a report</button>
+    <button class="btn ghost" data-go="history">My encounters</button>
+  </div>
+</main>
+
+<!-- ============ HISTORY ============ -->
+<main class="wrap hide" id="s-history">
+  <button class="back" data-go="welcome">&lsaquo; Back</button>
+  <h1>My encounters</h1>
+  <div id="histBody"></div>
+</main>
+
+<!-- ============ TERMS ============ -->
+<main class="wrap narrow hide" id="s-terms">
+  <button class="back" data-go="welcome">&lsaquo; Back</button>
+  <h1>Terms of use</h1>
+  <p class="sm">Last updated 1 September 2026.</p>
+
+  <h3>Licence and copyright</h3>
+  <p>Copyright 2026 Igor Gembitsky.</p>
+  <p>This program is open source, under the <b>MIT licence</b>. In plain words:</p>
+  <ul>
+    <li>You may use it, copy it, change it, and give it to other people.</li>
+    <li>You may do this for free, for any purpose, including teaching and commercial work.</li>
+    <li>Keep the copyright line, and do not hold the author responsible.</li>
+  </ul>
+
+  <h3>Everything it is built from is open too</h3>
+  <div class="boxed"><table>
+    <tr><td><b>Ollama</b><br><span class="sm">runs the model on your computer</span></td><td>MIT</td></tr>
+    <tr><td><b>The model</b><br><span class="sm">made by Alibaba</span></td><td>Apache 2.0</td></tr>
+    <tr><td><b>The patient cases</b><br><span class="sm">published teaching material</span></td><td>Creative Commons Attribution</td></tr>
+  </table></div>
+  <p>You pay for nothing, create no account, and need no key.</p>
+
+  <h3>MedEdPORTAL's Creative Commons Attribution condition</h3>
+  <p>The cases come from <b>MedEdPORTAL</b>, the open access teaching journal of the Association of
+    American Medical Colleges, published under the <b>Creative Commons Attribution licence</b>,
+    written as <b>CC BY</b>.</p>
+  <p>CC BY lets you use, change and pass on the work, including commercially. In return it asks
+    for three things:</p>
+  <ul>
+    <li><b>Name the authors</b>, with the title, the year and a link to the original.</li>
+    <li><b>Say what you changed.</b></li>
+    <li><b>Name the licence</b>, so the next person knows their rights too.</li>
+  </ul>
+  <p><b>How this program does that.</b> The credit travels with the material, in five places: at
+    the top of every case file with a list of changes, on the welcome screen, on the case card, on
+    the result screen, and in every report written for a tutor.</p>
+  <p>If you pass this on or change a case, please keep that credit with it.</p>
+
+  <h3>Warning</h3>
+  <div class="warn">
+    <ul class="warnlist">
+      <li>This is a demonstration of a teaching tool.</li>
+      <li>The patients are invented.</li>
+      <li>The model is small and can make mistakes while sounding certain. It is least reliable on
+        conditions that were uncommon in the material it learned from.</li>
+      <li>There is no clinician behind the program, and nothing it produces has been checked.</li>
+      <li>Nothing here is medical advice. It is for education only.</li>
+    </ul>
+  </div>
+
+  <h3>Who made it</h3>
+  <p><b>Igor Gembitsky</b>, invited speaker on artificial intelligence in medical education at the
+    <a href="https://www.theglobalhealthacademy.org/global-health-academy/global-health-conferences/2026-home" target="_blank" rel="noopener">5th Annual Global Health Conference</a>,
+    Southbury, Connecticut, 27 September to 1 October 2026. Built in 2026 for that meeting.</p>
+  <ul>
+    <li>LinkedIn: <a href="https://www.linkedin.com/in/gembitsky" target="_blank" rel="noopener">linkedin.com/in/gembitsky</a></li>
+    <li>Code: <a href="https://github.com/igembitsky/virtual-standardized-patient" target="_blank" rel="noopener">github.com/igembitsky/virtual-standardized-patient</a></li>
+  </ul>
+  <p><b>Please get in touch.</b></p>
+  <ul>
+    <li><b>Stuck setting this up?</b> Write to me and I will help.</li>
+    <li><b>Want to contribute</b> a case, a translation or an improvement? Send it.</li>
+    <li><b>Building on this</b> for your school or programme? I am glad to talk it through.</li>
+    <li><b>Want to commission work?</b> I take that kind of work.</li>
+    <li><b>Want me to speak</b> at your event or teach a session? Ask.</li>
+  </ul>
+
+  <h3>Why it was made</h3>
+  <p>To show that anyone can run a modern AI model on an ordinary laptop, without paying anything
+    and without the internet.</p>
+  <p>It is a demonstration of one way the technology can be used. It is not a finished product,
+    and it is not the only way to do this.</p>
+
+  <h3>How to credit it</h3>
+  <p class="cite">Gembitsky I. Virtual Standardized Patient Simulator. 2026.<br>
+    github.com/igembitsky/virtual-standardized-patient<br><br>
+    Case credits are printed in each case file and on each result.</p>
+</main>
+
+<footer class="wrap foot" id="foot">
+  <span class="who">Built by <a href="https://www.linkedin.com/in/gembitsky" target="_blank" rel="noopener">Igor Gembitsky</a>, 2026. Free and open source.</span>
+  <span class="grow" style="flex:1"></span>
+  <a href="#" data-go="terms">Terms of use</a>
+  <a href="https://github.com/igembitsky/virtual-standardized-patient" target="_blank" rel="noopener">Source code</a>
+</footer>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Virtual Standardized Patient Simulator
+   Copyright 2026 Igor Gembitsky. MIT licence.
+   Everything runs on this computer. Nothing is sent anywhere.
+   ============================================================ */
+
+const CFG = {
+  ollama: "http://127.0.0.1:11434",
+  model: "qwen3:4b-instruct",
+  fallbackModels: ["qwen3:4b-instruct", "qwen3:4b", "llama3.1:8b", "granite4.1:3b"],
+  storeKey: "vsp.encounters.v1"
+};
+
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = t => { const d = document.createElement("div"); d.textContent = t == null ? "" : String(t); return d.innerHTML; };
+const pad = n => String(n).padStart(2, "0");
+const mmss = s => pad(Math.floor(Math.max(0, s) / 60)) + ":" + pad(Math.max(0, s) % 60);
+
+/* ---------- app state ---------- */
+const app = {
+  cases: [],          // parsed case objects
+  current: null,      // case being run
+  messages: [],       // model conversation
+  visible: [],        // {role, text} for transcript and report
+  covered: new Set(), // question ids the learner has asked
+  notes: "",
+  phase: "idle",      // idle | consult | note
+  timer: null,
+  endsAt: 0,
+  busy: false,
+  abort: null,
+  viewing: null       // encounter being viewed on the result screen
+};
+
+/* ============================================================
+   1. CASE FILE PARSER
+   ============================================================ */
+function parseCase(text, filename) {
+  const c = {
+    file: filename, id: filename.replace(/\.txt$/i, ""),
+    name: "", age: "", occupation: "", setting: "", complaint: "", opening: "",
+    vitals: [], abnormal: [], consultMins: 15, noteMins: 5, task: "",
+    persona: "", story: [], hidden: [], examine: {}, questions: [],
+    answer: {}, credit: {}
+  };
+  let section = "";
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    // Accept [Examine] as well as [EXAMINE]. Getting this wrong used to file every
+    // examination finding into the story, where the patient would say it out loud.
+    const head = line.match(/^\[([A-Za-z ]+)\]$/);
+    if (head) { section = head[1].trim().toUpperCase(); continue; }
+
+    const kv = line.match(/^([A-Za-z][A-Za-z0-9 .'()\/-]*?)\s*:\s*(.*)$/);
+    const key = kv ? kv[1].trim().toLowerCase() : null;
+    const val = kv ? kv[2].trim() : null;
+
+    switch (section) {
+      case "CASE":
+        if (key === "id") c.id = val;
+        else if (key === "name") c.name = val;
+        else if (key === "age") c.age = val;
+        else if (key === "occupation") c.occupation = val;
+        else if (key === "setting") c.setting = val;
+        else if (key === "complaint") c.complaint = val;
+        else if (key === "opening") c.opening = val;
+        break;
+      case "VITALS":
+        if (key === "abnormal") c.abnormal = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+        else if (kv) c.vitals.push({ label: kv[1].trim(), value: val });
+        else c.parseWarnings = (c.parseWarnings || []).concat("VITALS: " + line);
+        break;
+      case "TIMING":
+        if (key === "consultation") c.consultMins = parseInt(val, 10) || 15;
+        else if (key === "note") c.noteMins = parseInt(val, 10) || 5;
+        break;
+      case "TASK":
+        c.task += (c.task ? " " : "") + line;
+        break;
+      case "PERSONA":
+        c.persona += line + "\n";
+        break;
+      case "STORY": {
+        const m = line.match(/^\(only if asked\)\s*(.*)$/i);
+        if (m) c.hidden.push(m[1]); else c.story.push(line);
+        break;
+      }
+      case "EXAMINE":
+        if (kv) c.examine[kv[1].trim().toLowerCase()] = val;
+        else c.parseWarnings = (c.parseWarnings || []).concat("EXAMINE: " + line);
+        break;
+      case "QUESTIONS": {
+        const parts = line.split("|");
+        if (parts.length >= 2) {
+          c.questions.push({
+            id: "q" + c.questions.length,
+            label: parts[0].trim(),
+            words: parts[1].split(",").map(s => s.trim().toLowerCase()).filter(Boolean)
+          });
+        }
+        break;
+      }
+      case "ANSWER":
+        if (key === "most likely") c.answer.top = val;
+        else if (key === "also accepted") c.answer.also = val.split(",").map(s => s.trim()).filter(Boolean);
+        else if (key === "tests") c.answer.tests = val.split(",").map(s => s.trim()).filter(Boolean);
+        else if (key === "pass diagnosis words") c.answer.dxWords = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+        else if (key === "pass test words") c.answer.txWords = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+        else if (key === "teaching point") c.answer.teach = val;
+        else if (key === "miss note") c.answer.miss = val;
+        break;
+      case "CREDIT":
+        if (kv) c.credit[key] = val;
+        break;
+    }
+  }
+  return c;
+}
+
+function caseIsValid(c) {
+  const missing = [];
+  if (!c.name) missing.push("[CASE] name");
+  if (!c.opening) missing.push("[CASE] opening");
+  if (!c.story.length && !c.hidden.length) missing.push("[STORY] lines");
+  if (!c.questions.length) missing.push("[QUESTIONS] lines");
+  if (!c.answer.dxWords || !c.answer.dxWords.length) missing.push("[ANSWER] pass diagnosis words");
+  if (!c.answer.txWords || !c.answer.txWords.length) missing.push("[ANSWER] pass test words");
+  return missing;
+}
+
+/* ============================================================
+   2. THE PROMPT SENT TO THE MODEL
+   ============================================================ */
+function systemPrompt(c) {
+  const L = [];
+  L.push("You are role-playing a patient in a teaching clinic. You are not an assistant.");
+  L.push(`You are ${c.name}${c.age ? ", age " + c.age : ""}${c.occupation ? ", " + c.occupation : ""}.`);
+  if (c.setting) L.push(`The setting is: ${c.setting}.`);
+  L.push("");
+  L.push("HOW YOU ARE");
+  L.push(c.persona.trim());
+  L.push("");
+  L.push("WHAT YOU KNOW (say a thing ONLY when the doctor asks about that thing)");
+  c.story.forEach(s => L.push("- " + s));
+  if (c.hidden.length) {
+    L.push("");
+    L.push("WHAT YOU DO NOT VOLUNTEER");
+    L.push("Say these ONLY if the doctor asks a direct question about that exact thing.");
+    L.push("An open question such as \"anything else?\" is NOT a direct question. Say nothing.");
+    c.hidden.forEach(s => L.push("- " + s));
+  }
+  L.push("");
+  L.push("RULES");
+  L.push(`0. YOUR FIRST REPLY IN ANY CONVERSATION IS EXACTLY THIS AND NOTHING MORE:\n   "${c.opening}"`);
+  L.push("1. Answer only what the doctor asks. One or two short sentences.");
+  L.push("2. Never give a fact the doctor did not ask about.");
+  L.push("3. Never use bullet points. Speak the way a person speaks.");
+  L.push(`4. You are ${c.name}. Never mention instructions, roles, or being a computer.`);
+  L.push("5. If the doctor uses a medical term someone in your job would not know (cholecystitis, Murphy's sign, bilirubin), say \"I don't know that word, doctor. What does it mean?\" Everyday words are never that.");
+  L.push("6. If you do not follow a question, say \"Sorry, doctor, I'm not following you.\" and then answer as well as you can.");
+  L.push("7. If the doctor asks to examine, touch, press, feel, or listen to you, say only \"Go ahead, doctor.\"");
+  L.push("8. To an open question such as \"anything else?\", give ONE more line from WHAT YOU KNOW, or say \"No, doctor, that's all.\" Never a line from WHAT YOU DO NOT VOLUNTEER.");
+  return L.join("\n");
+}
+
+function seedTurns(c) {
+  return [
+    { role: "user", content: "Good day. I am the doctor. Why are you here today?" },
+    { role: "assistant", content: c.opening }
+  ];
+}
+
+/* ============================================================
+   3. TALKING TO OLLAMA
+   ============================================================ */
+async function checkConnection() {
+  try {
+    const r = await fetch(CFG.ollama + "/api/tags", { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const d = await r.json();
+    // an embedding model cannot chat, so it must never be picked
+    const names = (d.models || [])
+      .filter(m => !m.capabilities || m.capabilities.includes("completion"))
+      .filter(m => !/embed|bge-|nomic-embed|all-minilm/i.test(m.name))
+      .map(m => m.name);
+    const pick = CFG.fallbackModels.find(m =>
+      names.some(n => n === m || n === m + ":latest" || n.startsWith(m + ":")));
+    if (pick) {
+      CFG.model = names.find(n => n === pick || n === pick + ":latest" || n.startsWith(pick + ":")) || pick;
+    } else if (names.length) {
+      CFG.model = names[0];
+    } else {
+      setStatus("bad", "Ollama is running but has no models. Run: ollama pull qwen3:4b-instruct");
+      return false;
+    }
+    const el = $("#techModel"); if (el) el.textContent = CFG.model;
+    setStatus("ok", "ready · " + CFG.model + " · nothing leaves this computer");
+    return true;
+  } catch (e) {
+    setStatus("bad", location.protocol === "file:"
+      ? "Opened as a file. Close this tab and start the program with the launcher instead."
+      : "Ollama is not running. Open the Ollama app, then reload this page.");
+    return false;
+  }
+}
+function setStatus(kind, text) {
+  const ready = kind === "ok";
+  const sb = $("#startBtn"), note = $("#startBlocked");
+  if (sb) sb.disabled = !ready;
+  if (note) note.classList.toggle("hide", ready);
+  const d = $("#dot");
+  d.className = "dot" + (kind === "ok" ? " ok" : kind === "bad" ? " bad" : "");
+  $("#status").textContent = text;
+}
+
+async function askModel(messages, onDelta) {
+  app.abort = new AbortController();
+  const res = await fetch(CFG.ollama + "/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    signal: app.abort.signal,
+    body: JSON.stringify({
+      model: CFG.model, messages, stream: true, keep_alive: "20m",
+      options: { temperature: 0.6, num_ctx: 8192, num_predict: 300 }
+    })
+  });
+  if (!res.ok) throw new Error("Ollama replied " + res.status);
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = "", full = "";
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split("\n");
+    buf = lines.pop();
+    for (const ln of lines) {
+      if (!ln.trim()) continue;
+      let j; try { j = JSON.parse(ln); } catch { continue; }
+      if (j.error) throw new Error(j.error);
+      const piece = (j.message && j.message.content) || "";
+      if (piece) { full += piece; onDelta(clean(full)); }
+    }
+  }
+  return clean(full);
+}
+/* Some models emit a reasoning block. Never show it to a learner. */
+function clean(s) {
+  return s.replace(/<think>[\s\S]*?<\/think>/g, "")
+          .replace(/<unused9[0-9]>/g, "")
+          .replace(/^\s*thought\b[\s\S]*?\n\n/i, "")
+          .trim();
+}
+
+/* ============================================================
+   4. ROUTER
+   ============================================================ */
+const SCREENS = ["welcome","library","author","card","consult","note","result","history","terms"];
+function go(name) {
+  if (app.phase === "consult" && name !== "consult") { stopClock(); app.phase = "idle"; }
+  if (app.phase === "note" && name !== "note") { stopClock(); app.phase = "idle"; }
+  if (name !== "consult" && app.abort) { try { app.abort.abort(); } catch {} app.abort = null; }
+  SCREENS.forEach(s => $("#s-" + s).classList.toggle("hide", s !== name));
+  $("#foot").classList.toggle("hide", name === "consult" || name === "note");
+  $("#clock").classList.toggle("hide", !(name === "consult" || name === "note"));
+  $("#quit").classList.toggle("hide", name !== "consult");
+  window.scrollTo(0, 0);
+  const heading = $("#s-" + name).querySelector("h1, .back");
+  if (heading) { heading.setAttribute("tabindex", "-1"); heading.focus({ preventScroll: true }); }
+  if (name === "library") drawLibrary();
+  if (name === "history") drawHistory();
+  if (name === "author") $("#authorPrompt").textContent = AUTHOR_PROMPT;
+  location.hash = name;
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-go]");
+  if (!t) return;
+  e.preventDefault();
+  const target = t.getAttribute("data-go");
+  if (app.phase === "consult" || app.phase === "note") {
+    if (!confirm("Leaving now ends this encounter and loses it. Leave?")) return;
+  }
+  go(target);
+});
+window.addEventListener("hashchange", () => {
+  const h = location.hash.replace("#", "");
+  if (!SCREENS.includes(h)) return;
+  if (!$("#s-" + h).classList.contains("hide")) return;       // already there
+  if (app.phase === "consult" || app.phase === "note") {      // never jump out mid-encounter
+    location.hash = app.phase;
+    return;
+  }
+  // consult and note only exist inside a running encounter. Browser Back must not land there.
+  go(h === "consult" || h === "note" || h === "result" ? "library" : h);
+});
+
+/* ============================================================
+   5. LOADING CASES
+   ============================================================ */
+async function loadCases() {
+  let names = [];
+  try {
+    const r = await fetch("cases/", { cache: "no-store" });
+    if (r.ok) {
+      const d = await r.json();
+      if (Array.isArray(d)) names = d.filter(n => /\.txt$/i.test(n));
+    }
+  } catch {}
+  if (!names.length) names = ["graham.txt"];   // last resort so the app still runs
+  app.loadNote = "";
+  const loaded = [];
+  for (const n of names) {
+    try {
+      const r = await fetch("cases/" + encodeURIComponent(n), { cache: "no-store" });
+      if (!r.ok) continue;
+      const c = parseCase(await r.text(), n);
+      const bad = caseIsValid(c);
+      if (bad.length) { c.broken = bad; }
+      loaded.push(c);
+    } catch {}
+  }
+  app.cases = loaded;
+  if (!loaded.length) {
+    app.loadNote = "No case files were found. Check that a folder called <code>cases</code> " +
+      "sits next to <code>index.html</code> and holds at least one <code>.txt</code> file, " +
+      "then reload this page.";
+  }
+  drawCredits();
+}
+
+function drawCredits() {
+  const seen = new Map();
+  app.cases.forEach(c => {
+    if (c.credit && c.credit.id && !seen.has(c.credit.id)) seen.set(c.credit.id, c.credit);
+  });
+  $("#creditList").innerHTML = [...seen.values()].map(cr => `
+    <p class="cite">${esc(cr.authors || "")}. <i>${esc(cr.title || "")}</i>
+    ${esc(cr.journal || "")} ${esc(cr.year || "")}. ${esc(cr.id || "")}<br>
+    ${esc(cr.copyright || "")}<br>${esc(cr.licence || "")}<br>
+    <span class="sm">Changes: ${esc(cr.changes || "")}</span></p>`).join("");
+}
+
+function drawLibrary() {
+  const box = $("#caseList");
+  const done = history_all();
+  const n = app.cases.filter(c => !c.broken).length;
+  $("#libCount").innerHTML = app.loadNote
+    ? `<span style="color:var(--amber)">${app.loadNote}</span>`
+    : n + (n === 1 ? " patient ready." : " patients ready.");
+  box.innerHTML = "";
+  app.cases.forEach(c => {
+    const mine = done.filter(e => e.caseId === c.id);
+    const best = mine.length ? Math.max(...mine.map(e => e.covered)) : null;
+    const b = document.createElement("button");
+    b.className = "cc";
+    if (c.broken) {
+      b.innerHTML = `<span class="cn">${esc(c.file)}</span><h3>Case file has a problem</h3>
+        <p class="desc">Missing: ${esc(c.broken.join(", "))}</p>`;
+      b.setAttribute("aria-disabled", "true");
+      b.style.borderColor = "var(--amber)";
+      b.onclick = () => alert("This case file cannot be used yet.\n\nMissing: " +
+        c.broken.join(", ") + "\n\nOpen cases/" + c.file + " and add those sections.");
+    } else {
+      b.innerHTML = `
+        <span class="cn">${esc(shortId(c))}</span>
+        <h3>${esc(c.name)}${c.age ? ", " + esc(c.age) : ""}</h3>
+        <p class="desc">${esc(c.complaint)}</p>
+        <p class="meta">${c.consultMins} min consultation &middot; ${c.noteMins} min note<br>
+          ${c.questions.length} questions to cover${
+            c.parseWarnings ? `<br><span style="color:var(--amber)">${c.parseWarnings.length} line` +
+            (c.parseWarnings.length === 1 ? "" : "s") + ` in the file could not be read</span>` : ""}</p>
+        <span class="badge ${mine.length ? "done" : "new"}">${
+          mine.length ? `Best ${best} of ${c.questions.length}` : "Not tried yet"}</span>`;
+      b.onclick = () => openCard(c);
+    }
+    box.appendChild(b);
+  });
+  const add = document.createElement("button");
+  add.className = "cc add";
+  add.innerHTML = `<span class="cn">Your own</span><h3>Write your own patient</h3>
+    <p class="desc">Turn any published case into a case file.</p>
+    <p class="meta">Takes about ten minutes</p>`;
+  add.onclick = () => go("author");
+  box.appendChild(add);
+}
+
+/* ============================================================
+   6. CASE CARD
+   ============================================================ */
+function openCard(c) {
+  app.current = c;
+  $("#cardSetting").textContent = c.setting || "";
+  $("#cardName").textContent = c.name + (c.age ? ", " + c.age : "");
+  $("#cardComplaint").textContent = c.complaint + (c.occupation ? ". " + c.occupation + "." : "");
+  $("#cardVitals").innerHTML = vitalsHTML(c);
+  $("#cardTask").textContent = c.task || "Take a relevant history.";
+  $("#cardTiming").textContent =
+    `${c.consultMins} minutes with the patient, then ${c.noteMins} minutes to write your note.`;
+  const cr = c.credit || {};
+  $("#cardCredit").innerHTML =
+    `${esc(cr.authors || "")}. <i>${esc(cr.title || "")}</i> ${esc(cr.journal || "")} ${esc(cr.year || "")}.
+     ${esc(cr.id || "")}. ${esc(cr.licence || "")}`;
+  go("card");
+}
+/* The full DOI wraps to two lines on a card. The short number is enough to tell
+   two cases apart; the whole citation is on the case card and on the result. */
+function shortId(c) {
+  const id = (c.credit && c.credit.id) || "";
+  const m = id.match(/([0-9]{4,6})\s*$/);
+  return m ? "MedEdPORTAL " + m[1] : (c.file || "").replace(/\.txt$/i, "");
+}
+/* Temperature is the only reading with a unit. The case file may say F or C; the reader
+   picks the one they think in, and the choice is kept on this computer. */
+const UNITS_KEY = "vsp.units";
+function unitsGet() {
+  try { const u = localStorage.getItem(UNITS_KEY); if (u === "F" || u === "C") return u; } catch {}
+  return navigator.language === "en-US" ? "F" : "C";
+}
+function unitsSet(u) {
+  app.units = u;
+  try { localStorage.setItem(UNITS_KEY, u); } catch {}
+  refreshVitals();
+}
+function showValue(label, value) {
+  if (!/temp/i.test(label)) return value;
+  const m = String(value).match(/^(-?\d+(?:\.\d+)?)\s*\u00b0?\s*([FC])\b/i);
+  if (!m) return value;
+  const from = m[2].toUpperCase(), to = app.units;
+  if (from === to) return `${m[1]} \u00b0${to}`;
+  const n = parseFloat(m[1]);
+  return `${(to === "C" ? (n - 32) * 5 / 9 : n * 9 / 5 + 32).toFixed(1)} \u00b0${to}`;
+}
+function refreshVitals() {
+  $$(".units button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.u === app.units)));
+  if (!app.current) return;
+  $("#cardVitals").innerHTML = vitalsHTML(app.current);
+  $("#sideVitals").innerHTML = vitalsHTML(app.current);
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest(".units button");
+  if (b) unitsSet(b.dataset.u);
+});
+app.units = unitsGet();
+refreshVitals();
+
+function vitalsHTML(c) {
+  if (!c.vitals.length) return `<dt>Vitals</dt><dd>not taken</dd>`;
+  return c.vitals.map(v => {
+    const hot = c.abnormal.includes(v.label.toLowerCase());
+    return `<dt>${esc(v.label)}</dt><dd class="${hot ? "hot" : ""}">${esc(showValue(v.label, v.value))}` +
+           (hot ? ` <span class="flag" title="outside the normal range">abnormal</span>` : "") + `</dd>`;
+  }).join("");
+}
+
+/* ============================================================
+   7. THE CONSULTATION
+   ============================================================ */
+$("#startBtn").onclick = () => startConsult();
+
+function startConsult() {
+  const c = app.current;
+  app.messages = [{ role: "system", content: systemPrompt(c) }, ...seedTurns(c)];
+  app.visible = [];
+  app.covered = new Set();
+  app.notes = "";
+  $("#notes").value = "";
+  $("#log").innerHTML = "";
+  $("#ask").value = "";
+  $("#ask").disabled = false;
+  $("#send").disabled = false;
+  $("#exBtn").disabled = false;
+  $("#sideName").textContent = c.name;
+  $("#sideAge").textContent = (c.age ? c.age + " years old" : "") ;
+  $("#sideComplaint").textContent = c.complaint;
+  $("#sidePlace").textContent = c.setting || "";
+  $("#sideVitals").innerHTML = vitalsHTML(c);
+  drawDots();
+  app.phase = "consult";
+  go("consult");
+  startClock(c.consultMins * 60, () => endConsult(true));
+  examSetup(c);
+  examClose();
+  say("sys", "The patient is waiting",
+      `Greet ${c.name} and take a history.\nTo examine, press Examine.`);
+  $("#ask").focus();
+}
+
+function say(kind, who, text) {
+  const d = document.createElement("div");
+  d.className = "msg " + (kind === "me" ? "me" : kind === "pt" ? "pt" : kind === "err" ? "err" : "sys");
+  d.innerHTML = `<span class="who"></span><span class="txt"></span>`;
+  d.querySelector(".who").textContent = who;
+  d.querySelector(".txt").textContent = text;
+  $("#log").appendChild(d);
+  $("#log").scrollTop = $("#log").scrollHeight;
+  return d.querySelector(".txt");
+}
+
+$("#askForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const text = $("#ask").value.trim();
+  if (!text || app.busy || app.phase !== "consult") return;
+  $("#ask").value = "";
+  await handleTurn(text);
+});
+
+async function handleTurn(text) {
+  const c = app.current;
+  // Only an explicit "examine" is an examination. Everything else goes to the patient,
+  // so a question like "can I check your temperature?" is not swallowed.
+  const ex = text.match(/^\s*(?:examine|exam)\b\s*(.*)$/i);
+  if (ex) { doExamine(ex[1] || ""); return; }
+  say("me", "You", text);
+  app.visible.push({ role: "doctor", text });
+  markCovered(text);
+
+  app.busy = true; $("#send").disabled = true; $("#exBtn").disabled = true;
+  app.messages.push({ role: "user", content: text });
+  const node = say("pt", c.name, "");
+  node.parentElement.classList.add("typing");
+  try {
+    const full = await askModel(app.messages, t => { node.textContent = t; $("#log").scrollTop = $("#log").scrollHeight; });
+    app.messages.push({ role: "assistant", content: full });
+    app.visible.push({ role: "patient", text: full });
+    markCovered(text);          // only once the patient actually answered
+    if (!full) node.textContent = "(no reply)";
+    // The patient cannot be examined by asking. Point at the command instead.
+    if (/\b(press|pressing|touch|palpat\w*|percuss\w*|feel (your|the|my)|listen|have a look|examine you|check your)\b/i.test(text)
+        && Object.keys(c.examine).length)
+      say("sys", "Examination", "To examine, press Examine.");
+  } catch (err) {
+    node.parentElement.remove();
+    if (err.name !== "AbortError") say("err", "Problem", err.message + ". Your question was not sent. Check that Ollama is running, then try again.");
+  }
+  const t = $("#log").querySelector(".typing");
+  if (t) t.classList.remove("typing");
+  app.busy = false; $("#send").disabled = false; $("#exBtn").disabled = false;
+  $("#ask").focus();
+}
+
+/* ------------------------------------------------------------
+   EXAMINATION. One standard list, the same for every patient, so the list itself
+   gives nothing away. The case file's own words ("chest", "affect", "sinuses") map
+   onto it. An examination the case file does not mention gets one fixed line.
+   ------------------------------------------------------------ */
+const EXAMS = [
+  ["General", [["General appearance", "general, looks, appearance"], ["Hydration", "dehydrated, mucous membranes, turgor"]]],
+  ["Head and neck", [["Head and face", "head, face, scalp"], ["Eyes", "eye, pupils, sclera, conjunctiva, fundi"],
+    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses"],
+    ["Mouth and throat", "mouth, throat, tonsils, teeth, tongue"], ["Neck and thyroid", "neck, thyroid"],
+    ["Lymph nodes", "lymph, nodes, glands"]]],
+  ["Chest", [["Chest and lungs", "chest, lungs, breathing, respiratory"], ["Heart", "cardiac, heart sounds, murmur"], ["Breasts", "breast"]]],
+  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys"],
+    ["Rectal", "rectum, dre"], ["Pelvic and genital", "pelvic, genital, vaginal, speculum, bimanual, testes"]]],
+  ["Limbs and skin", [["Arms and hands", "arms, hands, wrists, upper limbs"], ["Legs and feet", "legs, feet, calves, ankles, oedema, edema, lower limbs"],
+    ["Peripheral pulses", "pulses, perfusion, capillary refill"], ["Skin", "rash, colour, jaundice"], ["Nails", "clubbing"],
+    ["Joints and muscles", "joints, musculoskeletal, range of motion, muscles"]]],
+  ["Nervous system and mind", [["Nervous system", "neuro, neurological, reflexes, cranial nerves, power, sensation"],
+    ["Gait and balance", "gait, walk, balance, romberg"], ["Mental state", "affect, mood, orientation, speech"],
+    ["Depression screening", "phq, phq-9, questionnaire"], ["Cognition screening", "memory, mini mental, moca"]]]
+];
+const EXAM_ITEMS = EXAMS.flatMap(([group, items]) => items.map(([name, syn]) =>
+  ({ group, name, words: [name.toLowerCase(), ...syn.split(",").map(w => w.trim().toLowerCase())] })));
+
+function examSetup(c) {
+  app.exams = EXAM_ITEMS.map(it => ({ ...it, finding: null }));
+  app.examMiss = c.examine.otherwise || null;
+  Object.entries(c.examine).forEach(([key, text]) => {
+    if (key === "otherwise") return;
+    const hit = examFind(key);
+    if (hit) hit.finding = text;
+    else app.exams.push({ group: "This case", name: key.charAt(0).toUpperCase() + key.slice(1), words: [key], finding: text });
+  });
+}
+/* Deterministic. An exact word first, then a word that starts with what was typed,
+   then a word that contains it. Short fragments never match by containment. */
+function examFind(q) {
+  q = q.toLowerCase().replace(/[^a-z0-9 -]/g, "").replace(/\s+/g, " ").trim();
+  if (!q) return null;
+  const L = app.exams;
+  return L.find(it => it.words.includes(q)) ||
+         L.find(it => it.words.some(w => w.startsWith(q))) ||
+         (q.length >= 3 ? L.find(it => it.words.some(w => w.includes(q))) : null) ||
+         L.find(it => it.words.some(w => w.length >= 4 && q.includes(w))) || null;
+}
+function examMatches(q) {
+  q = q.toLowerCase().trim();
+  if (!q) return app.exams;
+  const starts = app.exams.filter(it => it.name.toLowerCase().startsWith(q));
+  const rest = app.exams.filter(it => !starts.includes(it) && it.words.some(w => w.includes(q)));
+  return starts.concat(rest);
+}
+function examRender() {
+  const q = $("#exQ").value.trim();
+  const m = examMatches(q);
+  if (!m.length) { $("#exList").innerHTML = `<div class="empty">No examination matches "${esc(q)}". Try a body part.</div>`; return; }
+  let html = "", g = null;
+  m.forEach((it, i) => {
+    if (it.group !== g) { html += `<div class="grp">${esc(it.group)}</div>`; g = it.group; }
+    html += `<div class="it${i ? "" : " on"}" role="option" data-i="${app.exams.indexOf(it)}">${esc(it.name)}</div>`;
+  });
+  $("#exList").innerHTML = html;
+}
+function examOpen() {
+  if (app.phase !== "consult" || app.busy) return;
+  $("#exPop").classList.remove("hide");
+  $("#exBtn").setAttribute("aria-expanded", "true");
+  $("#exQ").value = "";
+  examRender();
+  $("#exQ").focus();
+}
+function examClose() {
+  $("#exPop").classList.add("hide");
+  $("#exBtn").setAttribute("aria-expanded", "false");
+}
+function examDo(it) {
+  examClose();
+  const label = it.name.toLowerCase();
+  say("me", "You", "Examine: " + label);
+  app.visible.push({ role: "doctor", text: "Examine: " + label });
+  const line = it.finding || app.examMiss || `${it.name}: nothing abnormal.`;
+  say("sys", "Examination, " + label, line);
+  app.visible.push({ role: "examination", text: label + ": " + line });
+  $("#ask").focus();
+}
+/* The typed form, "examine abdomen", goes through the same matcher. */
+function doExamine(what) {
+  if (!what.trim()) { examOpen(); return; }
+  const it = examFind(what);
+  if (it) { examDo(it); return; }
+  say("me", "You", "examine " + what.trim());
+  app.visible.push({ role: "doctor", text: "examine " + what.trim() });
+  say("sys", "Examination", `No examination matches "${what.trim()}". Press Examine to see the list.`);
+}
+$("#exBtn").onclick = () => $("#exPop").classList.contains("hide") ? examOpen() : examClose();
+$("#exQ").addEventListener("input", examRender);
+$("#exQ").addEventListener("keydown", e => {
+  const items = $$("#exList .it");
+  let i = items.findIndex(x => x.classList.contains("on"));
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    if (!items.length) return;
+    if (i >= 0) items[i].classList.remove("on");
+    i = (i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+    items[i].classList.add("on");
+    items[i].scrollIntoView({ block: "nearest" });
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (i >= 0) examDo(app.exams[+items[i].dataset.i]);
+  } else if (e.key === "Escape") {
+    examClose(); $("#exBtn").focus();
+  }
+});
+$("#exList").addEventListener("mousedown", e => {
+  const it = e.target.closest(".it");
+  if (it) { e.preventDefault(); examDo(app.exams[+it.dataset.i]); }
+});
+document.addEventListener("click", e => {
+  if (!$("#exPop").classList.contains("hide") && !e.target.closest("#exPop, #exBtn")) examClose();
+});
+
+/* A word in a case file matches the whole word only, so "before" does not fire on
+   "beforehand". End it with * to match any ending: "aggravat*" catches aggravated. */
+function wordHit(haystack, word) {
+  const w = word.toLowerCase().trim();
+  if (!w) return false;
+  const stem = w.endsWith("*");
+  const core = (stem ? w.slice(0, -1) : w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp("(^|[^a-z0-9])" + core + (stem ? "" : "($|[^a-z0-9])"), "i");
+  return re.test(haystack);
+}
+function markCovered(text) {
+  const t = " " + text.toLowerCase().replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ") + " ";
+  app.current.questions.forEach(q => {
+    if (app.covered.has(q.id)) return;
+    if (q.words.some(w => wordHit(t, w))) app.covered.add(q.id);
+  });
+  drawDots();
+}
+function drawDots() {
+  const total = app.current ? app.current.questions.length : 0;
+  const on = app.covered.size;
+  $("#dots").innerHTML =
+    "&#9679;".repeat(on) + `<i>${"&#9675;".repeat(Math.max(0, total - on))}</i>` +
+    `<span class="hint" style="display:block;margin-top:6px">${on} of ${total}</span>`;
+}
+
+$("#quit").onclick = () => endConsult(false);
+
+function endConsult(timeUp) {
+  if (app.phase !== "consult") return;
+  if (!timeUp && app.visible.filter(v => v.role === "doctor").length === 0) {
+    if (!confirm("You have not asked anything yet. Finish and write your note?")) return;
+  }
+  stopClock();
+  if (app.abort) { try { app.abort.abort(); } catch {} app.abort = null; }
+  app.busy = false;
+  app.notes = $("#notes").value;
+  openNote(timeUp);
+}
+
+/* ============================================================
+   8. THE CLOCK
+   ============================================================ */
+function startClock(seconds, onEnd) {
+  stopClock();
+  // Measured against the clock on the wall, so a sleeping laptop or a background
+  // tab does not hand the learner extra time.
+  let deadline = Date.now() + seconds * 1000;
+  let last = Date.now();
+  const el = $("#clock");
+  let warned = false;
+  const tick = () => {
+    // If the machine slept or the tab was frozen, give the time back rather than
+    // marking a half-written note the moment the lid opens.
+    const now = Date.now(), gap = now - last;
+    if (gap > 5000) deadline += gap - 500;
+    last = now;
+    app.endsAt = Math.max(0, Math.round((deadline - now) / 1000));
+    el.textContent = mmss(app.endsAt);
+    el.classList.toggle("low", app.endsAt <= 60);
+    if (app.endsAt <= 60 && !warned) { warned = true; announce("One minute left."); }
+    if (app.endsAt <= 0) { stopClock(); onEnd(); }
+  };
+  tick();
+  app.timer = setInterval(tick, 500);
+}
+function announce(text) {
+  const el = $("#announce");
+  if (el) { el.textContent = ""; setTimeout(() => { el.textContent = text; }, 60); }
+}
+function stopClock() {
+  if (app.timer) { clearInterval(app.timer); app.timer = null; }
+}
+
+/* ============================================================
+   9. THE NOTE
+   ============================================================ */
+function openNote(timeUp) {
+  const c = app.current;
+  app.phase = "note";
+  $("#noteLede").innerHTML =
+    (timeUp ? "The consultation clock ran out. " : "") +
+    `Three diagnoses, most likely first, then three tests.<br>` +
+    `<span style="color:var(--amber)">At 0:00 this is marked as it stands.</span>`;
+  $("#noteCarry").textContent = app.notes.trim() || "You did not write any notes.";
+  $("#dxSlots").innerHTML = [1,2,3].map(i =>
+    `<label class="sr" for="dx${i}">Diagnosis ${i}</label>` +
+    `<input id="dx${i}" type="text" placeholder="Diagnosis ${i}" autocomplete="off">`).join("");
+  $("#txSlots").innerHTML = [1,2,3].map(i =>
+    `<label class="sr" for="tx${i}">Test ${i}</label>` +
+    `<input id="tx${i}" type="text" placeholder="Test ${i}" autocomplete="off">`).join("");
+  go("note");
+  startClock(c.noteMins * 60, () => { mark(); });
+  const first = $("#dx1"); if (first) first.focus();
+}
+
+$("#markBtn").onclick = () => mark();
+
+function mark() {
+  if (app.phase !== "note") return;
+  stopClock();
+  const c = app.current;
+  const dx = [1,2,3].map(i => ($("#dx" + i) || {}).value || "").map(s => s.trim()).filter(Boolean);
+  const tx = [1,2,3].map(i => ($("#tx" + i) || {}).value || "").map(s => s.trim()).filter(Boolean);
+  const dxHit = hasAny(dx.join(" "), c.answer.dxWords);
+  const txHit = hasAny(tx.join(" "), c.answer.txWords);
+  const pass = dxHit && txHit;
+
+  const enc = {
+    at: nowStamp(), caseId: c.id, caseName: c.name, caseFile: c.file,
+    covered: app.covered.size, total: c.questions.length,
+    coveredIds: [...app.covered],
+    dx, tx, pass, dxHit, txHit,
+    notes: app.notes, transcript: app.visible,
+    credit: c.credit, model: CFG.model
+  };
+  saveEncounter(enc);
+  app.phase = "idle";
+  showResult(enc, c, false);
+}
+
+function hasAny(text, words) {
+  if (!words || !words.length) return false;
+  const t = " " + text.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ") + " ";
+  return words.some(w => wordHit(t, w));
+}
+
+/* ============================================================
+   10. THE RESULT
+   ============================================================ */
+function showResult(enc, c, fromHistory) {
+  app.viewing = { enc, c };
+  const asked = [], other = [];
+  c.questions.forEach(q => (enc.coveredIds.includes(q.id) ? asked : other).push(q.label));
+  const cr = enc.credit || {};
+
+  $("#resultBody").innerHTML = `
+    <div class="verdict ${enc.pass ? "pass" : ""}">
+      <span class="big">${enc.pass ? "PASS" : "FAIL"}</span>
+      <span>${enc.pass
+        ? "You named the right kind of diagnosis and asked for the right kind of test."
+        : (!enc.dxHit && !enc.txHit) ? "Your diagnoses and your tests both missed."
+        : !enc.dxHit ? "Your tests were reasonable, but no diagnosis of the right kind."
+        : "Right kind of diagnosis, but no test that would confirm it."}</span>
+    </div>
+
+    <div class="cols">
+      <div>
+        <p class="lab" style="font-family:var(--mono);font-size:.69rem;letter-spacing:.11em;
+           text-transform:uppercase;color:var(--muted)">You wrote</p>
+        <p><b>Diagnoses</b><br>${enc.dx.length ? enc.dx.map(esc).join("<br>") : "<span class='sm'>none</span>"}</p>
+        <p><b>Tests</b><br>${enc.tx.length ? enc.tx.map(esc).join("<br>") : "<span class='sm'>none</span>"}</p>
+      </div>
+      <div>
+        <p class="lab" style="font-family:var(--mono);font-size:.69rem;letter-spacing:.11em;
+           text-transform:uppercase;color:var(--muted)">The case authors</p>
+        <p><b>${esc(c.answer.top || "")}</b> is most likely.</p>
+        <p class="sm">Also accepted: ${esc((c.answer.also || []).join(", "))}</p>
+        <p class="sm">Tests they list: ${esc((c.answer.tests || []).join(", "))}</p>
+      </div>
+    </div>
+
+    <h3>Questions, ${enc.covered} of ${enc.total}</h3>
+    <div class="cols">
+      <div><p class="lab" style="font-family:var(--mono);font-size:.69rem;letter-spacing:.11em;
+           text-transform:uppercase;color:var(--muted)">You asked</p>
+        ${asked.length ? asked.map(l =>
+        `<div class="ck yes"><span class="b">&#10003;</span><span>${esc(l)}</span></div>`).join("")
+        : "<p class='sm'>None.</p>"}</div>
+      <div><p class="lab" style="font-family:var(--mono);font-size:.69rem;letter-spacing:.11em;
+           text-transform:uppercase;color:var(--muted)">Also available</p>
+        ${other.length ? other.map(l =>
+        `<div class="ck no"><span class="b">+</span><span>${esc(l)}</span></div>`).join("")
+        : "<p class='sm'>You covered them all.</p>"}</div>
+    </div>
+    ${c.questions.length ? "" : `<p class="sm">The case file for this encounter is no longer in the
+      cases folder, so the question list cannot be shown.</p>`}
+
+    ${c.answer.teach ? `<div class="teach">${
+       (other.length && c.answer.miss) ? `<b>${esc(c.answer.miss)}</b> ` : ""
+     }${esc(c.answer.teach)}</div>` : ""}
+
+    <details class="fold"><summary>Read the transcript</summary>
+      <div class="foldbody"><div class="transcript">${
+        enc.transcript.map(t =>
+          `<b>${t.role === "doctor" ? "You" : t.role === "patient" ? esc(enc.caseName) : "Examination"}</b><br>${esc(t.text)}`
+        ).join("<br><br>") || "<span class='sm'>Nothing was said.</span>"}</div></div>
+    </details>
+    <details class="fold"><summary>Read your notes</summary>
+      <div class="foldbody"><div class="transcript">${esc(enc.notes || "You did not write any notes.")}</div></div>
+    </details>
+
+    <p class="cite" style="margin-top:22px">${esc(cr.authors || "")}. <i>${esc(cr.title || "")}</i>
+      ${esc(cr.journal || "")} ${esc(cr.year || "")}. ${esc(cr.id || "")}. ${esc(cr.licence || "")}</p>`;
+
+  if (app.storeFailed && !fromHistory) {
+    $("#resultBody").insertAdjacentHTML("afterbegin",
+      `<div class="warn"><p style="margin:0"><strong>This encounter was not saved.</strong>
+       Your browser refused to store it, which happens in a private window. Download the report
+       below if you want to keep it.</p></div>`);
+  }
+  $("#resultBack").textContent = fromHistory ? "‹ Back to my encounters" : "‹ Back to the library";
+  $("#resultBack").onclick = () => go(fromHistory ? "history" : "library");
+  $("#againBtn").classList.toggle("hide", !app.cases.includes(c));
+  go("result");
+}
+
+$("#againBtn").onclick = () => { if (app.viewing) { app.current = app.viewing.c; openCard(app.viewing.c); } };
+
+/* ============================================================
+   11. HISTORY, KEPT ON THIS COMPUTER
+   ============================================================ */
+function history_all() {
+  try {
+    const v = JSON.parse(localStorage.getItem(CFG.storeKey) || "[]");
+    if (Array.isArray(v)) return v;
+    app.storeCorrupt = true; return [];
+  } catch { app.storeCorrupt = true; return []; }
+}
+function saveEncounter(enc) {
+  try {
+    if (app.storeCorrupt) {   // keep the damaged copy rather than overwrite it
+      localStorage.setItem(CFG.storeKey + ".damaged", localStorage.getItem(CFG.storeKey) || "");
+      app.storeCorrupt = false;
+    }
+    const all = history_all();
+    all.unshift(enc);
+    localStorage.setItem(CFG.storeKey, JSON.stringify(all.slice(0, 200)));
+    app.storeFailed = false;
+  } catch (e) {
+    app.storeFailed = true;   // private window, or storage full
+  }
+}
+function nowStamp() {
+  const d = new Date();
+  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+         " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+
+function drawHistory() {
+  const all = history_all();
+  const box = $("#histBody");
+  if (!all.length) {
+    box.innerHTML = `<p class="empty">Nothing yet. Your encounters appear here after you finish one.</p>
+      <div class="row"><button class="btn" data-go="library">Choose a patient</button></div>`;
+    return;
+  }
+  const byCase = {};
+  all.forEach(e => { (byCase[e.caseName] = byCase[e.caseName] || []).push(e); });
+  const missed = {};
+  all.forEach(e => {
+    const c = app.cases.find(x => x.id === e.caseId);
+    if (!c) return;
+    c.questions.forEach(q => {
+      if (!e.coveredIds.includes(q.id)) missed[q.label] = (missed[q.label] || 0) + 1;
+    });
+  });
+  const top = Object.entries(missed).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+  box.innerHTML = `
+    ${top.length ? `<div class="pane" style="margin-bottom:18px">
+      <p class="lab">Most often not asked</p>
+      ${top.map(([l, n]) => `<p style="margin:0 0 6px">${esc(l)} <span class="pill f">${n}&times;</span></p>`).join("")}
+    </div>` : ""}
+    <div class="boxed"><table class="hist">
+      <tr><th>When</th><th>Case</th><th>Questions</th><th>Result</th><th></th></tr>
+      ${all.map((e, i) => `<tr class="row">
+        <td>${esc(e.at)}</td><td>${esc(e.caseName)}</td>
+        <td style="font-family:var(--mono);font-size:.88rem">${e.covered} of ${e.total}</td>
+        <td><span class="pill ${e.pass ? "p" : "f"}">${e.pass ? "PASS" : "FAIL"}</span></td>
+        <td><button class="go" data-i="${i}">Open<span class="sr"> the encounter with
+          ${esc(e.caseName)} on ${esc(e.at)}</span> &rsaquo;</button></td></tr>`).join("")}
+    </table></div>
+    <div class="row" style="margin-top:18px">
+      <button class="btn ghost" id="clearHist">Delete all encounters</button>
+    </div>`;
+
+  box.querySelectorAll("button.go").forEach(btn => {
+    const open = () => {
+      const e = all[+btn.dataset.i];
+      const c = app.cases.find(x => x.id === e.caseId) || rebuildCase(e);
+      showResult(e, c, true);
+    };
+    btn.onclick = open;
+    btn.closest("tr").onclick = ev => { if (ev.target.tagName !== "BUTTON") open(); };
+  });
+  const cl = $("#clearHist");
+  if (cl) cl.onclick = () => {
+    if (!confirm("Delete every saved encounter on this computer? This cannot be undone.")) return;
+    try { localStorage.removeItem(CFG.storeKey); } catch {}
+    drawHistory();
+  };
+}
+/* If a case file was removed after an encounter was saved, show what we still have. */
+function rebuildCase(e) {
+  return { id: e.caseId, name: e.caseName, questions: [], answer: {}, credit: e.credit || {} };
+}
+
+/* ============================================================
+   12. THE REPORT FOR A TUTOR
+   ============================================================ */
+$("#reportBtn").onclick = () => {
+  if (!app.viewing) return;
+  const { enc, c } = app.viewing;
+  const asked = [], other = [];
+  (c.questions || []).forEach(q => (enc.coveredIds.includes(q.id) ? asked : other).push(q.label));
+  const cr = enc.credit || {};
+  const L = [];
+  const line = s => L.push(s);
+  line("RECORD OF A PRACTICE ENCOUNTER");
+  line("");
+  line("Case           " + enc.caseName);
+  line("Source         " + [cr.authors, cr.journal, cr.year].filter(Boolean).join(". "));
+  if (cr.id) line("               " + cr.id + "  (" + (cr.licence || "") + ")");
+  line("Date           " + enc.at);
+  line("Model          " + (enc.model || "") + ", run offline on this computer");
+  line("");
+  line("RESULT         " + (enc.pass ? "PASS" : "FAIL"));
+  line("QUESTIONS      " + enc.covered + " of " + enc.total);
+  line("");
+  line("WHAT WENT WELL");
+  (asked.length ? asked : ["Nothing was recorded."]).forEach(a => line("  " + a));
+  line("");
+  line("WHAT TO WORK ON");
+  (other.length ? other : ["Every counted question was covered."]).forEach(a => line("  " + a));
+  if (!enc.pass && c.answer && c.answer.miss) { line(""); line("  " + wrap(c.answer.miss, 66, "  ")); }
+  line("");
+  line("AGREED NEXT STEP   (to complete with your tutor)");
+  line("  ..............................................................");
+  line("");
+  line("DIAGNOSES GIVEN");
+  (enc.dx.length ? enc.dx : ["none"]).forEach(d => line("  " + d));
+  line("TESTS GIVEN");
+  (enc.tx.length ? enc.tx : ["none"]).forEach(d => line("  " + d));
+  line("");
+  line("THE CASE AUTHORS' ANSWER");
+  if (c.answer && c.answer.top) line("  Most likely: " + c.answer.top);
+  if (c.answer && c.answer.also) line("  " + wrap("Also accepted: " + c.answer.also.join(", "), 66, "  "));
+  if (c.answer && c.answer.tests) line("  " + wrap("Tests: " + c.answer.tests.join(", "), 66, "  "));
+  line("");
+  line("LEARNER NOTES DURING THE ENCOUNTER");
+  (enc.notes || "none").split("\n").forEach(n => line("  " + n));
+  line("");
+  line("FULL TRANSCRIPT");
+  enc.transcript.forEach(t => {
+    const who = t.role === "doctor" ? "DOCTOR " : t.role === "patient" ? "PATIENT" : "EXAM   ";
+    line("  " + who + "  " + wrap(t.text, 60, "             "));
+  });
+  line("");
+  line("This is a practice encounter with a simulated patient. It is not a record of care");
+  line("and it involves no real person.");
+  line("");
+  if (cr.changes) { line("CHANGES MADE TO THE PUBLISHED CASE"); line("  " + wrap(cr.changes, 66, "  ")); line(""); }
+  line("Virtual Standardized Patient Simulator. Gembitsky I, 2026. MIT licence.");
+  line("github.com/igembitsky/virtual-standardized-patient");
+
+  const name = (enc.caseId || "encounter") + "-" + enc.at.replace(/[: ]/g, "-") + ".txt";
+  download(name, L.join("\n"));
+};
+function wrap(text, width, indent) {
+  const words = String(text).split(/\s+/);
+  const out = []; let cur = "";
+  words.forEach(w => {
+    if ((cur + " " + w).trim().length > width) { out.push(cur.trim()); cur = w; }
+    else cur += " " + w;
+  });
+  if (cur.trim()) out.push(cur.trim());
+  return out.join("\n" + indent);
+}
+function download(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+/* ============================================================
+   13. THE PROMPT FOR WRITING YOUR OWN CASE
+   ============================================================ */
+const AUTHOR_PROMPT = `Turn the clinical teaching case I paste below into a case file for an
+offline standardized patient simulator. Produce ONE plain text file in exactly
+this shape, and nothing else.
+
+[CASE]
+id: one-word-name
+name:
+age:
+occupation:
+setting:
+complaint:
+opening: the first line the patient says, word for word
+
+[VITALS]
+Pulse:
+Blood pressure:
+Breathing:
+Temperature: the number, then F or C
+abnormal: comma separated list of the readings above that are abnormal
+
+[TIMING]
+consultation: minutes with the patient
+note: minutes to write the note
+
+[TASK]
+one sentence telling the learner what to do
+
+[PERSONA]
+How the patient behaves, in a few lines. Their mood, and how long their answers are.
+The program already tells every patient how to handle medical jargon, requests to
+examine them, and open questions such as "anything else?". Do not repeat that here.
+
+[STORY]
+One line per fact, written as the patient would say it.
+Put (only if asked) at the front of any fact the patient must not volunteer.
+
+[EXAMINE]
+bodypart: the finding, in one line
+Use plain names: general, eyes, ears, nose, mouth, neck, chest, heart, abdomen, back, rectal, pelvic, arms, legs, skin, nails, neuro, gait, affect.
+otherwise: (optional) one line for any examination not listed above, for example on a video call
+Only include findings the source states. Invent nothing.
+
+[QUESTIONS]
+Short label of the question | four or five words that would appear in it
+One line per question the source says the learner should ask.
+A word matches the whole word only. End a word with * to match any ending,
+so aggravat* catches aggravated and aggravating.
+
+[ANSWER]
+most likely:
+also accepted: comma separated
+tests: comma separated
+pass diagnosis words: comma separated words that mean the learner got the right kind of diagnosis
+pass test words: comma separated words that mean they asked for the right kind of test
+teaching point: two or three sentences
+miss note: one sentence on the finding most people miss
+
+[CREDIT]
+authors:
+title:
+journal:
+year:
+id:
+url:
+licence:
+copyright:
+changes: what you changed when converting it
+
+Rules:
+Use only what is in the source. Invent no clinical detail.
+Keep the patient's own words wherever the source gives them.
+Plain English. Short lines. No markdown, no bold, no bullets.`;
+
+$("#copyPrompt").onclick = async e => {
+  try {
+    await navigator.clipboard.writeText(AUTHOR_PROMPT);
+    e.target.textContent = "Copied";
+    setTimeout(() => { e.target.textContent = "Copy the instructions"; }, 1600);
+  } catch {
+    e.target.textContent = "Select the text above and copy it";
+  }
+};
+
+/* ============================================================
+   14. START
+   ============================================================ */
+window.addEventListener("beforeunload", e => {
+  if (app.phase === "consult" || app.phase === "note") { e.preventDefault(); e.returnValue = ""; }
+});
+
+(async function boot() {
+  if (location.protocol === "file:") {
+    document.body.innerHTML =
+      `<div class="wrap narrow" style="padding-top:60px">
+         <h1>Start it with the launcher</h1>
+         <p class="lede">This page was opened straight from a file, and a browser will not let a
+         file talk to a program on your computer. Nothing here can work that way.</p>
+         <h3>What to do</h3>
+         <ul>
+           <li><b>macOS.</b> Double-click <code>start-mac.command</code></li>
+           <li><b>Windows.</b> Double-click <code>start-windows.bat</code></li>
+           <li><b>Linux.</b> Run <code>./start-linux.sh</code></li>
+         </ul>
+         <p>Your browser will open at <code>http://127.0.0.1:8756/</code>. Close this tab.</p>
+       </div>`;
+    return;
+  }
+  await loadCases();
+  const ok = await checkConnection();
+  // card and result need state that a reload has thrown away, so never restore them
+  const RESTORABLE = ["welcome", "library", "author", "history", "terms"];
+  const first = location.hash.replace("#", "");
+  go(RESTORABLE.includes(first) ? first : "welcome");
+  // keep checking, whether or not the first check worked, so a stopped Ollama is noticed
+  setInterval(async () => { if (app.phase === "idle") await checkConnection(); }, 8000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Virtual Standardized Patient
+Comment=Start the simulator in a terminal window, then open it in your browser
+Exec=sh -c 'p="${0#file://}"; cd "$(dirname "$p")" && exec ./start-linux.sh' %k
+Terminal=true
+Icon=utilities-terminal
+Categories=Education;Science;

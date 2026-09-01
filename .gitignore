@@ -1,0 +1,6 @@
+.DS_Store
+docs/evidence/
+*.log
+bench/results/
+.vscode/
+.playwright-cli/

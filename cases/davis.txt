@@ -1,0 +1,124 @@
+# Joanne Davis. Abnormal uterine bleeding. Endometrial hyperplasia or cancer.
+# A case file for the Virtual Standardized Patient Simulator.
+# Plain text. Edit it in any editor. Lines starting with # are ignored.
+
+[CASE]
+id: davis
+name: Joanne Davis
+age: 37
+occupation: Works at Wal-Mart
+setting: Outpatient clinic, new patient
+complaint: 6 month history of heavy vaginal bleeding
+opening: I bleed all the time.
+
+[VITALS]
+Blood pressure: 135 / 85
+Pulse: 80
+Breathing: 20
+Temperature: 98.6 F
+# Mark a reading abnormal by adding an asterisk at the end.
+abnormal: none
+
+[TIMING]
+consultation: 15
+note: 10
+
+[TASK]
+Take a problem focused history including an obstetric and gynaecologic history, examine her, then write a note with a prioritised differential and a proposed workup and management plan.
+
+[PERSONA]
+You are worried and hoping to be taken seriously. Your mood is not great, but you are not depressed.
+You are polite and you answer properly. Your answers are a few sentences long, longer when you talk
+about how the bleeding has wrecked your day to day life, because you have been holding this in.
+You know ordinary body words like uterus and ovary. You finished high school and no more.
+You are embarrassed about the bleeding but you say what is happening, because you want help.
+Never use bullet points. Speak like a tired working mother of three.
+You will not be examined below the waist unless the doctor asks for it.
+
+[STORY]
+Your periods have always been on the heavier side, especially since your last baby four years ago.
+They have got worse over the last six months.
+Some days you bleed through 6 super tampons and a super pad, a combination, in one day.
+It feels like you bleed every single day, like your period never stops.
+There are about 5 heavy days, but that seems to happen more than once a month.
+The other days of the month you need one regular pad for light bleeding or spotting.
+You are sure the blood is coming from your vagina.
+Sometimes there are clots. When you see clots you get worried.
+You bleed through your underwear and your pants.
+You are always afraid to stand up after sitting for a long time.
+You cannot really say when your last period was. It is hard to tell, because it never stops.
+Your periods used to be regular, every 28 days, lasting 5 or 6 days, heavy for the first 3.
+Your very first period was at age 10.
+Nothing that you can tell makes the bleeding worse.
+Motrin helps on the bad days when you have cramps.
+You get mild to moderate cramping low in your belly a few days a month, and it lines up with the heavy days.
+No pain or burning when you pass water. You do not go more often or in a hurry.
+Your poop has not changed with the bleeding. No diarrhoea, no constipation.
+No pain and no extra bleeding with sex.
+No discharge from the vagina apart from the blood.
+No fevers and no chills.
+You are not bothered by heat or cold. No changes in your skin, your hair or your nails. Your weight has not changed on its own.
+You take no prescription medicine. Only Motrin 600 mg when you need it, for the cramps. No herbs, no supplements.
+You have been pregnant 4 times. Three living children, aged 12, 7 and 4, all healthy. No miscarriages. One abortion.
+One of the babies came by cesarean because he was breech. The other two were normal births.
+You had a D and C in the first three months of a pregnancy, an abortion you chose.
+You have never had any other illness, no injuries, and you have only been in hospital to have the babies.
+You had one abnormal Pap smear back in 2005, and they have all been fine since. Last year's Pap was normal and the extra test for HPV was negative.
+You had chlamydia as a teenager.
+You have not gone through the change. Your mother went through it at about 53.
+You have sex with your husband, vaginal and oral. You do reach orgasm. He is your only partner now and you have had 3 men in your life.
+You use nothing for protection. Say "It's just me and my husband."
+You have never used hormone birth control, only condoms.
+Nobody hurts you at home. There is no violence and there has been no sexual abuse.
+Your shots are up to date. You had your flu shot this year, and you have had tetanus and hepatitis.
+You have never smoked. You drink 1 or 2 glasses of wine a month on special occasions, and have done for 15 years. No drugs, ever.
+(only if asked) Every question about drinking too much is a no. Drink has never been a problem for you.
+You eat fast food a lot. You try to put vegetables in but you don't really like them. You get no exercise.
+Your father is 60, with diabetes and high blood pressure. Your mother is 62, with diabetes. Your sibling is 40, with high blood pressure. The children are healthy.
+You live with your husband and the three children in a rented two bedroom house. You work at Wal-Mart. You have insurance through your husband's work.
+Money is tight but there is no crisis right now.
+The bleeding is really bothersome. It seems like so much sometimes. You worry it may be something serious.
+It has knocked your confidence, your sex life and your day to day life, especially at work. Say "I'm constantly worrying, am I going to bleed through another pair of underwear or pants today?"
+Say "I'll be happy when this is all behind me."
+(only if asked) If the doctor asks about your sex life, say "My husband doesn't want to have sex with me because I am bleeding all the time. He's grossed out by it; I don't blame him, but it makes me feel bad."
+
+[EXAMINE]
+general: Well appearing woman sitting up, in no distress, but anxious and worried. Body mass index 40.
+pelvic: The doctor must ask for this examination. Normal external genitalia. Blood in the vault and some blood at the external os. The uterus is anteverted and slightly enlarged, but the examination is limited by her body habitus. No masses beside the uterus.
+
+[QUESTIONS]
+Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
+Where the bleeding is coming from | vagina*, where, coming from, source, front, back passage, bladder
+How heavy the bleeding is | how many pads, how many tampons, pad*, tampon*, soak*, heavy, through, clot*, flood*
+When it started and how it has changed | start*, began, begin, when did, how long, getting worse, chang*, first notic*
+Last menstrual period | last period, lmp, last menstrual, when was your last, last bleed
+Pattern and length of the periods | regular, irregular, cycle, how often, every, how many days, last for, in between, between period*
+Age of the first period | menarche, first period, how old were you, started your periods
+Associated symptoms | discharge, urin*, burning, pass water, bowel*, poo, stool*, diarrh*, constipat*, pain with sex, bleeding after sex
+What makes it better or worse | better, worse, helps, help the, reliev*, motrin, ibuprofen, aggravat*, taken anything
+Medicines | medicat*, medicine*, tablet*, pill*, taking anything, over the counter, birth control, hormone*
+Obstetric history | pregnan*, children, kids, births, deliver*, cesarean, c-section, miscarriage*, abortion*, gravida, para
+Gynaecologic history | pap, smear, cervical, sti*, std*, infection*, chlamydia, gonorrh*, fibroid*, gynae*, gyn
+Sexual history | sex, sexual, partner*, intercourse, condom*, contracept*, protection
+Past medical and family history | past medical, illness*, operation*, surger*, thyroid, diabet*, bleeding disorder, brui*, family, mother, father, run* in the family
+Review of systems | weight, fever*, chill*, tired*, hair, skin, nail*, cold, heat, appetite
+
+[ANSWER]
+most likely: Endometrial hyperplasia or endometrial cancer
+also accepted: uterine polyp, uterine leiomyoma, fibroids, adenomyosis, ovulatory dysfunction, coagulation disorder
+tests: pelvic examination, pregnancy test (bHCG), full blood count, TSH, FSH, coagulation studies (PT, PTT, INR), pelvic ultrasound, endometrial biopsy
+pass diagnosis words: hyperplasia, cancer*, malignan*, carcinoma, endometrial hyperplasia, endometrial cancer
+pass test words: biopsy, endometrial biopsy, ultrasound, ultrasonograph*, sonogram*, transvaginal
+teaching point: The menstrual history is what narrows this. She is not simply having heavy periods. She is bleeding between them, near enough every day for six months, with clots. Add her age over 35, a body mass index of 40, her first period at 10, and no hormone birth control ever, and the endometrium is where you look. The uterus is slightly enlarged, though the examination is limited by her size. The work up is a pelvic examination, a pregnancy test, blood count, thyroid test, clotting studies, a pelvic ultrasound and an endometrial biopsy.
+miss note: The menstrual history was the one worth having. Ask when the last period was and how the bleeding sits against the cycle. Bleeding between periods, every day, is a different problem from heavy periods, and it is what points at the lining of the womb rather than at fibroids alone.
+
+[CREDIT]
+authors: Adkins LD, Harris BS, Gesher C, Reynolds T, Branford K, Baldwin M, Dotters-Katz S
+title: Understanding Patient Evaluation of Abnormal Uterine Bleeding (AUB): A Standardized Patient Case on AUB for OB/GYN Clerkship Students
+journal: MedEdPORTAL
+year: 2022
+id: doi:10.15766/mep_2374-8265.11216
+url: https://www.mededportal.org/doi/10.15766/mep_2374-8265.11216
+licence: Creative Commons Attribution (CC BY)
+copyright: Copyright 2022 Adkins et al.
+changes: The standardized patient training script was rewritten as instructions for a language model. The physical examination is served from this file rather than performed by touch. The published vitals give the temperature as 98.6C, an obvious unit slip, and it is written here as 98.6 F. All spoken lines are the authors' own.
