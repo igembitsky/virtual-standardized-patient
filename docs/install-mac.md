@@ -39,7 +39,7 @@ Ollama is the free program that runs the AI model on your computer.
 2. Press **Choose a patient**. Eight patients are listed.
 3. Choose a patient and ask a question. The patient answers.
 
-You can now turn off Wi-Fi and use the simulator offline. Nothing leaves this computer.
+You can now turn off Wi-Fi and use the simulator offline.
 
 ## Every time after this
 
