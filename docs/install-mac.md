@@ -30,9 +30,11 @@ Ollama is the free program that runs the AI model on your computer.
 2. Double-click `start-mac.command`.
 3. The first time, macOS may block the file. See [If macOS blocks the file](#if-macos-blocks-the-file).
 4. A Terminal window opens. Leave it open.
-5. The first time, the window downloads the patient model. It shows the percentage. Wait for
+5. macOS may ask if Terminal can access files in your Desktop folder. Press **Allow**.
+   See [If Terminal asks for folder access](#if-terminal-asks-for-folder-access).
+6. The first time, the window downloads the patient model. It shows the percentage. Wait for
    **Download complete**.
-6. Your browser opens the simulator at `http://127.0.0.1:8756/`.
+7. Your browser opens the simulator at `http://127.0.0.1:8756/`.
 
 ### If macOS blocks the file
 
@@ -51,6 +53,23 @@ macOS checks every file downloaded from the internet. This happens once.
 1. Right-click `start-mac.command`. On a trackpad, click with two fingers.
 2. Choose **Open**.
 3. Press **Open** again.
+
+### If Terminal asks for folder access
+
+The simulator files are in a folder on your Desktop. Terminal needs permission to read them.
+macOS asks once.
+
+![Terminal would like to access files in your Desktop folder](screenshots/terminal-folder-access.png)
+
+1. Press **Allow**.
+
+If you pressed **Don't Allow** by mistake:
+
+1. Open **System Settings**.
+2. Press **Privacy & Security**.
+3. Press **Files and Folders**.
+4. Under **Terminal**, turn on **Desktop Folder**.
+5. Double-click `start-mac.command` again.
 
 ## 4. Check it works
 
@@ -72,6 +91,7 @@ to the Desktop.
 | What you see | What to do |
 |---|---|
 | "Apple could not verify" or "unidentified developer" | See [If macOS blocks the file](#if-macos-blocks-the-file) |
+| "Terminal would like to access files in your Desktop folder" | Press **Allow**. See [If Terminal asks for folder access](#if-terminal-asks-for-folder-access) |
 | "You do not have appropriate access privileges" | Open Terminal. Type `chmod +x ` with a space after it. Drag `start-mac.command` into the window. Press Enter. Double-click the file again |
 | "Ollama is not installed" in the window | Do step 1 again. Open Ollama once. Double-click the launcher again |
 | The download stopped before 100% | Close the window. Double-click the launcher again. It continues from where it stopped |
