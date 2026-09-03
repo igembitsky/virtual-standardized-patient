@@ -26,12 +26,12 @@ Ollama is the free program that runs the AI model on your computer.
 
 1. Open the folder on your Desktop.
 2. Double-click `start-mac.command`.
+   If macOS says it could not verify the file, follow [If macOS blocks the file](#if-macos-blocks-the-file).
 3. A Terminal window opens. Leave it open.
-4. The first time, the window downloads the patient model. Wait for **Download complete**.
-5. Your browser opens the simulator.
-
-If macOS shows a message, see [If macOS blocks the file](#if-macos-blocks-the-file) or
-[If Terminal asks for folder access](#if-terminal-asks-for-folder-access).
+4. If Terminal asks to access files in your Desktop folder, press **Allow**.
+   Pressed **Don't Allow**? See [If you pressed Don't Allow by mistake](#if-you-pressed-dont-allow-by-mistake).
+5. The first time, the window downloads the patient model. Wait for **Download complete**.
+6. Your browser opens the simulator.
 
 ## 4. Check it works
 
@@ -68,13 +68,13 @@ The message says Apple could not verify the file. This happens once.
 2. Choose **Open**.
 3. Press **Open** again.
 
-### If Terminal asks for folder access
+### If you pressed Don't Allow by mistake
+
+Terminal needs to read the simulator files on your Desktop. The pop-up looks like this:
 
 <img src="screenshots/terminal-folder-access.png" width="260" alt="Terminal would like to access files in your Desktop folder">
 
-Press **Allow**.
-
-If you pressed **Don't Allow** by mistake:
+To give the permission again:
 
 1. Open **System Settings**.
 2. Press **Privacy & Security**.
