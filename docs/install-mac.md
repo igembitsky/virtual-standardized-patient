@@ -39,6 +39,8 @@ Ollama is the free program that runs the AI model on your computer.
 2. Press **Choose a patient**. Eight patients are listed.
 3. Choose a patient and ask a question. The patient answers.
 
+You can now turn off Wi-Fi and use the simulator offline. Nothing leaves this computer.
+
 ## Every time after this
 
 1. Open the folder. Double-click `start-mac.command`.
@@ -100,10 +102,9 @@ Open your browser and go to `http://127.0.0.1:8756/`.
 | "Ollama is not installed" | Do step 1 again. Open Ollama once. Double-click `start-mac.command` again. |
 | "You do not have appropriate access privileges" | Open Terminal. Type `chmod +x ` with a space after it. Drag `start-mac.command` into the window. Press Enter. Double-click the file again. |
 
-### Extras
+### Add a shortcut
 
-- **Check it is offline.** Turn off Wi-Fi and ask a patient a question. The patient still answers. The line beside the green dot reads `nothing leaves this computer`.
-- **Add a shortcut.** Right-click `start-mac.command`, choose **Make Alias**, and drag the alias to the Desktop.
+Right-click `start-mac.command`, choose **Make Alias**, and drag the alias to the Desktop.
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 
