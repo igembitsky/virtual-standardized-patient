@@ -48,8 +48,9 @@ If macOS shows a message, see [If macOS blocks the file](#if-macos-blocks-the-fi
 
 ## If something happens
 
-<details>
-<summary><b>If macOS blocks the file</b></summary>
+You only need this part if a step above did not work.
+
+### If macOS blocks the file
 
 The message says Apple could not verify the file. This happens once.
 
@@ -67,10 +68,7 @@ The message says Apple could not verify the file. This happens once.
 2. Choose **Open**.
 3. Press **Open** again.
 
-</details>
-
-<details>
-<summary><b>If Terminal asks for folder access</b></summary>
+### If Terminal asks for folder access
 
 <img src="screenshots/terminal-folder-access.png" width="260" alt="Terminal would like to access files in your Desktop folder">
 
@@ -84,42 +82,28 @@ If you pressed **Don't Allow** by mistake:
 4. Under **Terminal**, turn on **Desktop Folder**.
 5. Double-click `start-mac.command` again.
 
-</details>
-
-<details>
-<summary><b>If the download stops or does not start</b></summary>
+### If the download stops or does not start
 
 1. Close the Terminal window.
 2. Double-click `start-mac.command` again. The download continues from where it stopped.
 
 If the download still does not start, open Terminal and type `ollama pull qwen3:4b-instruct`. Press Enter. Wait for `success`.
 
-</details>
-
-<details>
-<summary><b>If the browser does not open</b></summary>
+### If the browser does not open
 
 Open your browser and go to `http://127.0.0.1:8756/`.
 
-</details>
-
-<details>
-<summary><b>Other messages</b></summary>
+### Other messages
 
 | What you see | What to do |
 |---|---|
 | "Ollama is not installed" | Do step 1 again. Open Ollama once. Double-click `start-mac.command` again. |
 | "You do not have appropriate access privileges" | Open Terminal. Type `chmod +x ` with a space after it. Drag `start-mac.command` into the window. Press Enter. Double-click the file again. |
 
-</details>
-
-<details>
-<summary><b>Extras</b></summary>
+### Extras
 
 - **Check it is offline.** Turn off Wi-Fi and ask a patient a question. The patient still answers. The line beside the green dot reads `nothing leaves this computer`.
 - **Add a shortcut.** Right-click `start-mac.command`, choose **Make Alias**, and drag the alias to the Desktop.
-
-</details>
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 
