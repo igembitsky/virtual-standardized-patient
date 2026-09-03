@@ -46,7 +46,7 @@ Ollama is the free program that runs the AI model on your computer.
 
 ---
 
-## If something happens
+## Troubleshooting
 
 You only need this part if a step above did not work.
 
