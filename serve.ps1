@@ -11,6 +11,8 @@ $root   = (Get-Location).Path
 $port   = 8756
 $ollama = 'http://127.0.0.1:11434'
 $model  = 'qwen3:4b-instruct'
+# Where "Update" in the page gets the new files. VSP_ZIP overrides it for testing.
+$zipUrl = if ($env:VSP_ZIP) { $env:VSP_ZIP } else { 'https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip' }
 # Any one of these is enough. The page picks the first it recognises.
 $known  = '^(qwen3:4b-instruct|qwen3:4b|llama3\.1:8b|granite4\.1:3b)(:|$)'
 $types  = @{
@@ -23,6 +25,31 @@ $types  = @{
 function Get-Tags {
   try { Invoke-RestMethod -Uri "$ollama/api/tags" -TimeoutSec 3 -ErrorAction Stop } catch { $null }
 }
+# Download the ZIP, unpack it beside this folder, check it is complete, then copy it over
+# this folder. The old files stay until the whole ZIP has arrived and been checked.
+function Invoke-Update {
+  $tmp = Join-Path $root '.update-tmp'
+  try {
+    if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
+    New-Item -ItemType Directory -Path $tmp | Out-Null
+    $zip = Join-Path $tmp 'latest.zip'
+    Invoke-WebRequest -Uri $zipUrl -OutFile $zip -TimeoutSec 60 -UseBasicParsing -ErrorAction Stop
+    if (-not (Test-Path $zip) -or (Get-Item $zip).Length -eq 0) { return @{ ok = $false; error = 'the download did not finish' } }
+    Expand-Archive -Path $zip -DestinationPath $tmp -Force -ErrorAction Stop
+    $src = Get-ChildItem -Path $tmp -Directory | Select-Object -First 1
+    if (-not $src -or -not (Test-Path (Join-Path $src.FullName 'index.html')) -or
+        -not (Test-Path (Join-Path $src.FullName 'VERSION')) -or
+        -not (Test-Path (Join-Path $src.FullName 'cases'))) { return @{ ok = $false; error = 'the download was incomplete' } }
+    Copy-Item -Path (Join-Path $src.FullName '*') -Destination $root -Recurse -Force -ErrorAction Stop
+    $ver = (Get-Content (Join-Path $root 'VERSION') -Raw).Trim()
+    return @{ ok = $true; version = $ver }
+  } catch {
+    return @{ ok = $false; error = ($_.Exception.Message -replace '["\\]', '') }
+  } finally {
+    Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue   # leave no temporary folder behind
+  }
+}
+
 function Test-Model($tags) {
   if (-not $tags) { return $false }
   foreach ($m in @($tags.models)) { if ($m.name -match $known) { return $true } }
@@ -114,12 +141,29 @@ while ($true) {
     $line = $reader.ReadLine()
     if (-not $line) { $client.Close(); continue }
 
+    $method = ($line -split ' ')[0]
     $path = ($line -split ' ')[1]
     $path = ($path -split '\?')[0]
     $path = [System.Uri]::UnescapeDataString($path)
     if ($path -eq '/') { $path = '/index.html' }
 
     $writer = New-Object System.IO.BinaryWriter($stream)
+
+    # GET /update says this launcher can update. POST /update does it.
+    if ($path -eq '/update') {
+      if ($method -eq 'POST') {
+        $r = Invoke-Update
+        $json = if ($r.ok) { "{`"ok`":true,`"version`":`"$($r.version)`"}" } else { "{`"ok`":false,`"error`":`"$($r.error)`"}" }
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($json)
+        $head  = "HTTP/1.0 200 OK`r`nContent-Type: application/json`r`nContent-Length: $($bytes.Length)`r`nCache-Control: no-store`r`n`r`n"
+      } else {
+        $bytes = [System.Text.Encoding]::ASCII.GetBytes('can')
+        $head  = "HTTP/1.0 200 OK`r`nContent-Type: text/plain`r`nContent-Length: $($bytes.Length)`r`nCache-Control: no-store`r`n`r`n"
+      }
+      $writer.Write([System.Text.Encoding]::ASCII.GetBytes($head))
+      $writer.Write($bytes)
+      $writer.Flush(); $client.Close(); continue
+    }
 
     if ($path -eq '/cases' -or $path -eq '/cases/') {
       $names = @()

@@ -46,6 +46,19 @@ You can now turn off Wi-Fi and use the simulator offline.
 1. Open the folder. Double-click `start-mac.command`.
 2. To stop, close the Terminal window.
 
+## Updates
+
+When a new version exists, the top of the page shows **New version** and an **Update** button.
+
+1. Press **Update**. It takes about 10 seconds.
+2. The page reloads by itself. Your notes and your history stay.
+
+If the page shows a download link instead of a button, your copy is from before updates
+existed. Download the ZIP from the link, and replace the folder as in step 2. After that,
+the button appears.
+
+The version you have is at the bottom of the page.
+
 ---
 
 ## Troubleshooting

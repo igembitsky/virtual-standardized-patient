@@ -60,6 +60,9 @@ echo "Starting on http://127.0.0.1:8756 ..."
 exec /usr/bin/perl -x "$0"
 #!/usr/bin/perl
 use strict; use warnings; use IO::Socket::INET; use IO::Select; use Cwd 'abs_path';
+use File::Path qw(rmtree);
+# Where "Update" in the page gets the new files. VSP_ZIP overrides it for testing.
+my $ZIP = $ENV{VSP_ZIP} || 'https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip';
 my %T = (html=>'text/html; charset=utf-8', js=>'application/javascript',
          css=>'text/css', json=>'application/json', txt=>'text/plain; charset=utf-8',
          png=>'image/png', jpg=>'image/jpeg', jpeg=>'image/jpeg', svg=>'image/svg+xml',
@@ -82,10 +85,27 @@ while (my $c = $srv->accept) {
   my $req = <$c>;
   unless (defined $req) { close $c; exit 0 }
   while (my $h = <$c>) { last if $h =~ /^\r?\n$/ }   # buffered, so no select here
-  my ($path) = $req =~ m{^GET\s+(\S+)\s+HTTP} ? ($1) : ('/');
+  my ($method, $path) = $req =~ m{^(GET|POST)\s+(\S+)\s+HTTP} ? ($1, $2) : ('GET', '/');
   $path =~ s/\?.*$//;
   $path =~ s{%([0-9A-Fa-f]{2})}{chr(hex($1))}ge;
   $path = '/index.html' if $path eq '/';
+
+  # GET /update says this launcher can update. POST /update does it: download the ZIP,
+  # unpack it beside this folder, check it is complete, then copy it over this folder.
+  # The old files stay until the whole ZIP has arrived and been checked.
+  if ($path eq '/update') {
+    my $body;
+    if ($method eq 'GET') { $body = "can" }
+    else {
+      my ($ok, $msg) = do_update();
+      $msg =~ s/["\\]//g;
+      $body = $ok ? "{\"ok\":true,\"version\":\"$msg\"}" : "{\"ok\":false,\"error\":\"$msg\"}";
+    }
+    my $type = $method eq 'GET' ? 'text/plain' : 'application/json';
+    print $c "HTTP/1.0 200 OK\r\nContent-Type: $type\r\nContent-Length: " . length($body)
+           . "\r\nCache-Control: no-store\r\n\r\n$body";
+    close $c; exit 0;
+  }
 
   # a JSON listing of the cases folder, so new case files just appear
   if ($path eq '/cases/' or $path eq '/cases') {
@@ -112,4 +132,27 @@ while (my $c = $srv->accept) {
   print $c $body;
   close $c;
   exit 0;
+}
+
+sub do_update {
+  my @r = update_files();
+  rmtree("$root/.update-tmp");      # whatever happened, leave no temporary folder behind
+  return @r;
+}
+sub update_files {
+  my $tmp = "$root/.update-tmp";
+  rmtree($tmp); mkdir $tmp or return (0, "could not make a temporary folder");
+  my $zip = "$tmp/latest.zip";
+  system('curl', '-sL', '-m', '60', '-o', $zip, $ZIP);
+  (-s $zip) or return (0, "the download did not finish");
+  system('tar', '-xf', $zip, '-C', $tmp) == 0 or return (0, "could not unpack the download");
+  opendir(my $dh, $tmp) or return (0, "could not read the download");
+  my ($src) = map { "$tmp/$_" } grep { !/^\./ && -d "$tmp/$_" } readdir($dh);
+  closedir $dh;
+  ($src && -f "$src/index.html" && -f "$src/VERSION" && -d "$src/cases")
+    or return (0, "the download was incomplete");
+  system('cp', '-R', "$src/.", "$root/") == 0 or return (0, "could not copy the new files");
+  open my $vf, '<', "$root/VERSION" or return (0, "could not read the new version");
+  my $ver = <$vf>; close $vf; $ver =~ s/\s+//g;
+  return (1, $ver);
 }

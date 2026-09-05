@@ -61,6 +61,22 @@ h1[tabindex="-1"]:focus,.back[tabindex="-1"]:focus{outline:none}
 .dot.bad{background:#c0392b}
 .top .status{font-size:.85rem;color:var(--muted)}
 .top .grow{flex:1}
+/* the update notice in the header */
+.upd{display:inline-flex;align-items:center;padding:5px 6px 5px 12px;border-radius:999px;
+  font-size:.82rem;line-height:1.2;white-space:nowrap;border:1px solid transparent}
+.upd.new,.upd.old{background:var(--amber-soft);color:var(--amber);
+  border-color:color-mix(in srgb,var(--amber) 30%,transparent)}
+.upd.old{padding-right:12px}
+.upd.busy{background:var(--sunk);color:var(--muted)}
+.upd.done{background:var(--green-soft);color:var(--green-ink)}
+.upd.fail{background:var(--amber-soft);color:#c0392b;padding-right:12px}
+.upd b{font-weight:600}
+.upd a{color:inherit;font-weight:600}
+.upd button{margin-left:10px;font:inherit;font-size:.8rem;font-weight:600;border:0;border-radius:999px;
+  padding:4px 11px;cursor:pointer;background:var(--amber);color:var(--btn-ink)}
+.upd button.x{background:none;color:inherit;padding:2px 6px;font-weight:400;opacity:.7;margin-left:2px}
+.upd .spin{margin-right:8px;width:11px;height:11px;border:2px solid var(--muted);border-top-color:transparent;
+  border-radius:50%;animation:sp .7s linear infinite;flex:0 0 auto}
 .clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1rem;
   color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;
   padding:4px 12px}
@@ -353,6 +369,7 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
   <span class="brand">Virtual Standardized Patient</span>
   <span class="status" id="status" role="status" aria-live="polite">starting…</span>
   <span class="grow"></span>
+  <span class="upd hide" id="upd" role="status" aria-live="polite"></span>
   <span class="clock hide" id="clock" role="timer" aria-live="off" aria-label="Time remaining">00:00</span>
   <span class="sr" id="announce" role="status" aria-live="assertive"></span>
   <button class="btn ghost small hide" id="quit">Finish and write my note</button>
@@ -702,7 +719,7 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
 </main>
 
 <footer class="wrap foot" id="foot">
-  <span class="who">Built by <a href="https://www.linkedin.com/in/gembitsky" target="_blank" rel="noopener">Igor Gembitsky</a>, 2026. Free and open source.</span>
+  <span class="who">Built by <a href="https://www.linkedin.com/in/gembitsky" target="_blank" rel="noopener">Igor Gembitsky</a>, 2026. Free and open source. Version <span id="ver"></span>.</span>
   <span class="grow" style="flex:1"></span>
   <a href="#" data-go="terms">Terms of use</a>
   <a href="https://github.com/igembitsky/virtual-standardized-patient" target="_blank" rel="noopener">Source code</a>
@@ -725,7 +742,12 @@ const CFG = {
   ollama: "http://127.0.0.1:11434",
   model: "qwen3:4b-instruct",
   fallbackModels: ["qwen3:4b-instruct", "qwen3:4b", "llama3.1:8b", "granite4.1:3b"],
-  storeKey: "vsp.encounters.v1"
+  storeKey: "vsp.encounters.v1",
+  // Updates. The page asks GitHub for VERSION once at start, one small text file, nothing sent.
+  // The launcher does the actual update, from the ZIP, when the Update button is pressed.
+  version: "1.1",
+  versionUrl: "https://raw.githubusercontent.com/igembitsky/virtual-standardized-patient/main/VERSION",
+  zipUrl: "https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip"
 };
 
 const $  = s => document.querySelector(s);
@@ -741,6 +763,7 @@ const app = {
   messages: [],       // model conversation
   visible: [],        // {role, text} for transcript and report
   covered: new Set(), // question ids the learner has asked
+  upd: null,          // update notice state: new, old, busy, done, fail, or null
   notes: "",
   phase: "idle",      // idle | consult | note
   timer: null,
@@ -923,6 +946,64 @@ async function checkConnection() {
     return false;
   }
 }
+/* ---- updates ------------------------------------------------------------
+   One request to GitHub for VERSION, 3 second limit, nothing sent. A newer number
+   shows a notice in the header. Update asks the launcher, POST /update, to fetch the
+   ZIP and replace the files. A launcher from before this feature answers 404, so the
+   notice shows a download link instead. Offline, nothing shows. */
+function cmpVersion(a, b) {
+  const A = a.split(".").map(Number), B = b.split(".").map(Number);
+  for (let i = 0; i < Math.max(A.length, B.length); i++) { const d = (A[i] || 0) - (B[i] || 0); if (d) return d; }
+  return 0;
+}
+async function checkForUpdate() {
+  if (location.protocol === "file:") return;
+  let latest = "";
+  try {
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 3000);
+    const r = await fetch(CFG.versionUrl, { cache: "no-store", signal: ctl.signal });
+    clearTimeout(t);
+    if (r.ok) latest = (await r.text()).trim();
+  } catch { return; }
+  if (!/^\d+(\.\d+)*$/.test(latest) || cmpVersion(latest, CFG.version) <= 0) return;
+  let can = false;
+  try { const r = await fetch("/update", { cache: "no-store" }); can = r.ok && (await r.text()).trim() === "can"; } catch {}
+  showUpdate(can ? "new" : "old", latest);
+}
+function showUpdate(state, v) {
+  app.upd = state;
+  const el = $("#upd"), V = esc(v), dl = `<a href="${CFG.zipUrl}" target="_blank" rel="noopener">Download it from GitHub</a>`;
+  el.className = "upd " + state;
+  el.innerHTML =
+    state === "new"  ? `<span>New version <b>${V}</b></span><button type="button" id="updGo">Update</button><button type="button" class="x" id="updX" aria-label="Not now">&times;</button>` :
+    state === "old"  ? `<span>New version <b>${V}</b>. ${dl}</span>` :
+    state === "busy" ? `<span class="spin"></span><span>Updating, about 10 seconds</span>` :
+    state === "done" ? `<span>Updated to <b>${V}</b>. Reloading…</span>` :
+                       `<span>Could not update. ${dl}</span>`;
+  if (state === "new") {
+    $("#updGo").onclick = () => runUpdate(v);
+    $("#updX").onclick = () => { app.upd = null; drawUpdate(); };
+  }
+  drawUpdate();
+}
+function drawUpdate() {
+  const busy = !$("#s-consult").classList.contains("hide") || !$("#s-note").classList.contains("hide");
+  $("#upd").classList.toggle("hide", !app.upd || busy);
+}
+async function runUpdate(v) {
+  showUpdate("busy", v);
+  try {
+    const r = await fetch("/update", { method: "POST" });
+    const j = await r.json();
+    if (!r.ok || !j.ok) throw new Error(j.error || "update failed");
+    showUpdate("done", j.version || v);
+    setTimeout(() => location.reload(), 2000);
+  } catch (e) {
+    console.warn("update:", e);
+    showUpdate("fail", v);
+  }
+}
+
 function setStatus(kind, text) {
   const ready = kind === "ok";
   const sb = $("#startBtn"), note = $("#startBlocked");
@@ -989,6 +1070,7 @@ function go(name) {
   if (heading) { heading.setAttribute("tabindex", "-1"); heading.focus({ preventScroll: true }); }
   if (name === "library") drawLibrary();
   if (name === "history") drawHistory();
+  drawUpdate();
   if (name === "author") $("#authorPrompt").textContent = AUTHOR_PROMPT;
   location.hash = name;
 }
@@ -1878,7 +1960,9 @@ window.addEventListener("beforeunload", e => {
     return;
   }
   await loadCases();
+  $("#ver").textContent = CFG.version;
   const ok = await checkConnection();
+  checkForUpdate();
   // card and result need state that a reload has thrown away, so never restore them
   const RESTORABLE = ["welcome", "library", "author", "history", "terms"];
   const first = location.hash.replace("#", "");

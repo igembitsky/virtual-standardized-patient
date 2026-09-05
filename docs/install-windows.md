@@ -56,6 +56,19 @@ Windows checks every file downloaded from the internet. This happens once.
 1. Open the folder. Double-click `start-windows.bat`.
 2. To stop, close the black window.
 
+## Updates
+
+When a new version exists, the top of the page shows **New version** and an **Update** button.
+
+1. Press **Update**. It takes about 10 seconds.
+2. The page reloads by itself. Your notes and your history stay.
+
+If the page shows a download link instead of a button, your copy is from before updates
+existed. Download the ZIP from the link, and replace the folder as in step 2. After that,
+the button appears.
+
+The version you have is at the bottom of the page.
+
 To add a shortcut: right-click `start-windows.bat`, choose **Show more options**, then
 **Send to**, then **Desktop (create shortcut)**.
 

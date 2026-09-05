@@ -14,12 +14,14 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 exec python3 - "$@" <<'PY'
 import http.server, socketserver, os, json, re, shutil, subprocess, sys, threading, time
-import urllib.request, urllib.parse, webbrowser
+import urllib.request, urllib.parse, webbrowser, zipfile
 
 ROOT   = os.getcwd()
 PORT   = 8756
 OLLAMA = "http://127.0.0.1:11434"
 MODEL  = "qwen3:4b-instruct"
+# Where "Update" in the page gets the new files. VSP_ZIP overrides it for testing.
+ZIP    = os.environ.get("VSP_ZIP") or "https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip"
 # Any one of these is enough. The page picks the first it recognises.
 KNOWN  = re.compile(r"^(qwen3:4b-instruct|qwen3:4b|llama3\.1:8b|granite4\.1:3b)(:|$)")
 
@@ -77,10 +79,57 @@ elif t:
         print("\n  The model is still missing. Check your internet connection and run this again,")
         print(f"  or open a terminal and run:  ollama pull {MODEL}\n")
 
+def do_update():
+    """Download the ZIP, unpack it beside this folder, check it is complete, then copy it
+    over this folder. The old files stay until the whole ZIP has arrived and been checked."""
+    tmp = os.path.join(ROOT, ".update-tmp")
+    try:
+        shutil.rmtree(tmp, ignore_errors=True)
+        os.makedirs(tmp)
+        zpath = os.path.join(tmp, "latest.zip")
+        with urllib.request.urlopen(ZIP, timeout=60) as r, open(zpath, "wb") as f:
+            shutil.copyfileobj(r, f)
+        if os.path.getsize(zpath) == 0:
+            return {"ok": False, "error": "the download did not finish"}
+        with zipfile.ZipFile(zpath) as z:
+            z.extractall(tmp)
+        dirs = [d for d in os.listdir(tmp) if os.path.isdir(os.path.join(tmp, d))]
+        src = os.path.join(tmp, dirs[0]) if dirs else None
+        if not src or not all(os.path.exists(os.path.join(src, x)) for x in ("index.html", "VERSION", "cases")):
+            return {"ok": False, "error": "the download was incomplete"}
+        shutil.copytree(src, ROOT, dirs_exist_ok=True)
+        with open(os.path.join(ROOT, "VERSION")) as f:
+            ver = f.read().strip()
+        return {"ok": True, "version": ver}
+    except Exception as e:
+        return {"ok": False, "error": re.sub(r'["\\]', "", str(e))}
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)   # whatever happened, leave no temporary folder behind
+
 # 3. Serve, and open the browser
 class H(http.server.SimpleHTTPRequestHandler):
+    def send_json(self, obj):
+        body = json.dumps(obj).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+    def do_POST(self):
+        path = urllib.parse.urlparse(self.path).path
+        if path == "/update":
+            return self.send_json(do_update())
+        self.send_error(404)
     def do_GET(self):
         path = urllib.parse.urlparse(self.path).path
+        if path == "/update":     # says this launcher can update; POST does it
+            body = b"can"
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         if path in ("/cases", "/cases/"):
             try:
                 names = sorted(f for f in os.listdir(os.path.join(ROOT, "cases"))
