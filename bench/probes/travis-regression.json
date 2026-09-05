@@ -1,0 +1,30 @@
+[
+ {
+  "kind": "lay_medical",
+  "text": "Do you take any regular medications, especially aspirin or anti-inflammatory painkillers like ibuprofen?",
+  "expect": "ibuprofen",
+  "key": true
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Have you ever had episodes like this before, or been told you have gallstones?",
+  "key": true
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Does sitting up and leaning forward ease the pain at all, compared to lying flat?",
+  "expect": "still|nothing|worse",
+  "key": true
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Have your stools been black at all?",
+  "expect": "black",
+  "key": true
+ },
+ {
+  "kind": "exam",
+  "text": "Can I press on your stomach?",
+  "key": true
+ }
+]

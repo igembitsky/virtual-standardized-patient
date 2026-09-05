@@ -1,0 +1,89 @@
+[
+ {
+  "kind": "compound",
+  "text": "Can you tell me about your sleep pattern and also how your energy has been during the day?"
+ },
+ {
+  "kind": "compound",
+  "text": "Do you drink any alcohol, and have you used any recreational drugs or tobacco recently?"
+ },
+ {
+  "kind": "compound",
+  "text": "Have you had any past surgeries, hospital stays, or serious illnesses in the past?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Do you take aspirin or any other over-the-counter painkillers regularly?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Do you get heartburn or acid reflux at night that might be keeping you awake?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Have you ever been told you had gallstones or any gallbladder trouble?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you noticed any anhedonia, or a loss of interest in things you used to enjoy?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Any episodes of nocturnal polyuria, where you wake up needing to urinate several times a night?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you had any melena, meaning dark or tarry stools?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "How much water do you typically drink during the day?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Do you use any blue-light filtering glasses or screen settings in the evening?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "What has your blood pressure been running at home, if you've checked it?"
+ },
+ {
+  "kind": "open",
+  "text": "Is there anything else going on in your life right now you'd like to tell me about?"
+ },
+ {
+  "kind": "open",
+  "text": "Tell me more about how you've been feeling this past month."
+ },
+ {
+  "kind": "open",
+  "text": "What else has changed for you recently, besides the sleep?"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "How would you describe your mood lately?",
+  "expect": "low|down"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Has your alcohol drinking changed at all since your partner passed away?",
+  "expect": "more|increased|used to drink less"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Do you remember what you answered on the screening forms before this visit?",
+  "expect": "don't remember|can't remember|assistant"
+ },
+ {
+  "kind": "pushback",
+  "text": "You mentioned the bed feels bigger now since they died - can you tell me more about what that's like for you?"
+ },
+ {
+  "kind": "pushback",
+  "text": "You said you've tried reading and avoiding TV before bed with no luck - how sure are you that nothing at all has helped, even a little?"
+ },
+ {
+  "kind": "pushback",
+  "text": "Earlier you weren't sure if you could be depressed - would it help if I walked you through what your screening test result means?"
+ }
+]

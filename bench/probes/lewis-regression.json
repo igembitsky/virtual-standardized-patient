@@ -1,0 +1,30 @@
+[
+ {
+  "kind": "scripted",
+  "text": "Have you noticed any changes in your mood lately, like feeling sad or down?",
+  "expect": "don't know|trouble sleeping|low|forms",
+  "bad": "why do you think",
+  "key": true
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Has how much you drink changed since your partner passed?",
+  "expect": "more",
+  "key": true
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you noticed any anhedonia?",
+  "key": true
+ },
+ {
+  "kind": "unscripted",
+  "text": "Have you noticed any changes in your appetite or weight, or trouble concentrating?",
+  "key": true
+ },
+ {
+  "kind": "exam",
+  "text": "Can I listen to your chest?",
+  "key": true
+ }
+]

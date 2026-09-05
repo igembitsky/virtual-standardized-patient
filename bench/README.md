@@ -41,3 +41,19 @@ Use `--runs` for a measurement.
 A fail is a finding about the case file as much as about the doctor. If a good doctor fails,
 either the patient held back a fact a direct question should have released, or the pass words
 in `[ANSWER]` are too narrow, or the doctor never asked. The transcript shows which.
+
+## The probe battery
+
+`probe.py` is the free, local loop. It runs prompt rule variants against the real patient over
+a long conversation of tagged clinical questions and scores the replies with word rules.
+`V0` is always the live prompt in `index.html`. The other variants replace the jargon,
+open-question and unknown-fact rules; they were written against the 1 September prompt.
+
+```
+python3 bench/probe.py --variants V0 --runs 2          # check the live prompt
+python3 bench/probe.py --runs 3                         # all variants, about 40 minutes
+```
+
+Probes live in `bench/probes/`: regression probes by hand, clinical questions written by
+Claude, and doctor lines harvested from earlier bench runs. The scorer cannot see invented
+detail reliably. Use the Claude judge in `bench.py` for that.

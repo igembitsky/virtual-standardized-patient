@@ -1,0 +1,74 @@
+[
+ {
+  "kind": "harvest",
+  "text": "Can you describe the pain - where exactly it is, what it feels like, and whether it radiates anywhere, like to your back or shoulder?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Can you describe the pain for me - where exactly it is, what it feels like, and whether it moves anywhere else, like to your back or shoulder?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Can you tell me more about the pain in your right upper belly\u2014where exactly is it, and does it spread anywhere, like to your back or shoulder?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you have any medical conditions like diabetes, and do you drink alcohol regularly?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Does the pain tend to come on after eating fatty or greasy foods?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Does the pain tend to get worse after eating greasy or fried foods, like French fries or fried chicken?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you ever been told you have gallstones, or had similar episodes of pain like this before?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you ever been told you have gallstones, or had similar pain episodes before?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you ever had gallstones, or similar episodes of pain like this before?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you felt confused, drowsy, or not quite yourself in the last few hours?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you felt confused, unusually drowsy, or had any trouble thinking clearly since this started?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you had any fever or shaking chills along with this pain?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you had any fevers or shaking chills along with this pain?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you had any nausea or vomiting along with this pain?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you had any nausea or vomiting with this?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any lightheadedness, confusion, or feeling like you might faint since this pain started?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any yellowing of your skin or eyes, or darker than usual urine?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed your skin or the whites of your eyes turning yellow, or your urine looking darker than usual?"
+ }
+]

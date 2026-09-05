@@ -17,5 +17,7 @@ eval(grab("parseCase") + "\n" + grab("systemPrompt"));
 const text = fs.readFileSync(casefile, "utf8");
 const c = parseCase(text, casefile.split("/").pop());
 c.system = systemPrompt(c);
+const jm = src.match(/const JARGON = \/([\s\S]*?)\/i;\n/);
+c.jargon = jm ? jm[1] : null;
 c.raw = text;
 process.stdout.write(JSON.stringify(c));

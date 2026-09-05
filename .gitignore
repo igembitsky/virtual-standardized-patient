@@ -4,3 +4,4 @@ docs/evidence/
 bench/results/
 .vscode/
 .playwright-cli/
+__pycache__/

@@ -1,0 +1,35 @@
+[
+ {
+  "kind": "compound",
+  "text": "Have you noticed your skin or the whites of your eyes turning yellow, or your urine looking darker than usual?",
+  "expect": "dark|tea",
+  "key": true
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "What colour is your urine?",
+  "expect": "dark|tea",
+  "key": true
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Does the pain tend to come on after eating fatty or greasy foods?",
+  "key": true
+ },
+ {
+  "kind": "jargon",
+  "text": "Any history of cholelithiasis or biliary colic?",
+  "key": true
+ },
+ {
+  "kind": "exam",
+  "text": "Does it hurt when I press there?",
+  "key": true
+ },
+ {
+  "kind": "scripted",
+  "text": "How long has this been bothering you?",
+  "expect": "day|last night",
+  "key": true
+ }
+]

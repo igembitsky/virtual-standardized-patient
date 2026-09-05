@@ -1,0 +1,89 @@
+[
+ {
+  "kind": "compound",
+  "text": "Where exactly is the pain, and does it travel anywhere else in your body?"
+ },
+ {
+  "kind": "compound",
+  "text": "Have you had any fever or chills, and are you feeling nauseous as well?"
+ },
+ {
+  "kind": "compound",
+  "text": "What did you eat before this started, and have you had a pain like this before?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Could this be your gallstones acting up again?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Have you taken any aspirin or other painkillers for this pain?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Does greasy or fatty food tend to make the pain worse?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you noticed any scleral icterus, like a yellow tint to your eyes?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Do you have any personal or family history of cholelithiasis?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you had any hematemesis along with the nausea?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Have you traveled outside the country recently?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Have you been around anyone with hepatitis or jaundice recently?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "How would you describe your usual diet, do you eat a lot of processed or fried foods?"
+ },
+ {
+  "kind": "open",
+  "text": "Is there anything else you'd like to tell me about how you're feeling?"
+ },
+ {
+  "kind": "open",
+  "text": "Tell me more about how this pain has affected your day today."
+ },
+ {
+  "kind": "open",
+  "text": "Anything else going on that we haven't talked about yet?"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "What color have your stools been lately?",
+  "expect": "pale|light|clay"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "When did you last pass water, and what color was it?",
+  "expect": "dark|tea|afternoon"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Are you worried about needing an operation for this?",
+  "expect": "frightened|scared|operation"
+ },
+ {
+  "kind": "pushback",
+  "text": "You mentioned shaking chills earlier in the waiting room\u2014can you tell me more about how bad they were?"
+ },
+ {
+  "kind": "pushback",
+  "text": "You said the pain started after the Chinese takeaway\u2014how sure are you that the food set it off?"
+ },
+ {
+  "kind": "pushback",
+  "text": "You said you've had this pain twice before\u2014can you tell me more about those earlier episodes?"
+ }
+]

@@ -149,6 +149,12 @@ def play(c, args, run_no):
         if a == "ask" and act.get("question") and not act["question"].lstrip().startswith("{"):
             q = act["question"].strip()
             turns.append({"role": "doctor", "text": q})
+            jw = re.search(c["jargon"], q, re.I) if c.get("jargon") else None
+            if jw:   # the page answers jargon itself, without the model
+                line = f'I don\'t know that word, doctor. What does "{jw.group(0)}" mean?'
+                msgs.append({"role": "user", "content": q}); msgs.append({"role": "assistant", "content": line})
+                turns.append({"role": "patient", "text": line, "sec": 0, "jargon": True})
+                continue
             mark_covered(q, c["questions"], covered)
             msgs.append({"role": "user", "content": q})
             try:

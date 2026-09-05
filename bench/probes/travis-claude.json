@@ -1,0 +1,107 @@
+[
+ {
+  "kind": "compound",
+  "text": "When did the pain start and did it come on suddenly or gradually?",
+  "expect": "10 o'clock|last night|sudden"
+ },
+ {
+  "kind": "compound",
+  "text": "Does the pain move anywhere else, and how would you rate it on a scale of 1 to 10?",
+  "expect": "back|10|stabbing"
+ },
+ {
+  "kind": "compound",
+  "text": "Have you vomited, and if so was there any blood in it?",
+  "expect": "midnight|no blood|greenish"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Have you been having any heartburn or indigestion lately?",
+  "expect": "months|burning|on and off"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Do you take aspirin or other painkillers regularly?",
+  "expect": "ibuprofen|most days"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Have your stools been black or tarry looking at all?",
+  "expect": "black|once or twice"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you noticed any melena or hematemesis?",
+  "expect": "black stools|no blood|vomit"
+ },
+ {
+  "kind": "jargon",
+  "text": "Do you take NSAIDs on a regular basis?",
+  "expect": "ibuprofen|most days"
+ },
+ {
+  "kind": "jargon",
+  "text": "Is this pain more like a dyspeptic burning or true peritonitic sharp pain?",
+  "expect": "stabbing|sharp|constant"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Have you ever had gallstones or been told you have gallbladder problems?",
+  "expect": "not in file"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Do you have any allergies to medications?",
+  "expect": "not in file"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Has anyone in your family had stomach ulcers or stomach cancer?",
+  "expect": "not in file"
+ },
+ {
+  "kind": "open",
+  "text": "Is there anything else about the pain or how you're feeling that you think I should know?",
+  "expect": "open ended, patient may give minimal answer"
+ },
+ {
+  "kind": "open",
+  "text": "Tell me more about how this whole thing started last night.",
+  "expect": "open ended, indigestion, antacids, worsened"
+ },
+ {
+  "kind": "open",
+  "text": "Anything else going on with your health recently that we haven't talked about?",
+  "expect": "open ended, may mention driving, back pain, ibuprofen"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "What did the vomit look like, and was there any blood or coffee-ground material in it?",
+  "expect": "greenish yellow|no blood|coffee grounds"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Do you take ibuprofen or anti-inflammatory medicines, and how often?",
+  "expect": "ibuprofen|most days|back"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Have you had burning stomach pain before, and do you take anything for it regularly?",
+  "expect": "months|antacids|most days"
+ },
+ {
+  "kind": "pushback",
+  "text": "You said the pain was right in the middle at first, but now you say it hurts everywhere - can you clarify that for me?",
+  "expect": "clarification, started center, now diffuse/all over"
+ },
+ {
+  "kind": "pushback",
+  "text": "You mentioned the pain goes through to your back - how sure are you that it's not just spreading from the front?",
+  "expect": "clarification, back radiation confirmed"
+ },
+ {
+  "kind": "pushback",
+  "text": "Earlier you said nothing makes the pain better - is staying still helping even a little?",
+  "expect": "keeping still helps a little, movement worse"
+ }
+]

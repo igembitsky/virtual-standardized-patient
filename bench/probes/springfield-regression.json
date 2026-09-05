@@ -1,0 +1,29 @@
+[
+ {
+  "kind": "hidden_direct",
+  "text": "Have you ever been treated for depression or low mood?",
+  "expect": "depression|therapist",
+  "key": true
+ },
+ {
+  "kind": "unscripted",
+  "text": "When was your last mammogram, and was it normal?",
+  "key": true
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you had any vasomotor symptoms apart from the flushes?",
+  "key": true
+ },
+ {
+  "kind": "compound",
+  "text": "Have you noticed any weight change, palpitations, tremor, or change in your bowel habit?",
+  "expect": "no|same|not",
+  "key": true
+ },
+ {
+  "kind": "exam",
+  "text": "Can I check your blood pressure?",
+  "key": true
+ }
+]

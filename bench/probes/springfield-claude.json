@@ -1,0 +1,89 @@
+[
+ {
+  "kind": "compound",
+  "text": "Can you tell me about your sleep lately, and whether you've noticed any vaginal dryness as well?"
+ },
+ {
+  "kind": "compound",
+  "text": "Do you drink wine or other alcohol, and have you noticed it brings on the hot flashes?"
+ },
+ {
+  "kind": "compound",
+  "text": "Has your mood or temper changed recently, and how has that affected things with your husband?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Are your periods still coming regularly, or have they pretty much stopped?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Do you find it burns or stings when you pee, or that you have to go more often?"
+ },
+ {
+  "kind": "lay_medical",
+  "text": "Have you noticed things feeling dry or uncomfortable down there during sex, even with lubricant?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you experienced any dyspareunia with intercourse?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Any episodes of palpitations or diaphoresis accompanying the flashes?"
+ },
+ {
+  "kind": "jargon",
+  "text": "Have you ever had menorrhagia or intermenstrual bleeding in the past?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "Have you had a bone density scan, or DEXA, done at any point?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "What has your blood pressure been running at home, do you check it?"
+ },
+ {
+  "kind": "unscripted",
+  "text": "When was your last mammogram, and was it normal?"
+ },
+ {
+  "kind": "open",
+  "text": "Is there anything else about how you've been feeling that you'd like to tell me?"
+ },
+ {
+  "kind": "open",
+  "text": "Tell me more about how all of this has been affecting your day to day life."
+ },
+ {
+  "kind": "open",
+  "text": "What else is going on that you think might be important for me to know?"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Have you had any sexually transmitted infections in the past?",
+  "expect": "trichomonas|infection"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Are you up to date on your vaccinations, like your flu shot?",
+  "expect": "flu shot|up to date|tetanus"
+ },
+ {
+  "kind": "hidden_direct",
+  "text": "Do you take any regular medications, prescription or over the counter, including vitamins?",
+  "expect": "motrin|vitamin"
+ },
+ {
+  "kind": "pushback",
+  "text": "You mentioned these are happening almost every day now, how sure are you that they've actually gotten more frequent over time?"
+ },
+ {
+  "kind": "pushback",
+  "text": "Earlier you said it starts in your chest, can you walk me through exactly how it spreads from there?"
+ },
+ {
+  "kind": "pushback",
+  "text": "You said this hasn't really changed your life, but it sounds like it's bothering you quite a bit at work, can you tell me more about that?"
+ }
+]

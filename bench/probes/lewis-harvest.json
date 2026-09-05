@@ -1,0 +1,106 @@
+[
+ {
+  "kind": "harvest",
+  "text": "Are you currently taking any medications, including over-the-counter drugs or supplements, and do you have any other medical conditions like thyroid problems, chronic pain, or breathing issues at night?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Can you tell me more about your trouble sleeping\u2014are you having difficulty falling asleep, staying asleep, or waking up too early?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you drink alcohol or caffeine, and if so, has how much you drink changed since your partner passed?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you drink alcohol or caffeine, and if so, how much and when during the day?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you find yourself feeling anxious, worried, or restless, or has anyone told you that you snore loudly or stop breathing at night?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you have any ongoing medical conditions, or are you taking any medications, supplements, or over-the-counter drugs regularly?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you have any ongoing medical conditions, take any regular medications, or experience pain that might be keeping you awake at night?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Do you or anyone who's seen you sleep notice loud snoring, gasping, or pauses in your breathing at night?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Given all you've been through, have you had any thoughts of not wanting to be here anymore, or of hurting yourself?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Has anything significant changed in your life recently\u2014like a loss, retirement stress, health scare, or relationship change\u2014around the time your sleep and mood started to shift?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Has anything stressful or worrying been going on in your life over the past month\u2014like changes at home, finances, or health concerns?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you been feeling this tired, low, and not yourself nearly every day for at least the past two weeks?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any changes in your appetite or weight over the past month?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any changes in your appetite or weight, energy level, or your ability to concentrate over this past month?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any changes in your appetite or weight, or trouble concentrating, over the past month?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any changes in your mood lately, like feeling sad, down, or losing interest in things you used to enjoy?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Have you noticed any changes in your mood, energy, interest in activities, or appetite over this past month?"
+ },
+ {
+  "kind": "harvest",
+  "text": "I ask because sleep, energy, and interest can all be connected, and I want to make sure I understand the full picture\u2014I'm not assuming anything. Can I ask, over the past month, have you felt down, sad, or hopeless on most days?"
+ },
+ {
+  "kind": "harvest",
+  "text": "I'm sorry for your loss. Since your partner passed, have you noticed yourself feeling down, hopeless, or losing interest in things you used to enjoy, even a little?"
+ },
+ {
+  "kind": "harvest",
+  "text": "In the past month, have you had any thoughts that you would be better off dead or of hurting yourself in some way?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Over the past month, have you noticed any changes in your mood, like feeling sad, down, or losing interest in things you used to enjoy?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Since your partner passed away a year ago, have you been drinking more alcohol or using anything else, like sleep aids or over-the-counter medications, to help you cope or sleep?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Sleep problems can sometimes be linked to mood changes, so I like to ask about it routinely. Have you noticed less interest or pleasure in activities you normally enjoy over the past month?"
+ },
+ {
+  "kind": "harvest",
+  "text": "Thank you for sharing that. On the questionnaire, one item asks about thoughts of being better off dead or hurting yourself\u2014have you had any thoughts like that in the past month?"
+ },
+ {
+  "kind": "harvest",
+  "text": "That's a fair question\u2014trouble sleeping can have many causes, and mood is just one of the things I like to check. So, over the past month, have you noticed less interest or pleasure in activities you normally enjoy?"
+ },
+ {
+  "kind": "harvest",
+  "text": "That's okay, it's just a routine question. Has anything stressful or upsetting happened in your life recently, like a loss, health issue, or change in your routine?"
+ }
+]

@@ -239,6 +239,84 @@ The invented facts are mostly confident negatives about things the file does not
 added on 1 September fire on plain questions about one turn in fifteen, most often when the
 doctor joins two topics in one question. One run at temperature 0.6 is a sample.
 
+## The second bench run: filling the gaps
+
+The judge's list of invented answers was checked against the source scripts. Where the source
+had the fact, it went into the story as one plain line: Graham's pain is dull and hurts on a
+deep breath, and he has nausea; Travis has eaten and drunk nothing since the pain began, and
+the vomit is described; Lewis says "I can't really say, the forms will have it" to mood,
+appetite and concentration questions; Springfield's depression line is written as a question
+and answer. Facts with no source, such as a mammogram or a blood pressure history, were left
+out on purpose. Same protocol, two runs per case, about 25 minutes and 4 dollars.
+
+| Share of patient turns | Before, 75 turns | After, 151 turns |
+|---|---|---|
+| Accurate | 72 percent | 72 percent |
+| Invented a fact | 13 percent | 7 percent |
+| Contradicted the file | 3 percent | 4 percent |
+| Fallback line on a plain question | 7 percent | 11 percent |
+| Hidden line on a related question | 4 percent | 7 percent |
+| Cases passed | 6 of 8 | 13 of 16 |
+
+Filling the gaps halved the invented facts, and none of the targeted inventions came back.
+The fallback lines are now the largest error. The jargon line is added after a correct answer
+when a question holds a word such as "aspirin" or "gallstones". "Sorry, I'm not following you"
+fires on plain questions such as "fatty or greasy foods". Worst, "No, doctor, that's all" was
+used as a denial to "is your skin yellow, or your urine darker?" in both Graham runs, which
+buried the dark urine. Lewis still fires the "why do you think that?" challenge on any mood
+question. The leaks are mostly the new Travis vomit description given with the vomiting answer.
+
+## The third round: fixed phrases against no fixed phrases
+
+The two earlier benches pointed at one cause: a 4B model turns any fixed phrase in its rules
+into a generic answer. `bench/probe.py` tested that directly. It runs prompt rule variants
+against the real patient over a long conversation of realistic questions: the doctor lines
+harvested from the earlier benches, 21 tagged clinical questions per case written by Claude,
+and a set of regression probes placed late in the conversation. Four cases, three
+conversations each, about 440 patient lines per variant, Ollama only. Scoring is by word rules.
+
+| Variant | Fixed line on a plain question | Fixed line used as a denial | Scripted fact given when asked | Hidden line on an open question |
+|---|---|---|---|---|
+| Fixed phrases, as shipped on 1 September | 24 of 435 | 31 of 399 | 64 of 84 | 0 of 27 |
+| No jargon, confusion or open-question rules at all | 0 | 1 | 76 of 84 | 4 of 27 |
+| Same intents in the patient's own words | 0 | 0 | 75 of 84 | 2 of 27 |
+| Own words, and "not in your story means no" | 0 | 0 | 76 of 84 | 3 of 27 |
+| Either of the above plus "answer each part of a two-part question" | 0 | 0 | 76 of 84 | 2 of 27 |
+
+The fixed phrases lose on every column but the last, and they win that one only because the
+patient says "No, doctor, that's all" to everything. Without a fixed jargon line the model
+simply answers the jargon, because it knows what cholelithiasis means: 0 to 9 percent of
+jargon questions were queried. So jargon moved out of the prompt and into the page. A word
+list in `index.html` catches real medical terms before the model sees them and answers
+"I don't know that word, doctor" itself. Everyday words such as gallstones, aspirin, period
+and urine are not on the list on purpose. Checked in a real browser: cholelithiasis is
+caught, gallstones goes to the patient.
+
+Shipped: the "own words" rules with "not in your story means no" and the two-part rule, the
+exam rule unchanged, and the jargon list. Re-run of the live prompt through the same battery:
+0 fixed-line errors in 290 lines at temperature 0.6, and 0 in 435 at 0.3. Temperature 0.3
+changed nothing else worth having, so the page stays at 0.6.
+
+The Claude doctor and judge were then run once more on all eight cases as the referee.
+
+| Share of patient lines | Bench 1, fixed phrases | Bench 2, gaps filled | Bench 3, new rules |
+|---|---|---|---|
+| Accurate | 72 percent | 72 percent | 83 percent |
+| Invented a fact | 13 percent | 7 percent | 3 percent |
+| Contradicted the file | 3 percent | 4 percent | 10 percent |
+| Fixed line on a plain question | 7 percent | 11 percent | 0 |
+| Hidden line on a related question | 4 percent | 7 percent | 4 percent |
+| Cases passed | 6 of 8 | 13 of 16 | 7 of 8 |
+
+The new cost is the contradiction row. "Not in your story means no" is the convention real
+standardized patients are trained to, and it stopped the invented mammograms and blood
+pressure histories, but about one line in ten now denies something the file does say: Graham
+called his stools "not pale" when the file said lighter, Lewis said he never felt down when
+the file says his mood is low, Samuels denied sinus tenderness that only the examination
+card holds. Two of those were wording, and the case lines were tightened afterwards. The
+Samuels one is the old problem in a new coat: a doctor asks an examination as a question.
+Each bench is one run at temperature 0.6, and one run is a sample.
+
 ## Still not verified
 
 1. **`start-windows.bat` and `serve.ps1` have never run on Windows.** They use only what

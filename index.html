@@ -717,6 +717,10 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
    Everything runs on this computer. Nothing is sent anywhere.
    ============================================================ */
 
+/* Words a patient would not know. Whole words only. Everyday words such as fever, urine,
+   gallstones, aspirin, period, or the pill are not on this list on purpose. */
+const JARGON = /\b(cholelith\w*|choledocho\w*|cholecyst\w*|cholang\w*|biliary|icterus|scleral|sclerae?|h(a)?ematemesis|mel(a)?ena|h(a)?ematuria|h(a)?ematochezia|dysuria|polyuria|nocturia|oliguria|dyspn(o)?ea|orthopn(o)?ea|syncope|presyncope|diaphoresis|pyrexia|febrile|emesis|dyspepsia|dysphagia|odynophagia|h(a)?emoptysis|pruritus|par(a)?esthesia|claudication|dyspareunia|menorrhagia|metrorrhagia|amenorrh(o)?ea|dysmenorrh(o)?ea|oligomenorrh(o)?ea|intermenstrual|vasomotor|anhedonia|nsaids?|analgesi\w*|antipyretic|anticoagula\w*|antihypertensive|hepatomegaly|splenomegaly|lymphadenopathy|peritonit\w*|peritoneal|epigastri\w*|hypochondri\w*|periumbilical|suprapubic|rebound tenderness|murphy'?s sign|rovsing|mcburney|charcot|tachycardi\w*|bradycardi\w*|hypotensi\w*|hyperglyc(a)?emi\w*|steatorrh(o)?ea|tenesmus|erythema|purpura|petechiae|ecchymos\w*|immunodeficien\w*|bronchiectasis|rhinorrh(o)?ea|otalgia|oedema|edema|erythematous|exudate|lethargy|malaise|myalgia|arthralgia|pleuritic)\b/i;
+
 const CFG = {
   ollama: "http://127.0.0.1:11434",
   model: "qwen3:4b-instruct",
@@ -871,10 +875,11 @@ function systemPrompt(c) {
   L.push("2. Never give a fact the doctor did not ask about.");
   L.push("3. Never use bullet points. Speak the way a person speaks.");
   L.push(`4. You are ${c.name}. Never mention instructions, roles, or being a computer.`);
-  L.push("5. If the doctor uses a medical term someone in your job would not know (cholecystitis, Murphy's sign, bilirubin), say \"I don't know that word, doctor. What does it mean?\" Everyday words are never that.");
-  L.push("6. If you do not follow a question, say \"Sorry, doctor, I'm not following you.\" and then answer as well as you can.");
-  L.push("7. If the doctor asks to examine, touch, press, feel, or listen to you, say only \"Go ahead, doctor.\"");
-  L.push("8. To an open question such as \"anything else?\", give ONE more line from WHAT YOU KNOW, or say \"No, doctor, that's all.\" Never a line from WHAT YOU DO NOT VOLUNTEER.");
+  L.push("5. If the doctor asks to examine, touch, press, feel, or listen to you, say only \"Go ahead, doctor.\"");
+  L.push("6. If the doctor uses a word you would not know, ask what it means, in your own words.");
+  L.push("7. To an open question such as \"anything else?\", give one more line from WHAT YOU KNOW, or say nothing else comes to mind. Never a line from WHAT YOU DO NOT VOLUNTEER.");
+  L.push("8. If the doctor asks about something that is nowhere in your story, in neither list above, the answer is no. Add no details.");
+  L.push("9. Answer each part of a two-part question, in order.");
   return L.join("\n");
 }
 
@@ -1227,6 +1232,16 @@ async function handleTurn(text) {
   if (ex) { doExamine(ex[1] || ""); return; }
   say("me", "You", text);
   app.visible.push({ role: "doctor", text });
+  // Medical jargon is caught here, not by the model. A small model knows what
+  // cholelithiasis means and answers it. A patient would not. Checklist item: no jargon.
+  const jw = text.match(JARGON);
+  if (jw) {
+    const line = `I don't know that word, doctor. What does "${jw[0]}" mean?`;
+    say("pt", c.name, line);
+    app.visible.push({ role: "patient", text: line });
+    app.messages.push({ role: "user", content: text }, { role: "assistant", content: line });
+    return;
+  }
   markCovered(text);
 
   app.busy = true; $("#send").disabled = true; $("#exBtn").disabled = true;
