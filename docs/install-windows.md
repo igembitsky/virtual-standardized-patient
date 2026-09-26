@@ -28,7 +28,8 @@ Ollama is the free program that runs the AI model on your computer.
 
 ## 3. Start the simulator
 
-1. Open the folder on your Desktop.
+1. Open the folder on your Desktop. If it holds only another folder with the same name, open
+   that one.
 2. Double-click **Start on Windows**.
 3. The first time, Windows may show a warning. See [If Windows shows a warning](#if-windows-shows-a-warning).
 4. A window flashes for a moment and closes. That is normal.
