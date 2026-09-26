@@ -1,59 +1,85 @@
-# Bench: a Claude doctor against the real patient
+# The evaluation harness
 
-`bench.py` plays one consultation per case with no knowledge of the answers, then has a second
-model judge every patient line against the case file. It exists to answer two questions after
-any change to a case file or to `systemPrompt()` in `index.html`:
-
-1. Can a competent doctor pass this case in one attempt, with these questions and these answer words?
-2. Did the patient say anything inaccurate, invented, leaked, canned, or out of character?
-
-## What it uses
-
-- The **real prompt**. `case.js` runs the parser and prompt builder from `index.html` itself.
-- The **real patient**. The same Ollama call, model, and options as the page.
-- The **real marking**. Question credit and pass rules are ports of the page's own word matching.
-- A **Claude doctor** through `claude -p`, which sees only the door card: name, age, setting,
-  complaint, vital signs, task, and the list of examinable parts. Never the story or the answers.
-- A **Claude judge** that sees everything and labels each patient turn:
-  accurate, inaccurate, invented, leaked, canned_misfire, off_persona.
-
-## Run it
+Run it after any change to a case file, to `systemPrompt()` in `index.html`, or to the model.
 
 ```
-python3 bench/bench.py                         # every case, once
-python3 bench/bench.py --cases graham --runs 3
-python3 bench/bench.py --doctor haiku --judge sonnet --no-judge
+python3 bench/eval.py                                  # both suites, every case, about an hour
+python3 bench/eval.py --cases samuels                  # one case
+python3 bench/eval.py --suite examiner                 # one suite
+python3 bench/eval.py --patient-model qwen3.5:4b       # the same test for another model
 ```
 
-Needs Ollama running with the patient model, `node`, and a logged-in `claude` CLI.
-Cases run one after another. The turn cap is the case's consultation minutes.
+Needs Ollama running with the patient model, `node`, and a logged-in `claude` command. The
+`claude` command uses your Claude subscription. Cases run one after another.
 
-Results land in `bench/results/<timestamp>/`: one JSON per encounter with the full transcript
-and the judge's notes, plus `summary.md`. Each result records a hash of the system prompt, so
-two runs can be compared across prompt versions. The folder is not committed.
+Results land in `bench/results/eval-<timestamp>/`: `report.md` on top, and one JSON per case
+and suite with the full transcript, the examiner's script, and the judge's notes. Each result
+records a hash of the system prompt, so runs can be compared across prompt versions. The
+results folder is not committed.
 
-Cost is about 1 cent per doctor turn with Sonnet, so a full run of eight cases is roughly
-one to two dollars and ten to fifteen minutes. One run at temperature 0.6 is a sample.
-Use `--runs` for a measurement.
+## What is real and what is Claude
 
-## Reading the result
+- The **patient** is real: the prompt from `index.html`, the same Ollama request as the page.
+- The **counting and marking** are real: `page.js` runs the page's own jargon catch, checklist
+  credit, examination matcher and note marking from `index.html`. Nothing is a copy.
+- The **student**, the **examiner** and the **judge** are Claude, through `claude -p`.
 
-A fail is a finding about the case file as much as about the doctor. If a good doctor fails,
-either the patient held back a fact a direct question should have released, or the pass words
-in `[ANSWER]` are too narrow, or the doctor never asked. The transcript shows which.
+## Suite 1: the student
+
+A novice. It sees only the door card and one line of instructions: talk to the patient, take a
+history, examine if you want, write three diagnoses and three tests. It plays the whole
+encounter against the case's clock.
+
+This suite shows what a learner meets. A fail here is a finding about the student, not about
+the patient. The patient is judged on every reply all the same.
+
+## Suite 2: the examiner
+
+An expert who knows the whole case writes a fresh test script for every run, so the wording
+changes each time:
+
+- every checklist item, asked in natural words, to check the page counts it
+- every "only if asked" fact, asked directly, to check the patient gives it
+- the main story facts, asked directly
+- things that are not in the case, to check the patient says a plain no
+- open questions, to check the patient leaks nothing
+- the examinations, in the short words a student types
+- three correct notes and two wrong notes in varied words, to check the marking
+- five more ways to write the diagnosis, and varied names for each test
+
+The script is asked in encounters of up to 18 questions, the size of a real consultation.
+
+## The judge
+
+Claude reads the case file, the prompt and the transcript, and gives every patient reply one
+verdict:
+
+| Verdict | Meaning |
+|---|---|
+| correct | follows the protocol |
+| withheld | asked about a fact in the case and did not give it |
+| inaccurate | contradicts the case file |
+| invented | adds a fact that is not in the case |
+| leaked | gives an "only if asked" fact nobody asked for |
+| canned_misfire | the "I don't know that word" line on plain words |
+| off_persona | breaks role, lists, or runs far too long |
+
+## Reading the report
+
+The headline table gives one number per question: does the patient follow its protocol, does it
+give what is asked, does it deny what is absent, and does the page count what it should. The
+findings list every reply and every count that went wrong, with the words that caused it.
+
+One run at temperature 0.6 is a sample. Compare two runs before you call a change better.
 
 ## The probe battery
 
-`probe.py` is the free, local loop. It runs prompt rule variants against the real patient over
-a long conversation of tagged clinical questions and scores the replies with word rules.
-`V0` is always the live prompt in `index.html`. The other variants replace the jargon,
-open-question and unknown-fact rules; they were written against the 1 September prompt.
+`probe.py` is an older, cheaper loop. It runs prompt rule variants against the real patient over
+a long conversation of tagged clinical questions and scores the replies with word rules, with no
+Claude at all. `V0` is always the live prompt.
 
 ```
-python3 bench/probe.py --variants V0 --runs 2          # check the live prompt
-python3 bench/probe.py --runs 3                         # all variants, about 40 minutes
+python3 bench/probe.py --variants V0 --runs 2
 ```
 
-Probes live in `bench/probes/`: regression probes by hand, clinical questions written by
-Claude, and doctor lines harvested from earlier bench runs. The scorer cannot see invented
-detail reliably. Use the Claude judge in `bench.py` for that.
+Probes live in `bench/probes/`.

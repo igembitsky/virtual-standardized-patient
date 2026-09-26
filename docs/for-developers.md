@@ -19,9 +19,9 @@
 - The launcher serves the folder on `127.0.0.1:8756`. `GET /cases/` returns a JSON list of
   the case files, so a new case appears on reload.
 - The page talks to Ollama at `127.0.0.1:11434` through `/api/tags` and `/api/chat`.
-- To test a change to a case or to `systemPrompt()`, run `python3 bench/bench.py`. See
-  [`bench/README.md`](../bench/README.md). It needs a logged-in `claude` command and costs about
-  a dollar a run.
+- To test a change to a case, to `systemPrompt()`, or to the model, run `python3 bench/eval.py`.
+  See [`bench/README.md`](../bench/README.md). It needs a logged-in `claude` command, which
+  uses your Claude subscription.
 
 ## Make it your own
 
@@ -39,8 +39,8 @@ worth trying:
 | 16 GB or more | `gemma4:e4b-it-qat`, `granite4.2:8b`, `qwen3.5:9b` | `ollama pull gemma4:e4b-it-qat` |
 
 Only `qwen3:4b-instruct` has been tested with this program. `llama3.1:8b` was tested and did
-worse: it added stage directions and invented findings. Test a new model with the bench before
-you use it with learners. See `bench/README.md`.
+worse: it added stage directions and invented findings. Test a new model with
+`python3 bench/eval.py --patient-model <name>` before you use it with learners.
 
 Some models, such as Qwen 3.5 and Granite 4.2, can "think" before they answer. The program
 turns this off in every request, so the patient answers at once.
