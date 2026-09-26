@@ -120,17 +120,20 @@ Each claim below can be checked in the files in this folder.
   real model. See [`docs/VERIFICATION.md`](docs/VERIFICATION.md).
 - **Saved encounters** are stored by your browser, on your computer.
 
+- **The launchers are tested on a Mac, Windows, and Linux at every change.** GitHub runs each
+  one from the same ZIP a participant downloads, drives the page in Chrome, and checks the
+  first-run download, stopping when the tab closes, Quit, the model unload, refused paths,
+  the Update button, and the error report. See `.github/workflows/launchers.yml`.
+
 Not yet tested:
 
-- The Mac launcher from version 2.0, which runs with no Terminal window, has not yet been run
-  on a Mac.
-- The Windows launcher has never been run on Windows.
-- The Linux launcher has not been run on a Linux desktop.
-- All three servers were tested on Linux, in a real browser, against a stand-in for Ollama:
-  first-run download, stop on tab close, stop on Quit, model unload, and refused paths.
-- Speed on a computer without a graphics chip has not been measured.
+- The first open on a Mac, when macOS asks you to approve the app. Test machines cannot
+  press that button.
+- Whether Windows 11 keeps the launcher's window hidden when Windows Terminal is the default.
+- A real Ollama and model in those tests. They use a stand-in that answers like Ollama.
+- Speed on a computer without a graphics chip.
 
-If you run one of these, please open an issue and say whether it worked.
+If something does not work, press **Report a problem** at the bottom of the page.
 
 ## Terms of use
 
