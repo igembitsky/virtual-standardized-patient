@@ -2,7 +2,7 @@
 """The fast check. Runs the standard examiner scripts through the page's own rules only:
 checklist credit, jargon catch, examination matcher and note marking. No patient model, no
 Claude, a few seconds. Use it after any change to a case file's word lists or answer key, or to
-the matching code in index.html. The full check is eval.py.
+the matching code in app/index.html. The full check is eval.py.
 
   python3 bench/static.py                 every case
   python3 bench/static.py graham travis   some cases
@@ -11,12 +11,12 @@ the matching code in index.html. The full check is eval.py.
 """
 import json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from eval import HERE, ROOT, load_case, page_check
+from eval import HERE, ROOT, CASES, load_case, page_check
 
 SCRIPTS = os.path.join(HERE, "scripts")
 
 def check(cid):
-    path = os.path.join(ROOT, "cases", cid + ".txt")
+    path = os.path.join(CASES, cid + ".txt")
     c = load_case(path)
     plan = json.load(open(os.path.join(SCRIPTS, cid + ".json")))
     probes = plan["probes"]
@@ -55,14 +55,14 @@ def write_fresh(d):
     from eval import claude, PLAN_SYS, PLAN_SCHEMA
     os.makedirs(d, exist_ok=True)
     def one(f):
-        c = load_case(os.path.join(ROOT, "cases", f))
+        c = load_case(os.path.join(CASES, f))
         labels = [q["label"] for q in c["questions"]]
         plan = claude("opus", PLAN_SYS, "CASE FILE\n" + c["raw"] +
                       "\n\nCHECKLIST LABELS, use exactly one of these or \"\" in credits:\n" +
                       "\n".join("- " + l for l in labels), PLAN_SCHEMA)
         json.dump({"case": c["id"], **plan}, open(os.path.join(d, c["id"] + ".json"), "w"), indent=1)
     with ThreadPoolExecutor(4) as ex:
-        list(ex.map(one, sorted(f for f in os.listdir(os.path.join(ROOT, "cases")) if f.endswith(".txt"))))
+        list(ex.map(one, sorted(f for f in os.listdir(CASES) if f.endswith(".txt"))))
 
 if __name__ == "__main__":
     args = sys.argv[1:]

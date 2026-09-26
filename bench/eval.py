@@ -27,7 +27,9 @@ from datetime import datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-HTML = os.path.join(ROOT, "index.html")
+APP = os.path.join(ROOT, "app")
+HTML = os.path.join(APP, "index.html")
+CASES = os.path.join(APP, "cases")
 OLLAMA = "http://127.0.0.1:11434"
 CLAUDE_MIN = ["--no-session-persistence", "--output-format", "json",
               "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
@@ -453,14 +455,14 @@ def main():
     ap.add_argument("--fresh", action="store_true", help="examiner writes a new script, not the standard one")
     ap.add_argument("--out", default=os.path.join(HERE, "results"))
     a = ap.parse_args()
-    files = sorted(f for f in os.listdir(os.path.join(ROOT, "cases")) if f.endswith(".txt"))
+    files = sorted(f for f in os.listdir(CASES) if f.endswith(".txt"))
     want = [s.strip() for s in a.cases.split(",") if s.strip()]
     stamp = datetime.now().strftime("%Y-%m-%d-%H%M")
     outdir = os.path.join(a.out, "eval-" + stamp); os.makedirs(outdir, exist_ok=True)
     suites = ["student", "examiner"] if a.suite == "all" else [a.suite]
     rows = []
     for f in files:
-        path = os.path.join(ROOT, "cases", f)
+        path = os.path.join(CASES, f)
         c = load_case(path)
         if want and c["id"] not in want: continue
         for s in suites:

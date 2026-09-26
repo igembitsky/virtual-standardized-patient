@@ -1,8 +1,8 @@
-// Runs the page's own logic from index.html, so the harness tests the real thing, not a copy.
+// Runs the page's own logic from app/index.html, so the harness tests the real thing, not a copy.
 // Parser, prompt, jargon catch, question credit, examination matcher and note marking.
 //
-//   node bench/page.js index.html cases/graham.txt            prints the parsed case as JSON
-//   node bench/page.js index.html cases/graham.txt --check    reads a request on stdin:
+//   node bench/page.js app/index.html app/cases/graham.txt            prints the parsed case as JSON
+//   node bench/page.js app/index.html app/cases/graham.txt --check    reads a request on stdin:
 //     {"ask": ["question", ...], "examine": ["part", ...], "notes": [{"dx": [...], "tx": [...]}]}
 //   and prints, in the same order:
 //     {"ask": [{"jargon": word|null, "credits": [labels]}], "examine": [{"name", "finding"}],

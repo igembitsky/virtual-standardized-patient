@@ -16,7 +16,6 @@ Ollama is the free program that runs the AI model on your computer.
 2. Press **Download for Windows**.
 3. Open the downloaded file. Follow the steps on screen.
 4. Open Ollama once. A llama icon appears near the clock, at the bottom right of the screen.
-5. Leave it running.
 
 ## 2. Download the simulator
 
@@ -29,13 +28,14 @@ Ollama is the free program that runs the AI model on your computer.
 
 ## 3. Start the simulator
 
-1. Open the folder on your Desktop.
-2. Double-click `start-windows.bat`.
+1. Open the folder on your Desktop. If it holds only another folder with the same name, open
+   that one.
+2. Double-click **Start on Windows**.
 3. The first time, Windows may show a warning. See [If Windows shows a warning](#if-windows-shows-a-warning).
-4. A black window opens. Leave it open.
-5. The first time, the window downloads the patient model. It shows the percentage. Wait for
-   **Download complete**.
-6. Your browser opens the simulator at `http://127.0.0.1:8756/`.
+4. A window flashes for a moment and closes. That is normal.
+5. Your browser opens the simulator at `http://127.0.0.1:8756/`.
+6. The first time, the page downloads the patient model and shows the progress. Keep the
+   page open until it says **ready**.
 
 ### If Windows shows a warning
 
@@ -53,23 +53,17 @@ Windows checks every file downloaded from the internet. This happens once.
 
 ## Every time after this
 
-1. Open the folder. Double-click `start-windows.bat`.
-2. To stop, close the black window.
+1. Open the folder. Double-click **Start on Windows**.
+2. To stop, close the browser tab, or press **Quit** at the top of the page. The simulator
+   stops within a few seconds and gives the memory back.
 
 ## Updates
 
 When a new version exists, the top of the page shows **New version** and an **Update** button.
+Press **Update**. The page reloads by itself after about 10 seconds. Your notes and your
+history stay. The version you have is at the bottom of the page.
 
-1. Press **Update**. It takes about 10 seconds.
-2. The page reloads by itself. Your notes and your history stay.
-
-If the page shows a download link instead of a button, your copy is from before updates
-existed. Download the ZIP from the link, and replace the folder as in step 2. After that,
-the button appears.
-
-The version you have is at the bottom of the page.
-
-To add a shortcut: right-click `start-windows.bat`, choose **Show more options**, then
+To add a shortcut: right-click **Start on Windows**, choose **Show more options**, then
 **Send to**, then **Desktop (create shortcut)**.
 
 ## If something goes wrong
@@ -77,11 +71,13 @@ To add a shortcut: right-click `start-windows.bat`, choose **Show more options**
 | What you see | What to do |
 |---|---|
 | A blue **Windows protected your PC** box | Press **More info**. Press **Run anyway** |
-| The black window closes at once | Right-click `start-windows.bat` and choose **Edit**. Nothing to change. Close it. Double-click the file again. If it still closes, open an issue |
-| "Ollama is not installed" in the window | Do step 1 again. Open Ollama once. Double-click the launcher again |
-| The download stopped before 100% | Close the window. Double-click the launcher again. It continues from where it stopped |
+| **Something went wrong** | Press **Email report** to send the error report from your mail app, or **Report on GitHub** if you have a GitHub account |
+| Nothing happens after 20 seconds | Open your browser and go to `http://127.0.0.1:8756/`. If that does not load, press the Start button, type `%TEMP%`, press Enter, and email the file `virtual-standardized-patient.log` |
+| **Ollama is not running** on the page | Open Ollama from the Start menu. The page notices by itself |
+| The download stopped | The page tries again by itself and carries on from where it stopped |
 | The download does not start | Press the Start button, type `PowerShell`, and open it. Type `ollama pull qwen3:4b-instruct`. Press Enter. Wait for `success` |
-| The browser does not open | Open your browser and go to `http://127.0.0.1:8756/` |
+
+In the page, **Report a problem** at the bottom sends an error report at any time.
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 

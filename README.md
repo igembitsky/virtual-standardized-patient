@@ -32,6 +32,12 @@ Choose your system. Each page has every step, from the first download to the fir
 
 The install takes about 15 minutes. Most of that time is a 2.5 GB download.
 
+After that, you double-click **Start on Mac**, **Start on Windows**, or **Start on Linux**.
+The simulator opens in your browser. No other window opens. Close the tab, or press **Quit**,
+and it stops and gives the memory back.
+
+What changed in each version is in [`CHANGELOG.md`](CHANGELOG.md).
+
 If a step does not work, see [If something goes wrong](docs/troubleshooting.md).
 
 More about the program, its safety, and its licence is below.
@@ -94,12 +100,15 @@ and the marking come from the case file.
 
 Each claim below can be checked in the files in this folder.
 
-- **Nothing leaves your computer.** The page sends requests to two places: Ollama, on your own
-  computer at `127.0.0.1:11434`, and the `cases` folder. Search `index.html` for `fetch(` to
-  see both. The other web addresses in the file are links. They load only if you click them.
+- **Nothing leaves your computer.** Your questions go only to Ollama, on your own computer at
+  `127.0.0.1:11434`. The page also reads the `cases` folder from the launcher, and asks GitHub
+  for one small file, `VERSION`, to see whether a new version exists. Nothing is sent with it.
+  Search `app/index.html` for `fetch(` to see every request. The other web addresses in the
+  file are links. They load only if you click them.
 - **No account, no sign-in, no cookies, no analytics.**
 - **The launcher installs nothing.** It uses a program your system already has: Perl on a
-  Mac, PowerShell on Windows, Python on Linux. When you close its window, it stops.
+  Mac, PowerShell on Windows, Python on Linux. It stops by itself a few seconds after you
+  close the browser tab, and tells Ollama to unload the model.
 - **The launcher serves this folder to this computer only.** It listens on `127.0.0.1`. Other
   computers on your network cannot reach it. Requests for files outside the folder get a
   404 error. This was tested.
@@ -111,13 +120,20 @@ Each claim below can be checked in the files in this folder.
   real model. See [`docs/VERIFICATION.md`](docs/VERIFICATION.md).
 - **Saved encounters** are stored by your browser, on your computer.
 
+- **The launchers are tested on a Mac, Windows, and Linux at every change.** GitHub runs each
+  one from the same ZIP a participant downloads, drives the page in Chrome, and checks the
+  first-run download, stopping when the tab closes, Quit, the model unload, refused paths,
+  the Update button, and the error report. See `.github/workflows/launchers.yml`.
+
 Not yet tested:
 
-- The Windows launcher has never been run on Windows.
-- The Linux launcher has never been run on Linux.
-- Speed on a computer without a graphics chip has not been measured.
+- The first open on a Mac, when macOS asks you to approve the app. Test machines cannot
+  press that button.
+- Whether Windows 11 keeps the launcher's window hidden when Windows Terminal is the default.
+- A real Ollama and model in those tests. They use a stand-in that answers like Ollama.
+- Speed on a computer without a graphics chip.
 
-If you run one of these, please open an issue and say whether it worked.
+If something does not work, press **Report a problem** at the bottom of the page.
 
 ## Terms of use
 
@@ -149,7 +165,7 @@ this on or change a case, keep that credit with it.
 Copyright 2026 Igor Gembitsky. MIT licence. See [`LICENSE`](LICENSE).
 
 The cases are used under the Creative Commons Attribution licence. See
-[`cases/LICENSE.md`](cases/LICENSE.md). Each case file names its authors, its licence, and the
+[`app/cases/LICENSE.md`](app/cases/LICENSE.md). Each case file names its authors, its licence, and the
 changes made. For example:
 
 > Falcone J, Ogilvie J. *Three Adult Acute Abdominal Pain Objective Structured Clinical
@@ -178,7 +194,7 @@ Southbury, Connecticut, 27 September to 1 October 2026.
 
 ## For developers
 
-The program is one text file, `index.html`. Some ways to build on it:
+The program is one text file, `app/index.html`. Some ways to build on it:
 
 - Run a larger model, or a hosted one.
 - Change the patient's rules in the prompt.

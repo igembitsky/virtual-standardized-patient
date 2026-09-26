@@ -5,3 +5,4 @@ bench/results/
 .vscode/
 .playwright-cli/
 __pycache__/
+tests/node_modules/

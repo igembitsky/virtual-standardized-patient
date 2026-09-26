@@ -6,8 +6,8 @@ Time: about 15 minutes. Most of it is a 2.5 GB download. Python 3 must be instal
 every Linux has it.
 
 > [!NOTE]
-> The Linux launcher has not yet been run on Linux. If it works, or does not, please
-> [open an issue](https://github.com/igembitsky/virtual-standardized-patient/issues) and say so.
+> The Linux launcher has not yet been run on a Linux desktop. If it works, or does not,
+> please [open an issue](https://github.com/igembitsky/virtual-standardized-patient/issues) and say so.
 
 ## 1. Install Ollama
 
@@ -34,31 +34,24 @@ Ollama is the free program that runs the AI model on your computer.
 
 ## 3. Start the simulator
 
-Choose one of the three ways.
+**By double-click** (KDE, Cinnamon, Xfce, MATE, and GNOME with desktop icons)
 
-**GNOME: Ubuntu, Fedora, Debian**
+1. Open the folder. Double-click `Start on Linux.desktop`.
+2. If it asks whether to trust or launch it, choose **Trust and Launch**, **Allow Launching**,
+   or **Execute**.
 
-1. Open the folder. Right-click `start-linux.desktop` and choose **Allow Launching**.
-2. Double-click `start-linux.desktop`.
-
-**KDE: Kubuntu, KDE neon**
-
-1. Open the folder. Double-click `start-linux.sh`.
-2. Choose **Execute**.
-
-**Any Linux, from a terminal**
+**From a terminal** (any Linux)
 
 ```
 cd ~/Desktop/virtual-standardized-patient-main
-./start-linux.sh
+python3 app/server.py
 ```
 
 Then:
 
-1. A terminal window opens. Leave it open.
-2. The first time, the window downloads the patient model. It shows the percentage. Wait for
-   **Download complete**.
-3. Your browser opens the simulator at `http://127.0.0.1:8756/`.
+1. Your browser opens the simulator at `http://127.0.0.1:8756/`.
+2. The first time, the page downloads the patient model and shows the progress. Keep the
+   page open until it says **ready**.
 
 ## 4. Check it works
 
@@ -70,32 +63,29 @@ Then:
 ## Every time after this
 
 1. Start it the same way as in step 3.
-2. To stop, close the terminal window, or press Control-C in it.
+2. To stop, close the browser tab, or press **Quit** at the top of the page. The simulator
+   stops within a few seconds and gives the memory back.
 
 ## Updates
 
 When a new version exists, the top of the page shows **New version** and an **Update** button.
-
-1. Press **Update**. It takes about 10 seconds.
-2. The page reloads by itself. Your notes and your history stay.
-
-If the page shows a download link instead of a button, your copy is from before updates
-existed. Download the ZIP from the link, and replace the folder as in step 2. After that,
-the button appears.
-
-The version you have is at the bottom of the page.
+Press **Update**. The page reloads by itself after about 10 seconds. Your notes and your
+history stay. The version you have is at the bottom of the page.
 
 ## If something goes wrong
 
 | What you see | What to do |
 |---|---|
-| Double-click opens the file in a text editor | Use `start-linux.desktop` with **Allow Launching**, or start it from a terminal |
-| Nothing happens on double-click | Open a terminal and run the two lines in step 3 |
-| "python3 was not found" | Install Python 3 from your package manager. On Ubuntu: `sudo apt install python3` |
-| "Ollama is not installed" in the window | Do step 1 again |
-| The download stopped before 100% | Close the window. Start it again. It continues from where it stopped |
+| **Something went wrong** | Press **Email report** to send the error report from your mail app, or **Report on GitHub** if you have a GitHub account |
+| Double-click opens the file in a text editor | Start it from a terminal, as in step 3 |
+| "Python 3 was not found" | Install Python 3 from your package manager. On Ubuntu: `sudo apt install python3` |
+| **Ollama is not running** on the page | Do step 1 again |
+| The download stopped | The page tries again by itself and carries on from where it stopped |
 | The download does not start | In a terminal, run `ollama pull qwen3:4b-instruct`. Wait for `success` |
 | The browser does not open | Open your browser and go to `http://127.0.0.1:8756/` |
+| Nothing happens at all | Email the file `/tmp/virtual-standardized-patient.log` |
+
+In the page, **Report a problem** at the bottom sends an error report at any time.
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 

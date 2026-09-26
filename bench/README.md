@@ -1,6 +1,6 @@
 # The evaluation harness
 
-Run it after any change to a case file, to `systemPrompt()` in `index.html`, or to the model.
+Run it after any change to a case file, to `systemPrompt()` in `app/index.html`, or to the model.
 
 ```
 python3 bench/eval.py                                  # both suites, every case, about an hour
@@ -19,9 +19,9 @@ results folder is not committed.
 
 ## What is real and what is Claude
 
-- The **patient** is real: the prompt from `index.html`, the same Ollama request as the page.
+- The **patient** is real: the prompt from `app/index.html`, the same Ollama request as the page.
 - The **counting and marking** are real: `page.js` runs the page's own jargon catch, checklist
-  credit, examination matcher and note marking from `index.html`. Nothing is a copy.
+  credit, examination matcher and note marking from `app/index.html`. Nothing is a copy.
 - The **student**, the **examiner** and the **judge** are Claude, through `claude -p`.
 
 ## Suite 1: the student

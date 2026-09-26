@@ -12,26 +12,25 @@ Ollama is the free program that runs the AI model on your computer.
 2. Press **Download for macOS**.
 3. Open the downloaded file and follow the steps on screen.
 4. Open Ollama once. A llama icon appears in the menu bar at the top of the screen.
-5. Leave it running.
 
 ## 2. Download the simulator
 
 1. Go to [github.com/igembitsky/virtual-standardized-patient](https://github.com/igembitsky/virtual-standardized-patient).
 2. Press the green **Code** button.
 3. Press **Download ZIP**.
-4. Open your **Downloads** folder and double-click the ZIP file.
-5. Drag the new folder to your **Desktop**.
+4. Open your **Downloads** folder and double-click the ZIP file. If Safari already unzipped
+   it, you see a folder named `virtual-standardized-patient-main` instead.
+5. Drag that folder to your **Desktop**.
 
 ## 3. Start the simulator
 
 1. Open the folder on your Desktop.
-2. Double-click `start-mac.command`.
-   If macOS says it could not verify the file, follow [If macOS blocks the file](#if-macos-blocks-the-file).
-3. A Terminal window opens. Leave it open.
-4. If Terminal asks to access files in your Desktop folder, press **Allow**.
-   Pressed **Don't Allow**? See [If you pressed Don't Allow by mistake](#if-you-pressed-dont-allow-by-mistake).
-5. The first time, the window downloads the patient model. Wait for **Download complete**.
-6. Your browser opens the simulator.
+2. Double-click **Start on Mac**.
+   The first time, macOS says it could not verify the app. Follow [If macOS blocks the app](#if-macos-blocks-the-app).
+3. If macOS asks to let Start on Mac access files in your Desktop folder, press **Allow**.
+4. Your browser opens the simulator. No other window opens.
+5. The first time, the page downloads the patient model and shows the progress. Keep the
+   page open until it says **ready**.
 
 ## 4. Check it works
 
@@ -43,21 +42,15 @@ You can now turn off Wi-Fi and use the simulator offline.
 
 ## Every time after this
 
-1. Open the folder. Double-click `start-mac.command`.
-2. To stop, close the Terminal window.
+1. Open the folder. Double-click **Start on Mac**.
+2. To stop, close the browser tab, or press **Quit** at the top of the page. The simulator
+   stops within a few seconds and gives the memory back.
 
 ## Updates
 
 When a new version exists, the top of the page shows **New version** and an **Update** button.
-
-1. Press **Update**. It takes about 10 seconds.
-2. The page reloads by itself. Your notes and your history stay.
-
-If the page shows a download link instead of a button, your copy is from before updates
-existed. Download the ZIP from the link, and replace the folder as in step 2. After that,
-the button appears.
-
-The version you have is at the bottom of the page.
+Press **Update**. The page reloads by itself after about 10 seconds. Your notes and your
+history stay. The version you have is at the bottom of the page.
 
 ---
 
@@ -65,9 +58,9 @@ The version you have is at the bottom of the page.
 
 You only need this part if a step above did not work.
 
-### If macOS blocks the file
+### If macOS blocks the app
 
-The message says Apple could not verify the file. This happens once.
+The message says Apple could not verify the app. This happens once.
 
 **macOS 15 or newer**
 
@@ -79,45 +72,42 @@ The message says Apple could not verify the file. This happens once.
 
 **macOS 14 or older**
 
-1. Right-click `start-mac.command`. On a trackpad, click with two fingers.
+1. Right-click **Start on Mac**. On a trackpad, click with two fingers.
 2. Choose **Open**.
 3. Press **Open** again.
 
 ### If you pressed Don't Allow by mistake
 
-Terminal needs to read the simulator files on your Desktop. The pop-up looks like this:
-
-<img src="screenshots/terminal-folder-access.png" width="260" alt="Terminal would like to access files in your Desktop folder">
-
-To give the permission again:
-
 1. Open **System Settings**.
 2. Press **Privacy & Security**.
 3. Press **Files and Folders**.
-4. Under **Terminal**, turn on **Desktop Folder**.
-5. Double-click `start-mac.command` again.
+4. Under **Start on Mac**, turn on **Desktop Folder**.
+5. Double-click **Start on Mac** again.
 
-### If the download stops or does not start
+### If something goes wrong
 
-1. Close the Terminal window.
-2. Double-click `start-mac.command` again. The download continues from where it stopped.
+When the simulator cannot start, it says **Something went wrong** and offers two buttons.
+**Email report** opens your mail app with an error report filled in. **Report on GitHub**
+does the same on GitHub, which needs a free account. In the page, **Report a problem** at the
+bottom does the same at any time.
 
-If the download still does not start, open Terminal and type `ollama pull qwen3:4b-instruct`. Press Enter. Wait for `success`.
+If nothing happens at all:
 
-### If the browser does not open
+1. Wait 20 seconds. The first start after a download can be slow.
+2. Open your browser and go to `http://127.0.0.1:8756/`.
+3. If that does not load, the log is in the file `virtual-standardized-patient.log`. To find
+   it, open **Terminal**, type `open $TMPDIR` and press Enter. Email the file with your
+   report.
 
-Open your browser and go to `http://127.0.0.1:8756/`.
+### If the download stops
 
-### Other messages
-
-| What you see | What to do |
-|---|---|
-| "Ollama is not installed" | Do step 1 again. Open Ollama once. Double-click `start-mac.command` again. |
-| "You do not have appropriate access privileges" | Open Terminal. Type `chmod +x ` with a space after it. Drag `start-mac.command` into the window. Press Enter. Double-click the file again. |
+The page tries again by itself and carries on from where it stopped. If it still does not
+start, open Terminal and type `ollama pull qwen3:4b-instruct`. Press Enter. Wait for `success`.
 
 ### Add a shortcut
 
-Right-click `start-mac.command`, choose **Make Alias**, and drag the alias to the Desktop.
+Drag **Start on Mac** to the Dock. Or right-click it, choose **Make Alias**, and drag the
+alias to the Desktop.
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 
