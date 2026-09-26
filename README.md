@@ -9,16 +9,16 @@ played by an AI model that runs on your own computer. It works without an intern
 
 *Start the install below, or scroll down to read more about this project.*
 
-## Install requirements
+## What you need
 
-| Requirement | Minimum | Recommended |
-|---|---|---|
-| Memory (RAM) | 8 GB | 16 GB |
-| Free disk space | 6 GB | 10 GB |
-| Graphics chip | optional | any |
-| Internet | for the first download only | |
+| | Mac | Windows | Linux |
+|---|---|---|---|
+| System | macOS 14 Sonoma or newer | Windows 10 (22H2) or 11 | 64-bit Ubuntu, Fedora, Debian, and others |
+| Memory (RAM) | 8 GB | 8 GB | 8 GB |
+| Free disk space | 4 GB | 7 GB | 7 GB |
+| Download, once | 2.7 GB | 4.1 GB | 3.9 GB |
 
-A computer without a graphics chip works. Each reply takes a few seconds instead of one.
+After the download, it works without the internet.
 
 ## Install instructions
 
@@ -26,8 +26,8 @@ Choose your system. Each page has every step, from the first download to the fir
 
 | | |
 |---|---|
-| **[Install on a Mac](docs/install-mac.md)** | macOS |
-| **[Install on Windows](docs/install-windows.md)** | Windows 10 or 11 |
+| **[Install on a Mac](docs/install-mac.md)** | macOS 14 Sonoma or newer |
+| **[Install on Windows](docs/install-windows.md)** | Windows 10 (22H2) or 11 |
 | **[Install on Linux](docs/install-linux.md)** | Ubuntu, Fedora, and others |
 
 The install takes about 15 minutes. Most of that time is a 2.5 GB download.

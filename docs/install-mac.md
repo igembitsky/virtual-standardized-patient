@@ -2,7 +2,8 @@
 
 # Install on a Mac
 
-Time: about 15 minutes. Most of it is a 2.5 GB download.
+Time: about 15 minutes. Most of it is a 2.5 GB download. You need macOS 14 Sonoma or newer,
+8 GB of memory, and 4 GB of free disk space.
 
 ## 1. Install Ollama
 
