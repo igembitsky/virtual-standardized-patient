@@ -56,4 +56,11 @@ class H(http.server.BaseHTTPRequestHandler):
         pass
 
 
-http.server.ThreadingHTTPServer(("127.0.0.1", 11434), H).serve_forever()
+class Server(http.server.ThreadingHTTPServer):
+    def server_bind(self):                   # skip the slow network name lookup (macOS)
+        import socketserver
+        socketserver.TCPServer.server_bind(self)
+        self.server_name, self.server_port = "127.0.0.1", 11434
+
+
+Server(("127.0.0.1", 11434), H).serve_forever()

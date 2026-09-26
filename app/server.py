@@ -199,6 +199,13 @@ class Server(http.server.ThreadingHTTPServer):
     daemon_threads = True
     allow_reuse_address = True
 
+    def server_bind(self):
+        # The standard one looks up this computer's network name, which can take half a
+        # minute on a computer with slow or no DNS. The name is not needed here.
+        import socketserver
+        socketserver.TCPServer.server_bind(self)
+        self.server_name, self.server_port = "127.0.0.1", PORT
+
 
 def main():
     try:                                                    # keep the log small
