@@ -1,0 +1,411 @@
+{
+ "case": "travis",
+ "made": "2026-09-26 by opus",
+ "probes": [
+  {
+   "question": "Hello, I'm Dr. Patel, one of the emergency doctors on tonight. What brought you in?",
+   "target": "You were fine until about 10 o'clock last night, when a sharp pain in your upper stomach came on suddenly.",
+   "expect": "reveal",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "Can you walk me through what happened from the moment it began until you got here?",
+   "target": "If the doctor asks you to tell them more, say \"It started around 10 last night. I took some antacids but they didn't help. It got so bad I threw up. I couldn't sleep. I finally told my husband I couldn't stand it any longer and we came here.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Could you point to the spot where it's hurting most?",
+   "target": "The pain is \"mostly right here\". You slowly point to the upper middle of your stomach, just below the breastbone. \"But now it hurts all over.\"",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "Has it moved around at all since it began, or stayed in one place?",
+   "target": "The pain was always in the same place. Say \"It was always just right here.\"",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "What does the pain feel like to you?",
+   "target": "The pain is stabbing. Say \"It's sharp and hurts all the time.\"",
+   "expect": "reveal",
+   "credits": "Quality of the pain"
+  },
+  {
+   "question": "Is it there all the time, or does it let up now and then?",
+   "target": "The pain is constant. Say \"It never goes away.\"",
+   "expect": "reveal",
+   "credits": "Constant or comes and goes"
+  },
+  {
+   "question": "If zero is no pain and ten is the worst you can imagine, where is it right now?",
+   "target": "The pain is severe. On a scale of 1 to 10 it is a 10.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Does the pain spread anywhere else, like round to your back?",
+   "target": "The pain also goes to the middle of your back, \"like a knife in my gut\".",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you found anything that makes it feel better?",
+   "target": "What makes it better? \"Nothing makes it better.\"",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "Is there a way of lying that takes the edge off it even a bit?",
+   "target": "If asked whether anything lessens it, or whether any position helps, say \"If I don't move at all, it helps a little. The antacids didn't help at all.\" Lying still helps a little.",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "Does anything make it hurt more?",
+   "target": "What makes it worse? \"If I move or take a deep breath it gets worse.\"",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "Did you try taking anything for it before coming in?",
+   "target": "If asked what medicines you have tried, say \"I tried taking 2 TUMS last night, but they didn't help.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you actually been sick, thrown up at all?",
+   "target": "You vomited once, in the middle of the night, around midnight.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What did it look like when it came up?",
+   "target": "The vomit was last night's dinner, greenish yellow. There was not a lot of food in it.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Was there any blood in it, or anything dark that looked like coffee grounds?",
+   "target": "There was no blood in the vomit and nothing like coffee grounds.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When did you last have something to eat, and what was it?",
+   "target": "Your last meal was dinner last night, around 6 pm, right after you came home from work. Leftover pork chops, spicy cabbage and iced tea.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you been feeling hot, or getting the shivers?",
+   "target": "You don't know if you had a fever, but you feel cold and sweaty right now. Say \"I feel like I have a fever right now.\"",
+   "expect": "reveal",
+   "credits": "Fever or chills"
+  },
+  {
+   "question": "When you last went to the toilet for a poo, what colour was it?",
+   "target": "Your stools are brown. No blood and no black stools. Say \"My stools are brown. I didn't see any blood.\"",
+   "expect": "reveal",
+   "credits": "Colour of the stools"
+  },
+  {
+   "question": "And your pee, has that looked normal, no blood?",
+   "target": "Your urine was yellow, with no blood.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever had a pain like this in the past?",
+   "target": "You have never had stomach pain like this before.",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "Do you see a doctor for any long-term health problems?",
+   "target": "You are treated for high blood pressure and high cholesterol. You see your family doctor every year for a checkup. She often tells you to quit smoking, but it has been very hard.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you on any regular tablets from your doctor?",
+   "target": "Prescription medicines: \"Yes, I take three different pills for my blood pressure and cholesterol: metoprolol, Benicar and simvastatin.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What about things you buy yourself at the pharmacy, like painkillers for headaches?",
+   "target": "You take Motrin or aspirin now and then for headaches. Most recently you took 3 Motrin two days ago.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you use any recreational drugs?",
+   "target": "You take no street drugs.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever stayed in hospital or had an operation?",
+   "target": "You were in hospital for a tonsillectomy when you were 10.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When was your last period, and any bleeding since?",
+   "target": "You have had no periods for 10 years. No spotting. Your Pap test is normal every year. All your pregnancies and deliveries were vaginal and normal.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you sexually active, and with one partner?",
+   "target": "You have been in a monogamous relationship with your husband for 35 years, and you have always enjoyed a good sex life.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you smoke at all?",
+   "target": "You smoke a pack of Marlboros a day, and have for 45 years. You know you should quit, but you could not quit with the patch.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much beer, wine or spirits do you usually have in a day?",
+   "target": "Alcohol: you call yourself a social drinker. Give the amount only if the doctor asks how much you drink: you usually have one or two beers every day, and sometimes more, depending on the social occasion. You don't get drunk and you have never been arrested for drunk driving.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever felt you should drink less, or has anyone complained about it?",
+   "target": "You have never thought about cutting down. Nobody gets angry about your drinking. You don't feel guilty about it. You never need a drink in the morning to get going.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much coffee or fizzy drinks do you get through in a day?",
+   "target": "You drink at least two cups of coffee a day, one in the morning and one about 10 am, and at least two diet Cokes, one at lunch and one about 3 pm.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What do you normally eat in a day, and do you get much exercise?",
+   "target": "You usually skip breakfast, have a sandwich for lunch, and \"meat and potatoes\" for dinner. You do not exercise regularly.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What do you like doing in your free time?",
+   "target": "Hobbies and activities: you are in too much pain to talk about that.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What kind of work do you do, and how long have you been at it?",
+   "target": "You have driven for one trucking company for the past 30 years. You are thinking about retiring in the next few years. You finished high school.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Who's at home with you? Any kids?",
+   "target": "You have been married for 35 years. Your husband works at Walmart. You have three children, all grown and in good health.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do any illnesses run in your family, parents or brothers and sisters?",
+   "target": "Your father died of a heart attack at 55. Your mother died recently at 82 from a stroke. Your brother is 62 and has coronary artery disease.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed your skin or the whites of your eyes going yellow?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you had any runny, watery bowel movements?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you been abroad or travelled anywhere unusual lately?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Are you allergic to any medicines?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "I'm going to press gently on your tummy now. Say if it's too much and I'll stop.",
+   "target": "It hurts all over your stomach, but it is worst in the center, just below the breastbone.",
+   "expect": "reveal",
+   "credits": "Checked on comfort during the exam"
+  },
+  {
+   "question": "We'll also need to do an internal check of your back passage and a pelvic exam as part of looking into this.",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Mentioned the need for a rectal or pelvic exam"
+  },
+  {
+   "question": "I think there may be a hole in the lining of your stomach from an ulcer. We'll do blood tests and an x-ray and scan, and I'll get the surgeons to see you. How do you feel about that?",
+   "target": "You are worried about the possibility of having an operation.",
+   "expect": "reveal",
+   "credits": "Explained what is going on and what next"
+  },
+  {
+   "question": "Is there anything else going on that I haven't asked about?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  },
+  {
+   "question": "Anything else you'd like me to know before we get things moving?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "appearance"
+  },
+  {
+   "key": "abdomen",
+   "phrasing": "belly palpation"
+  },
+  {
+   "key": "back",
+   "phrasing": "flank punch"
+  },
+  {
+   "key": "rectal",
+   "phrasing": "DRE"
+  },
+  {
+   "key": "pelvic",
+   "phrasing": "vaginal exam"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Perforated peptic ulcer with generalized peritonitis",
+    "Acute pancreatitis",
+    "Perforated appendix"
+   ],
+   "tx": [
+    "Complete blood count",
+    "Serum lipase and amylase",
+    "Erect chest X-ray for free air under the diaphragm"
+   ]
+  },
+  {
+   "dx": [
+    "Peritonitis secondary to perforated duodenal ulcer (NSAID use, smoker)",
+    "Acute pancreatitis",
+    "Gastritis"
+   ],
+   "tx": [
+    "CXR upright",
+    "CT abdomen and pelvis",
+    "BMP / electrolytes"
+   ]
+  },
+  {
+   "dx": [
+    "Perforated viscus, likely PUD, with generalised peritonitis",
+    "Pancreatitis",
+    "Ruptured appendix"
+   ],
+   "tx": [
+    "FBC",
+    "Upright chest radiograph",
+    "Abdominal CT scan"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Acute cholecystitis",
+    "Biliary colic",
+    "Gastroenteritis"
+   ],
+   "tx": [
+    "Right upper quadrant ultrasound",
+    "Liver function tests",
+    "CBC"
+   ]
+  },
+  {
+   "dx": [
+    "Inferior myocardial infarction",
+    "Acute cholecystitis",
+    "GERD"
+   ],
+   "tx": [
+    "ECG",
+    "Troponin",
+    "Abdominal ultrasound"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Perforated peptic ulcer",
+  "Perforated PUD with peritonitis",
+  "Hollow viscus perforation with free air",
+  "Perforated gastric ulcer causing peritonitis",
+  "Generalised peritonitis from a perforated duodenal ulcer"
+ ],
+ "test_variants": [
+  {
+   "key": "CBC",
+   "phrasing": "Full blood count"
+  },
+  {
+   "key": "CBC",
+   "phrasing": "FBC with white cell count"
+  },
+  {
+   "key": "amylase",
+   "phrasing": "Serum amylase"
+  },
+  {
+   "key": "lipase",
+   "phrasing": "Serum lipase level"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "Basic metabolic panel"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "U&Es"
+  },
+  {
+   "key": "upright chest X-ray",
+   "phrasing": "Erect CXR looking for free air"
+  },
+  {
+   "key": "upright chest X-ray",
+   "phrasing": "Upright chest radiograph"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CT abdomen and pelvis"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CAT scan of the abdomen"
+  }
+ ]
+}

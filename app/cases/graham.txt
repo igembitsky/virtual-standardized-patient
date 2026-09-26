@@ -92,7 +92,7 @@ rectal: Not done yet. The patient says "The nurse told me someone would be in to
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
 Where the pain is | where, whereabouts, point, show me, which part, location, where did it start, where did the pain start, where it started, where was it, where was the pain, initially, at first, same place, always been, moved, move around, moving around
-Quality of the pain | describe, what is it like, sharp, dull, burning, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words
+Quality of the pain | describe, what is it like, sharp, dull, burning, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words, what's it like, into words
 Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, whole time, ease off, eases off, on and off, off and on, comes back, go away
 What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, helps, set it off, sets it off, hurt more, position
 Colour of the urine | urine, water, wee, pass water, urinat*, pee, peed, peeing, toilet, bathroom, blood in your urine
@@ -107,7 +107,7 @@ Explained what might be causing the pain | i think it, i think this, i think you
 most likely: Ascending cholangitis
 also accepted: acute cholecystitis, perforated ulcer, acute pancreatitis, gastritis, perforated appendix, incarcerated hernia
 tests: complete blood count, liver function tests, amylase, lipase, electrolytes, right upper quadrant ultrasound, abdominal CT, ERCP if indicated
-pass diagnosis words: cholangit*, bile duct infection, infected bile duct, infection of the bile duct
+pass diagnosis words: cholangit*, bile duct infection, infected bile duct, infection of the bile duct, infected obstructed, obstructed and infected
 pass test words: ultrasound, ultrasonography, sonogram*, lft, lfts, liver function, liver enzymes, bilirubin, ct, computed tomography, ercp, cbc, complete blood count, full blood count, white count, amylase, lipase
 teaching point: Right upper quadrant pain after a meal, a high fever with shaking chills, and urine dark like tea point to a blocked and infected bile duct, which is ascending cholangitis. Fever, right upper quadrant pain and jaundice make Charcot's triad; here the jaundice shows as dark urine and lighter stools. The fast pulse, fast breathing and low blood pressure with the fever are signs of sepsis, and the two earlier milder attacks after meals point to gallstones. Check the blood count, liver tests, amylase and lipase, get a right upper quadrant ultrasound, and plan ERCP if it is indicated.
 miss note: Acute cholecystitis is the easy answer, but the shaking chills, the tea colored urine and the lighter stools say the bile duct is blocked and infected; he mentions the urine himself, but the lighter stools come out only if you ask about changes to his stools.

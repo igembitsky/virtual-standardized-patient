@@ -1,0 +1,373 @@
+{
+ "case": "morris",
+ "made": "2026-09-26 by opus",
+ "probes": [
+  {
+   "question": "Good morning, I'm Dr Patel, one of the emergency doctors on this morning. What brings you in?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "When did this all start?",
+   "target": "The pain began about a week ago. It was mild, about 3 out of 10. At first it came in waves lasting about 30 minutes, every 2 or 3 hours.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Can you show me exactly where it hurts?",
+   "target": "The pain is in your lower abdomen on the left. Say \"It's kind of in my lower abdomen over here\" and that you point to the left lower side.",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "Does the pain travel anywhere, like your back or down your legs?",
+   "target": "If asked whether the pain goes anywhere else, say \"No.\" It has always been only in the left lower side.",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "How would you put the pain into words, is it sharp, achy, cramping?",
+   "target": "The pain is sharp and steady. It is moderate, a 6 out of 10.",
+   "expect": "reveal",
+   "credits": "Quality of the pain"
+  },
+  {
+   "question": "Is it there all the time now, or does it come and go?",
+   "target": "Say \"It initially came and went, but now is there all the time.\" It is slowly building and it is worse right now.",
+   "expect": "reveal",
+   "credits": "Constant or comes and goes"
+  },
+  {
+   "question": "Has anything made it easier, or anything make it hurt more?",
+   "target": "If asked what makes it worse, say \"If I move it gets worse.\" Sneezing makes it worse too, and you sneeze because you have spring allergies.",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "Has it been waking you up at night?",
+   "target": "It sometimes woke you from sleep, and it seemed to help if you got up and walked around.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you had pain like this at any point in the past?",
+   "target": "If asked whether you have had pain like this before, say \"I've had some discomfort in the past, but not like this.\"",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "How often did those earlier bouts happen, and were they as bad?",
+   "target": "It has happened less than once a month, and it was not as bad as this time.",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "What were those earlier episodes like, and how did they settle?",
+   "target": "It was a crampy discomfort in your lower abdomen that lasted a few hours and went away after a bowel movement. It happened two or three times over the past 2 years.",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "During those earlier times, did you go off your food or run a temperature?",
+   "target": "Those times it did not affect your eating and you had no fevers. You do not remember more about them, and you did not think it was important enough to call the doctor.",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "Have you felt hot or shivery at all?",
+   "target": "Last night you felt like you were getting a fever. You checked your temperature and it was 101. You took 2 Tylenol and went back to sleep.",
+   "expect": "reveal",
+   "credits": "Fever or chills"
+  },
+  {
+   "question": "How has your appetite been?",
+   "target": "You have had a poor appetite all week. You have not felt hungry for more than 24 hours and have eaten no solid food since yesterday.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you feel queasy at all?",
+   "target": "You feel sick to your stomach.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you actually been sick, brought anything up?",
+   "target": "You have not vomited.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How have things been going with your bowel movements?",
+   "target": "You had a few loose stools when the pain started a week ago. Now you feel constipated and you have not had a bowel movement for 2 days.",
+   "expect": "reveal",
+   "credits": "Bowels and stools"
+  },
+  {
+   "question": "Have you seen any blood when you go to the toilet, or anything very dark?",
+   "target": "There has been no blood in your stools and no black stools.",
+   "expect": "reveal",
+   "credits": "Bowels and stools"
+  },
+  {
+   "question": "When did you last pee, and what colour was it?",
+   "target": "You passed urine when you got up this morning. It looked yellow. No blood.",
+   "expect": "reveal",
+   "credits": "Colour of the urine"
+  },
+  {
+   "question": "Has anyone done an internal examination of your back passage yet?",
+   "target": "No rectal exam has been done on you yet. If the doctor asks about one, say \"The nurse told me someone would be in to do that after you spoke with me.\"",
+   "expect": "reveal",
+   "credits": "Asked about a rectal or pelvic exam"
+  },
+  {
+   "question": "Are you otherwise well? Any surgeries or hospital stays?",
+   "target": "Apart from this you are in good health. You have never had an operation and never been in hospital.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you take any regular medications or any recreational drugs?",
+   "target": "If asked about prescription medicines, say \"None.\" You take no street drugs.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When was your last period, and are they regular?",
+   "target": "Your periods started at 14. They come every 28 days and are still normal and regular. Your last period was 3 weeks ago, and it was normal.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you up to date with your smear tests and women's health checks?",
+   "target": "You have a Pap smear every year. Your last gynaecology exam was 6 months ago and it was normal.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you sexually active, and is there any chance you could be pregnant?",
+   "target": "You have been with your husband only, for the past 15 years, and have always enjoyed a good sex life. Your husband had a vasectomy 5 years ago, after you both decided not to have children.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much alcohol do you drink in a typical week?",
+   "target": "You call yourself a social drinker. You have no more than 2 or 3 drinks a week. You do not get drunk and you have never been arrested for drunk driving. If the doctor asks the drinking questions, every answer is no.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you smoke cigarettes?",
+   "target": "You do not smoke.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much coffee or tea do you have?",
+   "target": "You drink one cup of coffee a day, in the morning, and stay away from other drinks with caffeine.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What do you normally eat in a day?",
+   "target": "You usually have cereal for breakfast, a fast food salad for lunch, and pasta or chicken for dinner.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you get much exercise?",
+   "target": "You exercise on the treadmill at home, about 30 minutes 3 or 4 times a week.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What do you like to do in your free time?",
+   "target": "If asked about hobbies, you are in too much pain to talk about them.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you had any thoughts of hurting yourself?",
+   "target": "You have no thoughts of harming yourself.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What do you do for work?",
+   "target": "You finished graduate school in industrial engineering. You have worked as an industrial engineering professor at CMU for the past 10 years.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Does anything run in the family, like bowel problems or cancer?",
+   "target": "Your parents are alive, in their early seventies, and in good health. Your father had colon cancer at 60 and was cured with surgery. Your four brothers and sisters are healthy.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Who's at home with you, are you married, any kids?",
+   "target": "You have been married for 15 years. You have no children.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you been travelling abroad recently?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Any cough or trouble catching your breath?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed any rash on your skin?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Has anyone at home had the same sort of tummy trouble?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything else bothering you that we haven't talked about?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "general appearance"
+  },
+  {
+   "key": "abdomen",
+   "phrasing": "palpate belly"
+  },
+  {
+   "key": "back",
+   "phrasing": "kidney punch"
+  },
+  {
+   "key": "rectal",
+   "phrasing": "DRE"
+  },
+  {
+   "key": "pelvic",
+   "phrasing": "speculum"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Perforated sigmoid diverticulitis",
+    "Acute pancreatitis",
+    "Constipation"
+   ],
+   "tx": [
+    "CBC with differential",
+    "Serum lipase and amylase",
+    "CT abdomen and pelvis with contrast"
+   ]
+  },
+  {
+   "dx": [
+    "Acute diverticulitis with localized perforation",
+    "Gastritis",
+    "Ovarian cyst"
+   ],
+   "tx": [
+    "Full blood count",
+    "Basic metabolic panel",
+    "CT scan of the abdomen"
+   ]
+  },
+  {
+   "dx": [
+    "Complicated diverticulitis (perforated)",
+    "Pancreatitis",
+    "Colon cancer"
+   ],
+   "tx": [
+    "WBC count",
+    "U&Es",
+    "CAT scan abdomen/pelvis"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Ovarian torsion",
+    "Ectopic pregnancy",
+    "Pelvic inflammatory disease"
+   ],
+   "tx": [
+    "Urine pregnancy test",
+    "Transvaginal ultrasound",
+    "Urinalysis"
+   ]
+  },
+  {
+   "dx": [
+    "Left ureteric colic (kidney stone)",
+    "Urinary tract infection",
+    "Irritable bowel syndrome"
+   ],
+   "tx": [
+    "Urine dipstick",
+    "Renal ultrasound",
+    "Urine culture"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Perforated diverticulitis",
+  "Sigmoid diverticulitis with micro-perforation",
+  "Diverticular perforation",
+  "Complicated diverticulitis",
+  "Acute diverticulitis, perforated"
+ ],
+ "test_variants": [
+  {
+   "key": "complete blood count (CBC)",
+   "phrasing": "full blood count"
+  },
+  {
+   "key": "complete blood count (CBC)",
+   "phrasing": "FBC with white cell count"
+  },
+  {
+   "key": "amylase",
+   "phrasing": "serum amylase"
+  },
+  {
+   "key": "lipase",
+   "phrasing": "serum lipase level"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "U&Es"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "basic metabolic panel"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CT abdomen and pelvis"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CAT scan of the belly"
+  }
+ ]
+}

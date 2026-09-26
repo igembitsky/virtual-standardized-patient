@@ -1,0 +1,311 @@
+{
+ "case": "graham",
+ "made": "2026-09-26 by opus",
+ "probes": [
+  {
+   "question": "Hi there, I'm Dr Patel, one of the emergency doctors on tonight. What's brought you in?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "Can you put a finger on the spot where it hurts most?",
+   "target": "Where the pain is: point to the upper right part of your stomach and say \"It's right here.\"",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "When it first came on, was it in that same spot, or somewhere else?",
+   "target": "If asked where the pain was when it started, say \"It was always right here.\" It has not moved.",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "Does the pain travel anywhere, say round to your back or up to your shoulder?",
+   "target": "(only if asked) If asked whether the pain goes anywhere else: it is worst in the upper right of your stomach, but it also seems to go to your right upper back, \"where my shoulder blade is\".",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How would you put the pain into words? What's it like?",
+   "target": "The pain is dull, intense and constant. Say \"It's constant and it hurts when I take a deep breath.\"",
+   "expect": "reveal",
+   "credits": "Quality of the pain"
+  },
+  {
+   "question": "Is it there the whole time, or does it let up now and then?",
+   "target": "The pain is constant. Say \"It never goes away.\"",
+   "expect": "reveal",
+   "credits": "Constant or comes and goes"
+  },
+  {
+   "question": "Have you found anything that eases it, or anything that makes it hurt more?",
+   "target": "If asked what makes it better, say \"Nothing seems to make it better. I feel like it is getting worse.\"",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "If zero is no pain and ten is the worst you can imagine, where would you put it right now?",
+   "target": "On a scale of 1 to 10 the pain is an 8.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What did you have to eat last night before this started?",
+   "target": "You had Chinese takeout at about 6 last night, right after you came home from work: Kung Pao chicken, an egg roll and wonton soup.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you been feeling hot, or getting the shivers at all?",
+   "target": "You feel like you are getting a fever right now. In the waiting room of the Emergency Room you had shaking chills. Say \"I just couldn't stop shaking.\" You stress this.",
+   "expect": "reveal",
+   "credits": "Fever or chills"
+  },
+  {
+   "question": "Have you felt queasy, or actually been sick?",
+   "target": "You have not vomited.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When you last went for a wee, did it look normal to you?",
+   "target": "You last passed water this afternoon. It was dark, \"almost like tea\". There was no blood in it. This worries you, so if the doctor does not ask about your urine, mention it yourself.",
+   "expect": "reveal",
+   "credits": "Colour of the urine"
+  },
+  {
+   "question": "Have your poos looked any different lately, like a change in colour?",
+   "target": "(only if asked) If asked about changes to your stools: there has been no blood and no black stools. You have noticed that your stools are a lighter color.",
+   "expect": "reveal",
+   "credits": "Colour of the stools"
+  },
+  {
+   "question": "Has anything like this ever happened to you before?",
+   "target": "You have had two attacks of stomach pain before this one. Both were not as bad as this.",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "Are you on any regular medicines from your doctor?",
+   "target": "If asked about prescription medicines, say \"Yes, I take two inhalers (flovent and albuterol) for asthma and Synthroid for hypothyroidism.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much alcohol would you have in a typical week or month?",
+   "target": "(only if asked) If asked how much you drink: you consider yourself a \"social drinker\". You have 2 or 3 drinks a month. Sometimes you drink more, depending on the social occasion. You do not get drunk, and you have never been arrested for drunk driving.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Has anyone ever been annoyed about your drinking, or have you ever needed a drink first thing in the morning?",
+   "target": "(only if asked) If asked the drinking questions: you have not thought about cutting down, nobody gets angry about your drinking, you do not feel guilty about it, and you never need a drink in the morning to get started.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you with a partner at the moment?",
+   "target": "(only if asked) You are single and not in a sexual relationship at present.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Sometimes when people are in a lot of pain they have dark thoughts. Have you had any thoughts of hurting yourself?",
+   "target": "(only if asked) You have no thoughts of harming yourself.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you been abroad or travelled anywhere recently?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Has your skin been itchy at all?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you lost any weight without trying over the last few months?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed any rash anywhere on your body?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Before I press on your tummy, is there any way of lying that makes it easier? And let me know if I'm pressing too hard.",
+   "target": "If asked whether you can do anything to lessen the pain, or whether any position helps, say \"If I lie still, it helps.\"",
+   "expect": "reveal",
+   "credits": "Asked about my comfort during the exam"
+  },
+  {
+   "question": "I'll also need to examine your back passage with a gloved finger as part of this.",
+   "target": "If the doctor asks about or mentions a rectal exam, say \"The nurse told me someone would be in to do that after you spoke with me.\"",
+   "expect": "reveal",
+   "credits": "Mentioned the need for a rectal exam"
+  },
+  {
+   "question": "I think a stone may be blocking the tube that drains your gallbladder and it's become infected. We need blood tests and a scan, and you may need a procedure. Are you worried about needing an operation?",
+   "target": "(only if asked) You are worried about the possibility of having an operation.",
+   "expect": "reveal",
+   "credits": "Explained what might be causing the pain"
+  },
+  {
+   "question": "Is there anything else bothering you that we haven't talked about?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "general appearance"
+  },
+  {
+   "key": "abdomen",
+   "phrasing": "tummy palpation"
+  },
+  {
+   "key": "back",
+   "phrasing": "costovertebral angle"
+  },
+  {
+   "key": "rectal",
+   "phrasing": "DRE"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Ascending cholangitis",
+    "Acute cholecystitis",
+    "Acute pancreatitis"
+   ],
+   "tx": [
+    "FBC",
+    "LFTs",
+    "RUQ ultrasound"
+   ]
+  },
+  {
+   "dx": [
+    "Acute cholangitis with sepsis (Charcot's triad) from choledocholithiasis",
+    "Acute calculous cholecystitis",
+    "Perforated peptic ulcer"
+   ],
+   "tx": [
+    "CBC with differential",
+    "serum lipase and amylase",
+    "ERCP if indicated"
+   ]
+  },
+  {
+   "dx": [
+    "Infected obstructed common bile duct",
+    "Gallbladder inflammation",
+    "Pancreatitis"
+   ],
+   "tx": [
+    "liver enzymes and bilirubin",
+    "abdominal ultrasonography",
+    "CT abdomen"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Biliary colic",
+    "Right lower lobe pneumonia",
+    "Right pyelonephritis"
+   ],
+   "tx": [
+    "urinalysis",
+    "chest x-ray",
+    "urine culture"
+   ]
+  },
+  {
+   "dx": [
+    "Right-sided pyelonephritis",
+    "Kidney stone",
+    "Food poisoning"
+   ],
+   "tx": [
+    "urine dipstick",
+    "renal function",
+    "KUB x-ray"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Acute cholangitis",
+  "Ascending cholangitis secondary to CBD stone",
+  "Bile duct infection from gallstone obstruction",
+  "Suppurative cholangitis",
+  "Cholangitis with Charcot's triad"
+ ],
+ "test_variants": [
+  {
+   "key": "complete blood count",
+   "phrasing": "CBC with diff"
+  },
+  {
+   "key": "complete blood count",
+   "phrasing": "full blood count"
+  },
+  {
+   "key": "liver function tests",
+   "phrasing": "LFTs"
+  },
+  {
+   "key": "liver function tests",
+   "phrasing": "bilirubin and liver enzymes"
+  },
+  {
+   "key": "amylase",
+   "phrasing": "serum amylase"
+  },
+  {
+   "key": "lipase",
+   "phrasing": "serum lipase level"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "U&Es"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "basic metabolic panel"
+  },
+  {
+   "key": "right upper quadrant ultrasound",
+   "phrasing": "RUQ US"
+  },
+  {
+   "key": "right upper quadrant ultrasound",
+   "phrasing": "gallbladder sonogram"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CT abdomen and pelvis"
+  },
+  {
+   "key": "ERCP if indicated",
+   "phrasing": "endoscopic retrograde cholangiopancreatography"
+  },
+  {
+   "key": "ERCP if indicated",
+   "phrasing": "ERCP for duct drainage"
+  }
+ ]
+}

@@ -100,7 +100,7 @@ What makes it better or worse | better, worse, relieve*, ease, eases, easier, ag
 Colour of the stools | stool*, bowel*, motion*, faeces, feces, poo, poop, black, dark, tarry, melaena, melena, blood in, number two
 Fever or chills | fever*, chill*, temperature, hot, shiver*, shaking, rigor*, sweat*, cold, feverish
 Had this pain before | before, previous*, past, ever had, first time, indigestion, heartburn, ulcer*
-Checked on comfort during the exam | let me know if, tell me if, too hard, does that hurt, am i hurting, gentle, comfortable, sorry, stop me
+Checked on comfort during the exam | let me know if, tell me if, too hard, does that hurt, am i hurting, gentle, comfortable, sorry, stop me, too much, say if
 Mentioned the need for a rectal or pelvic exam | rectal, rectum, back passage, pelvic, internal exam*, finger in
 Explained what is going on and what next | i think, i believe, might be, could be, probably, surgery, operation, surgeon, ulcer, hole, perforat*, x-ray, xray, scan, blood tests, next step*
 

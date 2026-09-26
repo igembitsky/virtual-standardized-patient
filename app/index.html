@@ -1715,7 +1715,10 @@ function jargonWord(c, text) {
 const NOTE_STOP = new Set(("a an the and or but if of to in on at for with from by is are was were be been being do does did " +
   "have has had you your yours i me my we our he she it they them this that these those any some anything something ever never " +
   "not no yes how what when where why who which there here about like as so just very more most much many few get got go going " +
-  "come came feel feeling felt lately recently since before after over into out up down time times day days tell know").split(" "));
+  "come came feel feeling felt lately recently since before after over into out up down time times day days tell know " +
+  // words about the conversation itself, not the story: "if the doctor asks you, say ..."
+  "ask asked asks asking doctor say says said tell told telling else want wanted like need needs " +
+  "haven didn doesn don isn wasn aren won couldn wouldn shouldn can could would should will").split(" "));
 const NOTE_WORDS = {
   surgery: "operation cesarean caesarean section removed", operation: "surgery cesarean caesarean section",
   sti: "trichomonas chlamydia gonorrhea herpes sexually", std: "trichomonas chlamydia gonorrhea herpes sexually",
