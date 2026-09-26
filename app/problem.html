@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Something went wrong</title>
+<!-- Opened by a launcher that could not start the simulator. The launcher copies this file
+     to the temporary folder with the report filled in below, and opens it in the browser.
+     Opened as it is, it shows a short report with the likely reason for this system. -->
+<style>
+:root{--ground:#EFF1EE;--panel:#FFF;--ink:#151A17;--body:#333B36;--muted:#5E6862;--line:#D9DFD8;
+  --green:#0B6B4F;--btn-ink:#FFF;--sunk:#E7EBE6;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--ground:#131614;--panel:#1B1F1C;--ink:#EAEEE8;--body:#C7CFC9;
+  --muted:#949D96;--line:#2B322D;--green:#5CC79E;--btn-ink:#08211A;--sunk:#0D100E}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--body);font:1.1rem/1.6 var(--sans);padding:48px 16px}
+.card{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px}
+h1{color:var(--ink);font-size:1.6rem;line-height:1.2;margin:0 0 12px}
+p{margin:0 0 14px}
+.what{color:var(--ink);font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 10px}
+button{font:inherit;font-size:1rem;font-weight:600;border-radius:9px;padding:10px 18px;cursor:pointer;
+  background:var(--green);color:var(--btn-ink);border:1px solid var(--green)}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--muted)}
+.sm{font-size:.88rem;color:var(--muted)}
+details{margin-top:18px}
+summary{cursor:pointer;color:var(--muted);font-size:.95rem}
+textarea{width:100%;height:260px;margin-top:10px;font:.78rem/1.5 var(--mono);color:var(--body);
+  background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Something went wrong</h1>
+  <p class="what" id="what">The simulator could not start.</p>
+  <p>Please send this error report, so it can be fixed.</p>
+  <div class="row">
+    <button id="email">Email report</button>
+    <button class="ghost" id="github">Report on GitHub</button>
+  </div>
+  <p class="sm">Email opens your mail app with the report filled in. Send it to whoever gave you
+    the simulator. GitHub needs a free account.</p>
+  <details>
+    <summary>See the report</summary>
+    <textarea id="report" readonly></textarea>
+    <p><button class="ghost" id="copy">Copy</button></p>
+  </details>
+</div>
+<script>
+"use strict";
+// The launcher replaces the next line with the report. Left as it is, it is null.
+const DATA = /*REPORT*/null/*END*/;
+const REASONS = {
+  powershell: "Windows did not let the launcher run. This can happen on a computer that an organisation manages.",
+  python: "Python 3 was not found. Install python3 from your package manager, then start the simulator again.",
+};
+// Opened as it is: only the Windows launcher (PowerShell blocked) and the Linux one (no Python) do that.
+const reason = /Windows/.test(navigator.userAgent) ? "powershell" : /Linux/.test(navigator.userAgent) ? "python" : "";
+const what = DATA ? DATA.what : (REASONS[reason] || "The simulator could not start.");
+const report = DATA ? DATA.report : [
+  "Virtual Standardized Patient Simulator: problem report",
+  "When: " + new Date().toString(),
+  "Computer: " + navigator.userAgent,
+  "What happened: " + what,
+].join("\n");
+document.getElementById("what").textContent = what;
+document.getElementById("report").value = report;
+
+const TITLE = "Problem report: " + what.split(".")[0];
+const REPO = "https://github.com/igembitsky/virtual-standardized-patient";
+// Mail apps and GitHub accept only so much in a link. The whole report is copied first, so
+// anything cut short can be pasted in.
+const cut = (s, n) => s.length <= n ? s
+  : s.slice(0, n) + "\n\n[The report was cut short here. The whole report is copied: paste it below.]";
+function copy() {
+  const t = document.getElementById("report");
+  try { navigator.clipboard.writeText(report).catch(() => {}); } catch {}
+  try { t.select(); document.execCommand("copy"); t.setSelectionRange(0, 0); } catch {}
+}
+document.getElementById("email").onclick = () => {
+  copy();
+  location.href = "mailto:?subject=" + encodeURIComponent(TITLE) + "&body=" + encodeURIComponent(cut(report, 1500));
+};
+document.getElementById("github").onclick = () => {
+  copy();
+  window.open(REPO + "/issues/new?title=" + encodeURIComponent(TITLE)
+    + "&body=" + encodeURIComponent("```\n" + cut(report, 5000) + "\n```"), "_blank", "noopener");
+};
+document.getElementById("copy").onclick = e => { copy(); e.target.textContent = "Copied"; };
+</script>
+</body>
+</html>

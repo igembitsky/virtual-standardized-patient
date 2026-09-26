@@ -6,9 +6,12 @@
 #   2. Opens the browser there.
 #   3. Stops by itself when the last browser tab closes, or when Quit is pressed in the page.
 #      On the way out it unloads the patient model, so Ollama gives back the memory.
+#
+# It keeps a log in the temporary folder, virtual-standardized-patient.log. If it cannot
+# start, it opens a page in the browser with an error report to email or post on GitHub.
 use strict; use warnings;
 use IO::Socket::INET; use IO::Select; use Cwd 'abs_path'; use File::Basename 'dirname';
-use File::Temp 'tempdir'; use File::Path 'rmtree';
+use File::Temp 'tempdir'; use File::Path 'rmtree'; use POSIX 'strftime';
 
 my $PORT   = 8756;
 my $URL    = "http://127.0.0.1:$PORT/";
@@ -17,7 +20,6 @@ my $OLLAMA = 'http://127.0.0.1:11434';
 my $ZIP    = $ENV{VSP_ZIP} || 'https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip';
 # The patient models. Only these are unloaded on the way out.
 my $KNOWN  = qr/^(qwen3:4b-instruct|qwen3:4b|llama3\.1:8b|granite4\.1:3b)(:|$)/;
-my $OPEN   = $ENV{VSP_OPEN} || 'open';           # how to open the browser
 # How long to wait before stopping, in seconds.
 my $FIRST_TAB = 120;   # for the browser to open the first tab
 my $LAST_TAB  = 10;    # after the last tab closes, so a reload does not stop it
@@ -29,17 +31,30 @@ my %T = (html=>'text/html; charset=utf-8', js=>'application/javascript',
          ico=>'image/x-icon', md=>'text/plain; charset=utf-8');
 my $root = dirname(abs_path($0));    # the app folder, served
 my $top  = dirname($root);           # the folder that was downloaded
+my $LOG  = ($ENV{TMPDIR} || '/tmp') . '/virtual-standardized-patient.log';
+$LOG =~ s{//+}{/}g;
+my $srv;
 
-my $srv = IO::Socket::INET->new(LocalAddr=>'127.0.0.1', LocalPort=>$PORT, Listen=>32,
-                                ReuseAddr=>1, Proto=>'tcp');
-unless ($srv) {                      # already running: just show it
-  print "It is already running. Opening it ...\n";
-  system($OPEN, $URL); exit 0;
+# Anything that goes wrong from here on ends in the problem page, not in silence.
+$SIG{__DIE__} = sub { return if $^S; fail("The launcher stopped with an error: $_[0]") };
+
+rename $LOG, "$LOG.old" if -s $LOG && -s $LOG > 200_000;     # keep the log small
+logline("Starting version " . version() . " on " . mac_version() . ", Perl $^V, in $root");
+
+$srv = IO::Socket::INET->new(LocalAddr=>'127.0.0.1', LocalPort=>$PORT, Listen=>32,
+                             ReuseAddr=>1, Proto=>'tcp');
+unless ($srv) {
+  my $why = $!;
+  if (`curl -s -m 3 ${URL}update` eq 'can') {  # this simulator, already running: just show it
+    logline("It is already running. Opening it.");
+    open_browser($URL); exit 0;
+  }
+  fail("Another program is using port $PORT, so the simulator cannot start. ($why)");
 }
 $SIG{PIPE} = 'IGNORE';               # a tab that closes mid-reply must not stop the server
-$SIG{$_} = \&stop for qw(INT TERM HUP);
-print "Running on $URL\nIt stops by itself when you close the browser tab, or press Quit in the page.\n";
-system($OPEN, $URL);
+$SIG{$_} = sub { stop("signal $_[0]") } for qw(INT TERM HUP);
+logline("Running on $URL. It stops by itself when you close the browser tab, or press Quit in the page.");
+open_browser($URL);
 
 my $sel = IO::Select->new($srv);
 my (%buf, %born);        # per connection: what has arrived, and when it opened
@@ -76,10 +91,54 @@ while (!$quit) {
   for my $c ($sel->handles) { drop($c) if $c != $srv && $now - $born{$c} > 5 }
   delete $tabs{$_} for grep { $now - $tabs{$_} > $QUIET_TAB } keys %tabs;
   if (%tabs)     { $empty_since = 0 }
-  elsif (!$seen) { $quit = 1 if $now - $begun > $FIRST_TAB }
-  else           { $empty_since ||= $now; $quit = 1 if $now - $empty_since >= $LAST_TAB }
+  elsif (!$seen) { $quit = 'no browser tab opened in 2 minutes' if $now - $begun > $FIRST_TAB }
+  else           { $empty_since ||= $now; $quit = 'the last tab closed' if $now - $empty_since >= $LAST_TAB }
 }
-stop();
+stop($quit);
+
+sub logline {
+  my $line = strftime('%Y-%m-%d %H:%M:%S ', localtime) . join('', @_) . "\n";
+  print $line if -t STDOUT;          # started from Terminal; otherwise STDOUT is the log already
+  if (open my $fh, '>>', $LOG) { print $fh $line; close $fh }
+}
+sub log_tail {
+  my ($n) = @_;
+  open my $fh, '<', $LOG or return "(no log)\n";
+  my @l = <$fh>; close $fh;
+  return join '', @l[($#l - $n + 1 < 0 ? 0 : $#l - $n + 1) .. $#l];
+}
+sub version {
+  open my $fh, '<', "$root/index.html" or return 'unknown';
+  local $/; my ($v) = <$fh> =~ /version: "([^"]+)"/; close $fh;
+  return $v || 'unknown';
+}
+sub mac_version { my $v = `sw_vers -productVersion 2>/dev/null`; chomp $v; $v ? "macOS $v" : $^O }
+sub open_browser { system('open', $_[0]) unless $ENV{VSP_NO_BROWSER} }   # tests set VSP_NO_BROWSER
+sub json_str {
+  my $s = shift;
+  $s =~ s/(["\\])/\\$1/g; $s =~ s/\n/\\n/g; $s =~ s/\r/\\r/g; $s =~ s/\t/\\t/g;
+  $s =~ s/([\x00-\x1f])/sprintf('\\u%04x', ord $1)/ge; $s =~ s{</}{<\\/}g;
+  return "\"$s\"";
+}
+# It cannot start. Log why, and open a page with a report to send.
+sub fail {
+  my ($what) = @_;
+  $what =~ s/\s+$//;
+  $SIG{__DIE__} = 'DEFAULT';
+  logline("PROBLEM: $what");
+  my $report = join "\n", 'Virtual Standardized Patient Simulator: problem report',
+    'Version: ' . version(), 'When: ' . strftime('%Y-%m-%d %H:%M:%S %z', localtime),
+    'Computer: ' . mac_version() . ", Perl $^V", "Folder: $top", "What happened: $what",
+    '', '--- launcher log, last lines ---', log_tail(80);
+  if (open my $in, '<', "$root/problem.html") {
+    local $/; my $page = <$in>; close $in;
+    my $data = '{"what":' . json_str($what) . ',"report":' . json_str($report) . '}';
+    $page =~ s{/\*REPORT\*/null/\*END\*/}{$data};
+    my $out = dirname($LOG) . '/virtual-standardized-patient-problem.html';
+    if (open my $o, '>', $out) { print $o $page; close $o; open_browser("file://$out") }
+  }
+  exit 3;
+}
 
 sub drop {
   my ($fh, $keep) = @_;
@@ -103,12 +162,14 @@ sub handle {
 
   if ($path eq '/alive') { $tabs{$tab} = time if $tab; $seen = 1; return reply($c, '200 OK', 'text/plain', 'ok') }
   if ($path eq '/bye')   { delete $tabs{$tab} if $tab;             return reply($c, '200 OK', 'text/plain', 'ok') }
-  if ($path eq '/quit' && $method eq 'POST') { $quit = 1;          return reply($c, '200 OK', 'text/plain', 'ok') }
+  if ($path eq '/quit' && $method eq 'POST') { $quit = 'Quit was pressed'; return reply($c, '200 OK', 'text/plain', 'ok') }
+  if ($path eq '/log')   {                                          return reply($c, '200 OK', 'text/plain; charset=utf-8', log_tail(150)) }
 
   # GET /update says this launcher can update. POST /update does it.
   if ($path eq '/update') {
     return reply($c, '200 OK', 'text/plain', 'can') unless $method eq 'POST';
     my $err = update_files();
+    logline('Update: ' . ($err || 'done'));
     $err =~ s/["\\]//g if $err;
     return reply($c, '200 OK', 'application/json', $err ? "{\"ok\":false,\"error\":\"$err\"}" : '{"ok":true}');
   }
@@ -123,7 +184,7 @@ sub handle {
   }
 
   my $file = abs_path($root . $path) || '';
-  if ($file !~ m{^\Q$root\E/} || !-f $file) { return reply($c, '404 Not Found', 'text/plain', "Not found\n") }
+  if ($file !~ m{^\Q$root\E/} || !-f $file) { logline("404 $method $path"); return reply($c, '404 Not Found', 'text/plain', "Not found\n") }
   my ($ext) = $file =~ /\.([A-Za-z0-9]+)$/;
   open my $fh, '<:raw', $file or return reply($c, '404 Not Found', 'text/plain', "Not found\n");
   my $body = do { local $/; <$fh> }; close $fh;
@@ -155,13 +216,16 @@ sub update_from {
 
 # Give back the memory the patient model holds, then stop. Ollama itself is left as it was found.
 sub stop {
+  my ($why) = @_;
+  logline("Stopping: $why");
   close $srv if $srv;
   my %done;
   for my $m (`curl -s -m 3 $OLLAMA/api/ps` =~ /"name"\s*:\s*"([^"]+)"/g) {
     next if $done{$m}++ || $m !~ $KNOWN;
     system('curl', '-s', '-m', '10', '-o', '/dev/null', "$OLLAMA/api/generate",
            '-d', "{\"model\":\"$m\",\"keep_alive\":0}");
+    logline("Unloaded $m");
   }
-  print "Stopped.\n";
+  logline('Stopped.');
   exit 0;
 }

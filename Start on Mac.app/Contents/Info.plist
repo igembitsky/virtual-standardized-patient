@@ -7,8 +7,8 @@
   <key>CFBundleIdentifier</key>           <string>io.github.igembitsky.virtual-standardized-patient</string>
   <key>CFBundleExecutable</key>           <string>start</string>
   <key>CFBundlePackageType</key>          <string>APPL</string>
-  <key>CFBundleShortVersionString</key>   <string>2.0</string>
-  <key>CFBundleVersion</key>              <string>2.0</string>
+  <key>CFBundleShortVersionString</key>   <string>1.2</string>
+  <key>CFBundleVersion</key>              <string>1.2</string>
   <key>LSMinimumSystemVersion</key>       <string>10.13</string>
   <!-- No Dock icon and no menu: the simulator lives in the browser tab. -->
   <key>LSUIElement</key>                  <true/>

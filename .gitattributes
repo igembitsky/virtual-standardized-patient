@@ -6,6 +6,7 @@
 .github         export-ignore
 bench           export-ignore
 docs            export-ignore
+tests           export-ignore
 VERSION         export-ignore
 
 # Keep the Windows launcher's line endings as Windows expects.

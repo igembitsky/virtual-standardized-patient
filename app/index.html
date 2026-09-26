@@ -84,6 +84,19 @@ h1[tabindex="-1"]:focus,.back[tabindex="-1"]:focus{outline:none}
 .setup a{color:inherit;font-weight:600}
 .setup .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
 .setup .bar i{display:block;height:100%;width:0;background:var(--green);transition:width .4s}
+.setup .btn{margin-top:12px}
+/* the problem report pop-up */
+dialog.report{max-width:560px;width:calc(100% - 32px);border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);color:var(--body);padding:26px;box-shadow:var(--shadow)}
+dialog.report::backdrop{background:rgba(10,15,12,.45)}
+dialog.report h2{margin:0 0 10px;color:var(--ink);font-size:1.4rem}
+dialog.report p{margin:0 0 12px;font-size:1rem}
+dialog.report .what{color:var(--ink);font-weight:600}
+dialog.report .row{margin:16px 0 8px}
+dialog.report summary{cursor:pointer;color:var(--muted);font-size:.92rem}
+dialog.report textarea{width:100%;height:200px;margin-top:8px;font:.76rem/1.5 var(--mono);color:var(--body);
+  background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px}
+.foot button.linkish{background:none;border:0;padding:0;font:inherit;color:var(--muted);text-decoration:underline;cursor:pointer}
 .clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1rem;
   color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;
   padding:4px 12px}
@@ -731,9 +744,27 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
     Case credits are printed in each case file and on each result.</p>
 </main>
 
+<dialog class="report" id="report" aria-labelledby="reportTitle">
+  <h2 id="reportTitle">Something went wrong</h2>
+  <p class="what" id="reportWhat"></p>
+  <p>Please send this error report, so it can be fixed.</p>
+  <div class="row">
+    <button type="button" class="btn" id="repEmail">Email report</button>
+    <button type="button" class="btn ghost" id="repGithub">Report on GitHub</button>
+    <button type="button" class="btn ghost" id="repClose">Close</button>
+  </div>
+  <p class="sm">Email opens your mail app with the report filled in. Send it to whoever gave you
+    the simulator. GitHub needs a free account.</p>
+  <details>
+    <summary>See the report</summary>
+    <textarea id="reportText" readonly></textarea>
+  </details>
+</dialog>
+
 <footer class="wrap foot" id="foot">
   <span class="who">Built by <a href="https://www.linkedin.com/in/gembitsky" target="_blank" rel="noopener">Igor Gembitsky</a>, 2026. Free and open source. Version <span id="ver"></span>.</span>
   <span class="grow" style="flex:1"></span>
+  <button type="button" class="linkish" id="reportLink">Report a problem</button>
   <a href="#" data-go="terms">Terms of use</a>
   <a href="https://github.com/igembitsky/virtual-standardized-patient" target="_blank" rel="noopener">Source code</a>
 </footer>
@@ -758,11 +789,23 @@ const CFG = {
   storeKey: "vsp.encounters.v1",
   // Updates. The page asks GitHub for VERSION once at start, one small text file, nothing sent.
   // The launcher does the actual update, from the ZIP, when the Update button is pressed.
-  version: "2.0",
+  version: "1.2",
   versionUrl: "https://raw.githubusercontent.com/igembitsky/virtual-standardized-patient/main/VERSION",
   zipUrl: "https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip"
 };
 const WANTED = CFG.model;   // downloaded on first run if none of the models above is there
+
+/* What went wrong in this page, kept for the problem report. Nothing is sent anywhere
+   unless the learner presses Email report or Report on GitHub. */
+const PROBLEMS = [];
+function noteProblem(msg) {
+  if (PROBLEMS.length && PROBLEMS[PROBLEMS.length - 1].endsWith(msg)) return;   // once in a row
+  PROBLEMS.push(new Date().toLocaleTimeString() + "  " + msg);
+  if (PROBLEMS.length > 40) PROBLEMS.shift();
+}
+addEventListener("error", e => noteProblem("page error: " + e.message
+  + (e.filename ? " (" + e.filename.split("/").pop() + ":" + e.lineno + ")" : "")));
+addEventListener("unhandledrejection", e => noteProblem("page error: " + ((e.reason && e.reason.message) || e.reason)));
 
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -950,10 +993,11 @@ async function checkConnection() {
     setStatus("ok", "ready · " + CFG.model + " · nothing leaves this computer");
     return true;
   } catch (e) {
+    noteProblem("cannot reach Ollama: " + e.message);
     setStatus("bad", "Ollama is not running");
     setSetup(`<b>Ollama is not running.</b> Open the Ollama app. If it is not installed yet, get it
       free from <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a>,
-      install it, and open it once. This page notices by itself.`);
+      install it, and open it once. This page notices by itself.`, null, true);
     return false;
   }
 }
@@ -993,19 +1037,80 @@ async function pullModel() {
     if (!ok) throw new Error("the connection closed");
   } catch (e) {
     app.pullFailed = Date.now();
+    app.pullFails = (app.pullFails || 0) + 1;
+    noteProblem("model download stopped: " + e.message);
     setStatus("bad", "the model download stopped");
     setSetup(`<b>The download stopped:</b> ${esc(e.message)}. Check the internet connection.
-      It tries again by itself in a moment, and carries on from where it stopped.`);
+      It tries again by itself in a moment, and carries on from where it stopped.`, null, true);
+    if (app.pullFails === 3) openReport("The patient model could not be downloaded.");
   }
   app.pulling = false;
   if (!app.pullFailed) checkConnection();
 }
-function setSetup(html, pct) {
+function setSetup(html, pct, report) {
   $("#setup").classList.toggle("hide", !html);
   if (!html) return;
-  $("#setupText").innerHTML = html;
+  $("#setupText").innerHTML = html + (report
+    ? `<br><button type="button" class="btn ghost small" onclick="openReport()">Report a problem</button>` : "");
   $("#setupBar").classList.toggle("hide", pct == null);
   if (pct != null) $("#setupFill").style.width = pct + "%";
+}
+
+/* ---- problem reports -----------------------------------------------------
+   One report, built when asked for: versions, what Ollama has, what went wrong in the
+   page, and the end of the launcher's log. Email opens the learner's own mail app;
+   GitHub opens a new issue. Both are filled in, and the whole report is copied first,
+   because a link can carry only so much. */
+async function getText(url) {
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 3000);
+  try { const r = await fetch(url, { cache: "no-store", signal: ctl.signal }); return r.ok ? await r.text() : "HTTP " + r.status; }
+  catch (e) { return "not reachable (" + e.message + ")"; }
+  finally { clearTimeout(t); }
+}
+async function buildReport(what) {
+  const [ver, tags, log] = await Promise.all([getText(CFG.ollama + "/api/version"),
+    getText(CFG.ollama + "/api/tags"), getText("/log")]);
+  let models = tags;
+  try { models = JSON.parse(tags).models.map(m => m.name).join(", ") || "none"; } catch {}
+  return ["Virtual Standardized Patient Simulator: problem report",
+    "Version: " + CFG.version,
+    "When: " + new Date().toString(),
+    "Computer: " + navigator.userAgent,
+    "What happened: " + what,
+    "Line at the top of the page: " + $("#status").textContent,
+    "Model: " + CFG.model,
+    "Ollama: " + ver,
+    "Models in Ollama: " + models,
+    "", "--- what went wrong in the page ---", PROBLEMS.join("\n") || "nothing noted",
+    "", "--- launcher log, last lines ---", log.trimEnd()].join("\n");
+}
+async function openReport(what) {
+  const d = $("#report");
+  if (d.open) return;
+  what = what || "";
+  $("#reportTitle").textContent = what ? "Something went wrong" : "Report a problem";
+  $("#reportWhat").textContent = what;
+  $("#reportWhat").classList.toggle("hide", !what);
+  $("#reportText").value = "Putting the report together…";
+  d.showModal();
+  const report = await buildReport(what || "reported by the learner");
+  $("#reportText").value = report;
+  const title = "Problem report: " + (what || "version " + CFG.version).replace(/\.$/, "");
+  const cut = (t, n) => t.length <= n ? t
+    : t.slice(0, n) + "\n\n[The report was cut short here. The whole report is copied: paste it below.]";
+  const copy = () => {
+    try { navigator.clipboard.writeText(report).catch(() => {}); } catch {}
+  };
+  $("#repEmail").onclick = () => {
+    copy();
+    setTimeout(alive, 1500);     // some browsers treat opening the mail app as leaving the page
+    location.href = "mailto:?subject=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(cut(report, 1500));
+  };
+  $("#repGithub").onclick = () => {
+    copy();
+    window.open("https://github.com/igembitsky/virtual-standardized-patient/issues/new?title=" + encodeURIComponent(title)
+      + "&body=" + encodeURIComponent("```\n" + cut(report, 5000) + "\n```"), "_blank", "noopener");
+  };
 }
 
 /* ---- the launcher ---------------------------------------------------------
@@ -1085,6 +1190,7 @@ async function runUpdate(v) {
     setTimeout(() => location.reload(), 2000);
   } catch (e) {
     console.warn("update:", e);
+    noteProblem("update failed: " + e.message);
     showUpdate("fail", v);
   }
 }
@@ -1428,7 +1534,12 @@ async function handleTurn(text) {
       say("sys", "Examination", "To examine, press Examine.");
   } catch (err) {
     node.parentElement.remove();
-    if (err.name !== "AbortError") say("err", "Problem", err.message + ". Your question was not sent. Check that Ollama is running, then try again.");
+    if (err.name !== "AbortError") {
+      say("err", "Problem", err.message + ". Your question was not sent. Check that Ollama is running, then try again.");
+      noteProblem("the patient could not answer: " + err.message);
+      app.chatFails = (app.chatFails || 0) + 1;
+      if (app.chatFails === 2) openReport("The patient could not answer.");
+    }
   }
   const t = $("#log").querySelector(".typing");
   if (t) t.classList.remove("typing");
@@ -2047,6 +2158,8 @@ window.addEventListener("beforeunload", e => {
   }
   heartbeat();
   $("#stopApp").onclick = quitApp;
+  $("#reportLink").onclick = () => openReport();
+  $("#repClose").onclick = () => $("#report").close();
   await loadCases();
   $("#ver").textContent = CFG.version;
   const ok = await checkConnection();

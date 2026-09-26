@@ -4,7 +4,7 @@ Everything below was run on an Apple M3 Pro, 18 GB, macOS, with Ollama 0.33.1 an
 `qwen3:4b-instruct`. Nothing here is an estimate.
 
 > [!NOTE]
-> This records version 1.x. In 2.0 the launchers were renamed and rewritten to run with no
+> This records versions 1.0 and 1.1. In 1.2 the launchers were renamed and rewritten to run with no
 > window, and the program moved into the `app` folder. See [`CHANGELOG.md`](../CHANGELOG.md).
 
 ## The whole journey, in a real browser
