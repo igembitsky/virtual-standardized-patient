@@ -2,7 +2,8 @@
 
 # Install on Windows
 
-Time: about 20 minutes. Most of it is two downloads, 1.5 GB and 2.5 GB. Windows 10 or 11.
+Time: about 20 minutes. Most of it is two downloads, 1.6 GB and 2.5 GB. You need Windows 10
+(22H2) or 11, 8 GB of memory, and 7 GB of free disk space.
 
 > [!NOTE]
 > The Windows launcher has not yet been run on Windows. It uses only what Windows ships.

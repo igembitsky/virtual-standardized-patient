@@ -2,8 +2,8 @@
 
 # Install on Linux
 
-Time: about 15 minutes. Most of it is a 2.5 GB download. Python 3 must be installed. Nearly
-every Linux has it.
+Time: about 15 minutes. Most of it is two downloads, 1.4 GB and 2.5 GB. You need a 64-bit
+Linux, 8 GB of memory, 7 GB of free disk space, and Python 3, which nearly every Linux has.
 
 > [!NOTE]
 > The Linux launcher has not yet been run on a Linux desktop. If it works, or does not,
