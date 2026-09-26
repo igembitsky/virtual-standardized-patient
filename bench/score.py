@@ -83,12 +83,16 @@ def cell(p):
 def gates():
     return json.load(open(os.path.join(HERE, "gates.json")))
 
-def check(m):
-    """The gates this set of measures fails, as (measure, rate, bar) tuples."""
-    out = []
-    for k, bar in gates()["gates"].items():
+def check(m, case=False):
+    """The gates this set of measures fails, as (measure, rate, bar) tuples. For one case, a
+    patient measure counts only with enough replies (rules.case_min_replies): with 3 open
+    questions, one leak is 33%, which says nothing about the model."""
+    g = gates(); out = []
+    min_n = g["rules"]["case_min_replies"] if case else 0
+    for k, bar in g["gates"].items():
         r = rate(m[k])
         if r is None: continue
+        if case and k in g["patient_gates"] and m[k][1] < min_n: continue
         higher = dict((a, c) for a, _, c in MEASURES)[k]
         if (higher and r < bar - 1e-9) or (not higher and r > bar + 1e-9): out.append((k, r, bar))
     return out
@@ -103,9 +107,10 @@ def gate_md(sc):
         p = sc["overall"][k]; r = rate(p)
         ok = r is None or (r >= bar - 1e-9 if higher else r <= bar + 1e-9)
         L.append(f"| {names[k]} | {'at least' if higher else 'at most'} {round(bar * 100)}% | {cell(p)} | {'pass' if ok else 'FAIL'} |")
-    L += ["", "| Case | Result |", "|---|---|"]
+    L += ["", f"A case counts a patient measure only with {gates()['rules']['case_min_replies']} or more replies for it.",
+          "", "| Case | Result |", "|---|---|"]
     for c, m in sc["cases"].items():
-        bad = check(m)
+        bad = check(m, case=True)
         L.append(f"| {c} | " + ("approved" if not bad else "not approved: " +
                  ", ".join(f"{names[k]} {round(r * 100)}%" for k, r, _ in bad)) + " |")
     return "\n".join(L) + "\n"

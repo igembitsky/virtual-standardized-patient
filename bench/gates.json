@@ -1,5 +1,5 @@
 {
-  "note": "The bar for approval. A rate from 0 to 1. For inaccurate, the rate must be at most the bar. The rules that the page applies (checklist, exams, notes) must be near perfect. The model measures allow for a small model.",
+  "note": "The bar for approval, as a rate from 0 to 1. For inaccurate, the rate must be at most the bar. For all others, at least the bar.",
   "gates": {
     "protocol": 0.80,
     "facts_given": 0.80,
@@ -12,5 +12,24 @@
     "correct_notes": 1.0,
     "wrong_notes": 1.0,
     "dx_words": 0.90
+  },
+  "why": {
+    "protocol": "The main measure. A small model makes small mistakes. Below this bar, the mistakes get in the way of the practice.",
+    "facts_given": "A student who asks the right question must get the answer. Below this bar, good students lose marks because of the model.",
+    "denials": "The patient must not invent a symptom. An invented symptom can lead a student to a wrong diagnosis.",
+    "open_no_leak": "Hidden facts test the student's questions. An open question such as \"anything else?\" must not give them away.",
+    "inaccurate": "A reply that goes against the case teaches a wrong fact. This is the most serious mistake, so it has the strictest bar.",
+    "checklist": "A good question in normal words must get credit.",
+    "checklist_reach": "Every checklist item must be possible to earn.",
+    "exams": "An examination typed in normal words must find the correct result.",
+    "correct_notes": "A correct note must always pass.",
+    "wrong_notes": "A note with a wrong diagnosis must always fail.",
+    "dx_words": "The correct diagnosis, written in different words, must get credit."
+  },
+  "patient_gates": ["protocol", "facts_given", "denials", "open_no_leak", "inaccurate"],
+  "program_gates": ["checklist", "checklist_reach", "exams", "correct_notes", "wrong_notes", "dx_words"],
+  "rules": {
+    "model_min_runs": 2,
+    "case_min_replies": 10
   }
 }

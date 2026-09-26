@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Benchmark</title>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --line: #d8dee4; --head: #f6f8fa;
+  --pass-bg: #e3f3e6; --pass-fg: #1d5c2e; --fail-bg: #fbe7e4; --fail-fg: #8c2f22;
+  --accent: #0b5cad;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1216; --fg: #e6e8eb; --muted: #9aa4af; --line: #2c333b; --head: #171b21;
+    --pass-bg: #1d3325; --pass-fg: #a8dcb5; --fail-bg: #3a2220; --fail-fg: #f0b5ab;
+    --accent: #6cb0f5;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1216; --fg: #e6e8eb; --muted: #9aa4af; --line: #2c333b; --head: #171b21;
+  --pass-bg: #1d3325; --pass-fg: #a8dcb5; --fail-bg: #3a2220; --fail-fg: #f0b5ab;
+  --accent: #6cb0f5;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+main { max-width: 900px; margin: 0 auto; padding: 32px 16px 64px; }
+h1 { font-size: 28px; margin: 0 0 6px; }
+h2 { font-size: 19px; margin: 40px 0 8px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+a { color: var(--accent); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0 6px; font-size: 13px; }
+.chip.few, td.few { background: var(--head); color: var(--muted); }
+.reasons { font-size: 12px; font-weight: 400; display: block; margin-top: 4px; }
+.chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px;
+  margin-right: 6px; border: 1px solid var(--line); }
+.chip.pass { background: var(--pass-bg); } .chip.fail { background: var(--fail-bg); }
+.wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+thead th { background: var(--head); font-weight: 600; white-space: nowrap; }
+td.num, th.num { text-align: center; white-space: nowrap; }
+td.pass { background: var(--pass-bg); color: var(--pass-fg); }
+td.fail { background: var(--fail-bg); color: var(--fail-fg); }
+tr.group td { background: var(--head); font-weight: 600; font-size: 13px; color: var(--muted); }
+.label { font-weight: 500; }
+.hint { display: block; color: var(--muted); font-size: 12.5px; }
+code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 12px; }
+.tabs button { font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.tabs button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+ul { margin: 0 0 10px; padding-left: 20px; }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="small"><a href="https://github.com/igembitsky/virtual-standardized-patient#readme">Back to the program</a></p>
+  <h1>Benchmark</h1>
+  <p>How well each model plays a patient. Each model gets the same 8 cases and the same questions.</p>
+  <div class="legend">
+    <span><span class="chip pass"></span>Meets the bar</span>
+    <span><span class="chip fail"></span>Does not meet the bar</span>
+    <span><span class="chip"></span>No bar, for information</span>
+    <span><span class="chip few"></span>Too few replies to judge</span>
+  </div>
+
+  <h2>Results by model</h2>
+  <div class="wrap"><table id="models"></table></div>
+  <p class="small muted" style="margin-top:8px">Reply time is the middle value on the test computer.
+    A computer with no graphics chip is slower. Memory in use does not include the system and the
+    browser. Add about 4 GB for them.</p>
+
+  <h2>How we approve a model</h2>
+  <p>A model is approved when all three of these are true:</p>
+  <ol id="rules"></ol>
+  <p>Each bar protects the learner from one kind of mistake:</p>
+  <div class="wrap"><table id="bars"></table></div>
+  <p class="small muted" style="margin-top:8px">Some measures have no bar. "Adds a fact", "Gives a hidden
+    fact" and "Holds back a fact" are all part of "Follows the patient rules", so that bar covers them.
+    We show them so that you can see which mistakes a model makes.</p>
+
+  <h2>Results by case</h2>
+  <p>Choose a model. The table shows its results for each patient. A patient measure with fewer
+    than <span id="minrep"></span> replies is grey: with 3 open questions, one mistake is 33%, which
+    says nothing about the model.</p>
+  <div class="tabs" id="tabs" role="group" aria-label="Model"></div>
+  <div class="wrap"><table id="cases"></table></div>
+
+  <h2>How the test works</h2>
+  <ul>
+    <li>The patient is the real program. It uses the same prompt and settings as the program.</li>
+    <li>Claude, an AI model, plays the student and the examiner. The examiner asks the same questions to each model.</li>
+    <li>Claude also plays the judge. The judge compares each patient reply with the case.</li>
+  </ul>
+
+  <h2>Limits</h2>
+  <ul>
+    <li>The patient model uses some chance. Two runs of the same test can differ by 2 points, so we
+      pool two or more runs. A difference of a few points between two models can be chance.</li>
+    <li>We improved the cases and the program with the standard questions. So the standard
+      questions can give a result that is a little too good. The check with new questions shows the
+      honest result.</li>
+    <li>The judge can make mistakes. Each verdict and its reason are in the results.</li>
+    <li>There are 8 cases, all in English.</li>
+  </ul>
+  <p class="small"><a href="../bench/README.md">Run the test yourself</a></p>
+
+  <details><summary>Test details</summary>
+    <div class="wrap" style="margin-top:8px"><table id="details"></table></div>
+  </details>
+</main>
+<script>
+const DATA = __DATA__;
+
+const ROWS = [
+  { group: "How the patient answers" },
+  { k: "protocol",     label: "Follows the patient rules",          hint: "All replies." },
+  { k: "facts_given",  label: "Gives a fact when asked",            hint: "The fact is in the case." },
+  { k: "denials",      label: "Says no to things not in the case",  hint: "And adds nothing." },
+  { k: "open_no_leak", label: "Keeps hidden facts on open questions", hint: "For example, “anything else?”" },
+  { k: "inaccurate",   label: "Says something different from the case" },
+  { k: "invented",     label: "Adds a fact that is not in the case" },
+  { k: "leaked",       label: "Gives a hidden fact nobody asked for" },
+  { k: "withheld",     label: "Holds back a fact that was asked for" },
+  { group: "How the program marks the student", hint: "The program does this, not the model." },
+  { k: "checklist",     label: "Counts checklist questions",  hint: "Asked in different words." },
+  { k: "exams",         label: "Finds the examination",       hint: "Typed in different words." },
+  { k: "correct_notes", label: "Passes a correct note" },
+  { k: "wrong_notes",   label: "Fails a wrong note" },
+  { k: "dx_words",      label: "Accepts the diagnosis",       hint: "Written in different words." },
+  { group: "Speed and size" },
+  { perf: "size",  label: "Download" },
+  { perf: "ram",   label: "Memory in use" },
+  { perf: "reply", label: "Reply time" },
+];
+const CASE_COLS = ["protocol", "facts_given", "open_no_leak", "inaccurate", "checklist", "exams"];
+const SHORT = { protocol: "Follows the rules", facts_given: "Gives asked facts", denials: "Says no",
+  open_no_leak: "Keeps hidden facts", inaccurate: "Different from the case",
+  checklist: "Counts questions", exams: "Finds exams" };
+const LABEL = Object.fromEntries(ROWS.filter(r => r.k).map(r => [r.k, r.label]));
+LABEL.checklist_reach = "Every checklist item can be earned";
+
+const G = DATA.gates, LOWER = new Set(DATA.lower);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const rate = p => p && p[1] ? p[0] / p[1] : null;
+const pass = (k, r) => r == null || !(k in G) ? null : LOWER.has(k) ? r <= G[k] + 1e-9 : r >= G[k] - 1e-9;
+function pct(k, r) {
+  if (r == null) return "n/a";
+  let s = Math.round(r * 100);
+  // Show one decimal when the rounded number would hide a fail or a pass at the bar.
+  if (k in G && s === Math.round(G[k] * 100) && pass(k, r) !== pass(k, s / 100)) s = (r * 100).toFixed(1);
+  return s + "%";
+}
+function cell(k, p, minN) {
+  const r = rate(p);
+  if (minN && p && p[1] < minN && DATA.patient_gates.includes(k))
+    return `<td class="num few" title="${p[0]} of ${p[1]}: too few replies to judge">${pct(k, r)}</td>`;
+  const ok = pass(k, r);
+  const cls = ok === true ? "pass" : ok === false ? "fail" : "";
+  return `<td class="num ${cls}" title="${p ? p[0] + " of " + p[1] : ""}">${pct(k, r)}</td>`;
+}
+const barText = k => !(k in G) ? "" : G[k] >= 1 ? "100%" : (LOWER.has(k) ? "at most " : "at least ") + Math.round(G[k] * 100) + "%";
+
+function modelsTable() {
+  const M = DATA.models;
+  let h = `<thead><tr><th>Measure</th><th class="num">Bar</th>` +
+    M.map(m => `<th class="num"><code>${esc(m.model)}</code></th>`).join("") + `</tr></thead><tbody>`;
+  h += `<tr><td class="label">Result</td><td class="num"></td>` + M.map(m =>
+    `<td class="num ${m.approved ? "pass" : "fail"}"><strong>${m.approved ? "Approved" : "Not approved"}</strong>` +
+    (m.approved ? "" : `<span class="reasons">${m.reasons.map(esc).join("<br>")}</span>`) + `</td>`).join("") + `</tr>`;
+  h += `<tr><td><span class="label">Test runs pooled</span><span class="hint">The standard questions.</span></td>` +
+    `<td class="num">at least ${DATA.rules.model_min_runs}</td>` +
+    M.map(m => `<td class="num ${m.runs >= DATA.rules.model_min_runs ? "pass" : "fail"}">${m.runs}</td>`).join("") + `</tr>`;
+  h += `<tr><td><span class="label">Check with new questions</span><span class="hint">Follows the patient rules, with questions no fix was tuned on.</span></td>` +
+    `<td class="num">${barText("protocol")}</td>` +
+    M.map(m => m.unseen ? cell("protocol", m.unseen.protocol) : `<td class="num fail">not done</td>`).join("") + `</tr>`;
+  for (const r of ROWS) {
+    if (r.group) { h += `<tr class="group"><td colspan="${M.length + 2}">${esc(r.group)}${r.hint ? ` <span style="font-weight:400">${esc(r.hint)}</span>` : ""}</td></tr>`; continue; }
+    const hint = r.hint ? `<span class="hint">${esc(r.hint)}</span>` : "";
+    if (r.perf) {
+      h += `<tr><td><span class="label">${esc(r.label)}</span>${hint}</td><td class="num"></td>` +
+        M.map(m => `<td class="num">${esc(m[r.perf] || "n/a")}</td>`).join("") + `</tr>`;
+      continue;
+    }
+    h += `<tr><td><span class="label">${esc(r.label)}</span>${hint}</td><td class="num">${barText(r.k)}</td>` +
+      M.map(m => cell(r.k, m.overall[r.k])).join("") + `</tr>`;
+  }
+  document.getElementById("models").innerHTML = h + "</tbody>";
+}
+
+function casesTable(i) {
+  const m = DATA.models[i];
+  let h = `<thead><tr><th>Patient</th>` + CASE_COLS.map(k => `<th class="num">${SHORT[k]}<span class="hint" style="font-weight:400">${barText(k)}</span></th>`).join("") + `</tr></thead><tbody>`;
+  for (const [c, v] of Object.entries(m.cases))
+    h += `<tr><td class="label">${esc(m.names[c] || c)}</td>` + CASE_COLS.map(k => cell(k, v[k], DATA.rules.case_min_replies)).join("") + `</tr>`;
+  document.getElementById("cases").innerHTML = h + "</tbody>";
+  document.querySelectorAll("#tabs button").forEach((b, j) => b.setAttribute("aria-pressed", j === i));
+}
+
+function tabs() {
+  const t = document.getElementById("tabs");
+  t.innerHTML = DATA.models.map((m, i) => `<button type="button" aria-pressed="false">${esc(m.model)}</button>`).join("");
+  t.querySelectorAll("button").forEach((b, i) => b.onclick = () => casesTable(i));
+}
+
+function approval() {
+  const R = DATA.rules;
+  document.getElementById("rules").innerHTML = [
+    `It meets every bar below, with the results of ${R.model_min_runs} or more test runs pooled together.`,
+    `It meets the patient bars again in a run with new examiner questions. Nobody tuned the cases or the program on those questions.`,
+    `It uses the same prompt and cases as the program that you download.`].map(t => `<li>${t}</li>`).join("");
+  document.getElementById("minrep").textContent = R.case_min_replies;
+  const order = [...DATA.patient_gates, ...DATA.program_gates];
+  document.getElementById("bars").innerHTML = `<thead><tr><th>Measure</th><th class="num">Bar</th><th>Why this bar</th></tr></thead><tbody>` +
+    order.map(k => `<tr><td class="label">${esc(LABEL[k] || k)}</td><td class="num">${barText(k)}</td><td>${esc(DATA.why[k] || "")}</td></tr>`).join("") + `</tbody>`;
+}
+
+function details() {
+  document.getElementById("details").innerHTML =
+    `<thead><tr><th>Model</th><th>Date</th><th class="num">Runs</th><th>Test computer</th><th>Prompt version</th></tr></thead><tbody>` +
+    DATA.models.map(m => `<tr><td><code>${esc(m.model)}</code></td><td>${esc(m.date)}</td><td class="num">${m.runs}</td><td>${esc(m.machine)}</td><td><code>${esc(m.prompt_sha || "")}</code></td></tr>`).join("") + `</tbody>`;
+}
+
+modelsTable(); approval(); tabs(); casesTable(0); details();
+</script>
+</body>
+</html>

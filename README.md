@@ -119,6 +119,9 @@ Each claim below can be checked in the files in this folder.
   and all 7 were fixed and re-tested. The full session was run in a real browser against the
   real model. See [`docs/VERIFICATION.md`](docs/VERIFICATION.md).
 - **Saved encounters** are stored by your browser, on your computer.
+- **The patient is tested against every case.** An automated test asks each patient every fact
+  and every checklist question in different words, and checks each reply against the case. The
+  results, and the bar a model must meet, are on [the benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html).
 
 - **The launchers are tested on a Mac, Windows, and Linux at every change.** GitHub runs each
   one from the same ZIP a participant downloads, drives the page in Chrome, and checks the

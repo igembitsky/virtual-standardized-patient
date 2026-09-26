@@ -20,6 +20,17 @@ Easier to start and to stop, lighter on your computer, and easy to report a prob
   the bottom of the page.
 - **A tidier folder.** The download holds only the three Start files, this list, the README,
   the licence, and an `app` folder with everything else.
+- **A more accurate patient.** The patient now contradicts its case in about 3 replies in 100,
+  down from 5. When a question asks about many things at once, the patient no longer answers
+  "no" to all of them and skips facts from its own story.
+- **Fairer marking.** A good question in normal words now gets credit much more often: 99% of
+  the test questions, up from 67%. More examination names work, such as "PR exam" and
+  "auscultation". A test written as "chest X-ray" now counts. A patient can use a medical word
+  that their own doctor told them.
+- **Clearer cases.** Unclear lines in five cases were rewritten and checked against the original
+  MedEdPORTAL cases, so that no case moved away from what its authors published.
+- **A public benchmark.** [The benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html)
+  shows how well each model plays a patient, and the bar a model must meet to be approved.
 - Copies from before 1.2 cannot update themselves to 1.2, because the folder changed. Download
   the new ZIP once, and replace the old folder. Your saved encounters are kept by the browser.
 
