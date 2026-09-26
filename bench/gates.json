@@ -1,0 +1,16 @@
+{
+  "note": "The bar for approval. A rate from 0 to 1. For inaccurate, the rate must be at most the bar. The rules that the page applies (checklist, exams, notes) must be near perfect. The model measures allow for a small model.",
+  "gates": {
+    "protocol": 0.80,
+    "facts_given": 0.80,
+    "denials": 0.95,
+    "open_no_leak": 0.80,
+    "inaccurate": 0.05,
+    "checklist": 0.90,
+    "checklist_reach": 1.0,
+    "exams": 0.90,
+    "correct_notes": 1.0,
+    "wrong_notes": 1.0,
+    "dx_words": 0.90
+  }
+}

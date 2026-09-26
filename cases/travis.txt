@@ -61,20 +61,20 @@ general: Lying rigidly still, knees drawn up, sweating, in severe pain.
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
 Where the pain is | where, whereabouts, point, show me, which part, location
-Quality of the pain | describe, what is it like, sharp, dull, burning, stabbing, quality, kind of pain
-Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent
-What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain
+Quality of the pain | describe, what is it like, sharp, dull, burning, stabbing, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words
+Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, whole time, ease off, eases off, on and off, off and on, comes back
+What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, helps, set it off, sets it off, hurt more
 Colour of the stools | stool*, bowel, motion*, faeces, feces, poo, black, melaena, melena
 Fever or chills | fever, chill*, temperature, hot, shiver*, shaking, rigor, sweat*
 Had this pain before | before, previous, past, ever had, first time, indigestion, heartburn
-Medicines including anti-inflammatories | medicine*, medication*, tablets, pills, drugs, ibuprofen, anti-inflammat*, painkiller*, antacid*
+Medicines including anti-inflammatories | medicine*, medication*, tablets, pills, drugs, ibuprofen, anti-inflammat*, painkiller*, antacid*, take anything, taken anything, took anything
 
 [ANSWER]
 most likely: Peritonitis due to a perforated ulcer
 also accepted: acute pancreatitis, gastritis, perforated appendix
 tests: full blood count, amylase, lipase, electrolytes, upright chest X-ray, abdominal CT
 pass diagnosis words: perforat*, ulcer, peritonitis, free air, viscus
-pass test words: chest x-ray, chest xray, chest radiograph, erect film, upright, ct, computed tomography, tomography
+pass test words: chest x-ray, chest xray, chest radiograph, erect film, upright, ct, computed tomography, tomography, cxr
 teaching point: Pain that starts in a second, a board like abdomen with no bowel sounds, daily anti-inflammatories and months of indigestion. That is a perforated peptic ulcer with peritonitis. An upright chest film showing free air under the diaphragm makes the diagnosis at the bedside.
 miss note: The daily ibuprofen and the months of burning indigestion are the history that explains the hole. Asking about medicines is what finds it.
 

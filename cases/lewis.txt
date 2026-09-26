@@ -77,11 +77,11 @@ depression screening: The screening forms the medical assistant collected before
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Asked about depression as a cause of the sleeping trouble | depress*, sad, feeling down, low mood, feeling blue, hopeless, mood
-Asked about thoughts of suicide or self harm | suicid*, kill yourself, end your life, harm yourself, hurt yourself, self harm, better off dead
-Screened for a history of mania | mania, manic, bipolar, racing thoughts, high energy, elated, spending sprees, grandiose
+Asked about depression as a cause of the sleeping trouble | depress*, sad, feeling down, low mood, feeling blue, hopeless, mood, spirits, low, blue, down
+Asked about thoughts of suicide or self harm | suicid*, kill yourself, end your life, harm yourself, hurt yourself, self harm, better off dead, hurting yourself, harming yourself, worth living, end it all, wish you were dead
+Screened for a history of mania | mania, manic, bipolar, racing thoughts, high energy, elated, spending sprees, grandiose, full of energy, wound up, less sleep, barely need*, mile a minute, top of the world, talking fast, hardly need*
 Asked about alcohol and substance use | alcohol, drink*, wine, beer, liquor, drug*, smok*, tobacco, cigarette*, marijuana
-Asked whether there were other questions or concerns | anything else, other concerns, other questions, further questions, additional questions, questions for me
+Asked whether there were other questions or concerns | anything else, other concerns, other questions, further questions, additional questions, questions for me, like to ask, want to ask, anything worrying, anything you want
 
 [ANSWER]
 most likely: Major depressive disorder, moderate

@@ -96,13 +96,13 @@ nails: Clubbing of the fingers.
 general: Well groomed, in a gown, sitting comfortably on the examination table. Breathes comfortably and can do everything asked without getting short of breath.
 
 [QUESTIONS]
-Asked the chief complaint | what brings you, what brings, how can i help, what can i do for you, going on today, tell me more, bringing you in
-Long history of infections | infection*, how often, how many times, before, previously, recurrent, past, ever had, sinusitis, pneumonia*, bronchitis
-Infections during childhood | child*, childhood, kid, as a kid, growing up, young, teen*, first time, tubes
+Asked the chief complaint | what brings you, what brings, how can i help, what can i do for you, going on today, tell me more, bringing you in, brought you, brings you
+Long history of infections | infection*, how often, how many times, before, previously, recurrent, past, ever had, sinusitis, pneumonia*, bronchitis, a lot, tend to get, first time
+Infections during childhood | child*, childhood, kid, as a kid, growing up, young, teen*, first time, tubes, when you were little, little one, younger
 Short of breath | breath*, short of breath, breathing, dyspn*, wind*, winded
-Impact on your life | impact, affect*, interfer*, day to day, your life, cope, coping, stop* you
-Your concerns and what you think is going on | worry*, worried, concern*, what do you think, why do you think, afraid, scared
-Summarised the history back to the patient | so to summar*, let me summar*, let me recap, so what i'm hearing, if i understand, so far you, let me make sure i
+Impact on your life | impact, affect*, interfer*, day to day, your life, cope, coping, stop* you, held you back, hold you back, miss work, time off
+Your concerns and what you think is going on | worry*, worried, concern*, what do you think, why do you think, afraid, scared, reckon, causing
+Summarised the history back to the patient | so to summar*, let me summar*, let me recap, so what i'm hearing, if i understand, so far you, let me make sure i, recap*, summar*, got that right, did i miss, let me check, check i've got
 
 [ANSWER]
 most likely: Sinusitis due to an underlying primary immunodeficiency, common variable immunodeficiency

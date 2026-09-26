@@ -1,0 +1,523 @@
+{
+ "case": "springfield",
+ "made": "2026-09-25 by opus, frozen as the standard set",
+ "probes": [
+  {
+   "question": "Hi there, I'm Dr. Alvarez, one of the doctors in the clinic. Thanks for joining the video call today. What can I help you with?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "Roughly how many months have you been dealing with these hot spells?",
+   "target": "You have been getting terrible hot spells for maybe the past 5 or so months.",
+   "expect": "reveal",
+   "credits": "When they started"
+  },
+  {
+   "question": "When did the very first one happen?",
+   "target": "They started four or five months ago. They come and go.",
+   "expect": "reveal",
+   "credits": "When they started"
+  },
+  {
+   "question": "Do you remember what you were doing when you had your first one?",
+   "target": "You got the first one right in the middle of teaching.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do they build up slowly, or do they hit you all of a sudden?",
+   "target": "They come on suddenly.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Can you describe what one of these feels like when it happens?",
+   "target": "You feel sweaty all over. You often have to take off your sweater or your jacket.",
+   "expect": "reveal",
+   "credits": "What the flashes feel like"
+  },
+  {
+   "question": "Is it just your face that gets hot, or all of you?",
+   "target": "Your whole body gets hot.",
+   "expect": "reveal",
+   "credits": "Where the flashes start and spread"
+  },
+  {
+   "question": "Whereabouts on your body does the heat begin, and does it move anywhere from there?",
+   "target": "They start in your chest and then spread out into your face, legs and arms until it is your whole body.",
+   "expect": "reveal",
+   "credits": "Where the flashes start and spread"
+  },
+  {
+   "question": "Once one gets going, how many minutes does it go on for?",
+   "target": "Each one usually lasts about three or four minutes, then it eases away slowly.",
+   "expect": "reveal",
+   "credits": "How long each one lasts"
+  },
+  {
+   "question": "How many of these are you getting these days?",
+   "target": "You get one almost every day now.",
+   "expect": "reveal",
+   "credits": "How often they happen"
+  },
+  {
+   "question": "Are they getting more frequent or staying the same? What did you think was going on at first?",
+   "target": "You thought maybe it was a virus at first, but it has been going on for a few months now and they seem to be happening more and more.",
+   "expect": "reveal",
+   "credits": "How often they happen"
+  },
+  {
+   "question": "Do you notice them more at a certain time of day, like daytime versus at night?",
+   "target": "They are more frequent at night. But you know it happens almost every day as well.",
+   "expect": "reveal",
+   "credits": "Worse at night"
+  },
+  {
+   "question": "If you had to put it on a scale, how bad would you say they are?",
+   "target": "They are moderate. Really bothersome, though they have not stopped you doing anything.",
+   "expect": "reveal",
+   "credits": "How bad the flashes are"
+  },
+  {
+   "question": "What's the most unpleasant part of them for you?",
+   "target": "They are mostly uncomfortable. You hate feeling like you are suddenly sweating.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do they ever happen in front of other people? How does that feel?",
+   "target": "They are embarrassing too, if you start whipping off your jacket for no reason.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have they changed how you go about your life day to day?",
+   "target": "It has not really changed your life, but it does bother you to get them so often and not be able to control them once one starts.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How are they affecting you at your job?",
+   "target": "You know it is probably nothing serious, but it is really affecting you at work.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed anything that sets one off?",
+   "target": "Sometimes they start when you go into a hotter room, or if you are teaching a lesson you are less familiar with so you are a bit nervous. Other times they start seemingly out of nowhere.",
+   "expect": "reveal",
+   "credits": "What brings them on"
+  },
+  {
+   "question": "Does having a drink make them worse, or do they come on at any particular moments with your husband?",
+   "target": "They are worse with alcohol, when you have a glass of wine, and you get them during sex.",
+   "expect": "reveal",
+   "credits": "What brings them on"
+  },
+  {
+   "question": "What about walking into a warm room, does that do it?",
+   "target": "Going into a warmer room can bring one on.",
+   "expect": "reveal",
+   "credits": "What brings them on"
+  },
+  {
+   "question": "Is there anything you do that helps one pass?",
+   "target": "Taking your clothes off, going outside if it is cold, and fanning yourself all help. With time it gets better on its own.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What do you think might be causing them, and what are you hoping we can do?",
+   "target": "You imagine it has something to do with your \"change of life\", and you are just hoping there is something that can be done about it.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How are you sleeping lately?",
+   "target": "You have difficulty sleeping. The hot flashes wake you from sleep, and you have difficulty falling asleep.",
+   "expect": "reveal",
+   "credits": "Sleep"
+  },
+  {
+   "question": "Some women notice things feel drier down below, especially during intimacy. Has that been an issue for you?",
+   "target": "You get vaginal dryness with sex, even when you use a lubricant you buy over the counter.",
+   "expect": "reveal",
+   "credits": "Vaginal dryness"
+  },
+  {
+   "question": "Have you felt any different in yourself emotionally, like snapping at people more easily?",
+   "target": "You have been more irritable and short with your husband.",
+   "expect": "reveal",
+   "credits": "Mood and irritability"
+  },
+  {
+   "question": "Have you ever been treated for depression or had any struggles with your mental health?",
+   "target": "If the doctor asks about depression, low mood or mental health: yes, you have depression. You take no tablets for it. You see a therapist once a month. You have no thoughts of harming yourself or anyone else.",
+   "expect": "reveal",
+   "credits": "Mood and irritability"
+  },
+  {
+   "question": "How old were you when you got your first period, and what were they like back then?",
+   "target": "Your periods started at 15. They used to be regular, every 31 days, lasting three or four days, heavy on the first day.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When was your last period?",
+   "target": "Your periods are now very irregular. You have not had a period in six or seven months.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you know around what age your mom stopped having periods?",
+   "target": "Your mother went through the change at about 50.",
+   "expect": "reveal",
+   "credits": "Mother's menopause"
+  },
+  {
+   "question": "Have you been running a temperature or getting the shivers?",
+   "target": "You have no fevers and no chills.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Outside of these episodes, do you find hot or cold weather harder to handle than other people?",
+   "target": "You have no trouble with heat or cold otherwise.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Any changes to your skin, hair or fingernails?",
+   "target": "There has been no change to your skin, your hair or your nails.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you lost or gained any weight recently?",
+   "target": "Your weight has not changed.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How's your tummy and your bowel movements?",
+   "target": "You have no stomach or bowel trouble, and your bowels never changed with your periods.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Any stinging when you pee, or needing to rush to the bathroom?",
+   "target": "No burning when you pass water, and you do not have to go more often or in a hurry.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Any change in discharge from the vagina?",
+   "target": "There is no change in your vaginal discharge.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you allergic to any medicines, or to anything like pollen or pets?",
+   "target": "You have no allergies to medicines and no allergies to anything around you.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What medicines, vitamins or supplements are you taking?",
+   "target": "You take no prescription medicines. You take Motrin, 400 mg, now and then for aches and pains, and a Women's Once A Day multivitamin.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are your vaccinations current?",
+   "target": "Your shots are up to date. You had a flu shot this year, and you have had tetanus and hepatitis.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you had any surgeries or hospital stays?",
+   "target": "You had one child by caesarean because he was breech, and a D and C after a miscarriage at about six weeks. Those are your only operations, and the only times you have been in hospital.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How many times have you been pregnant, and how did those pregnancies go?",
+   "target": "You have been pregnant twice. One live birth, one miscarriage, no terminations.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When was your last Pap test, and have any ever come back abnormal?",
+   "target": "Your smear last year was normal and the HPV test was negative. You have never had an abnormal smear and never had surgery on your cervix.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever had an infection passed on through sex?",
+   "target": "A long time ago you had trichomonas, an infection caught from sex. It was treated properly.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How are things in the bedroom generally? Are you happy with your sex life?",
+   "target": "You have vaginal and oral sex, you do orgasm, and you are content with your sex life, although maybe you have a bit less energy for sex than you used to.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How many partners do you have now, and how many have you had over your life?",
+   "target": "One partner now, your husband. Three men in your whole life, the other two when you were a teenager.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you use condoms or any other protection against infections?",
+   "target": "You use nothing for safer sex. Say \"It's just me and my husband.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you using anything to prevent pregnancy?",
+   "target": "You use no birth control. Say \"I'm too old for that!\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you feel safe at home? Has anyone ever hurt you or forced you into anything?",
+   "target": "Nobody hurts you at home. No violence, no sexual abuse.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you use tobacco in any form, now or in the past?",
+   "target": "You have never smoked.",
+   "expect": "reveal",
+   "credits": "Smoking"
+  },
+  {
+   "question": "How much alcohol do you drink in a typical week?",
+   "target": "You drink one or two glasses of wine a week, and have done for the past fifteen years. If the doctor asks the drinking questions, every answer is no.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you use any recreational drugs, like marijuana?",
+   "target": "You do not use drugs of any kind.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Tell me about what you usually eat.",
+   "target": "You are vegetarian and you try to eat healthy, but you often have some sort of dessert after dinner.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you get any physical activity or workouts?",
+   "target": "You do no exercise. You are on your feet in front of your class all day and you sometimes join in the games at recess.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much caffeine do you have, like coffee or soda?",
+   "target": "One cup of coffee in the morning, not more.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Who's at home with you?",
+   "target": "You live with your husband and your 17 year old son in a house you own.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are finances or health insurance a concern for you right now?",
+   "target": "Money is not a worry. You are middle class and planning to help your son pay for college. You are insured through your husband's work.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are your parents still living? What health problems did they have?",
+   "target": "Your father is dead. He had type 2 diabetes and high blood pressure. Your mother is dead. She had type 2 diabetes.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you have brothers or sisters or children, and are they healthy?",
+   "target": "You have one sibling, 48, with high blood pressure. Your son is 17 and healthy.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Walk me through a normal weekday for you.",
+   "target": "On a normal day you are up between 6 and 7, teaching by 7:30, home at 3 to grade and plan lessons, dinner with your husband at 6 or 6:30, a television show, then bed.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed your heart pounding or racing during these episodes?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Any bad headaches along with them?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you found any lumps in your breasts?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Any bleeding after sex or spotting between periods?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything else bothering you that we haven't talked about?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "general appearance"
+  },
+  {
+   "key": "general",
+   "phrasing": "look at patient"
+  },
+  {
+   "key": "general",
+   "phrasing": "inspection"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Menopause with vasomotor symptoms and genitourinary syndrome",
+    "Hyperthyroidism",
+    "Pregnancy"
+   ],
+   "tx": [
+    "TSH",
+    "Urine hCG",
+    "FSH"
+   ]
+  },
+  {
+   "dx": [
+    "Perimenopause / menopausal transition",
+    "Thyrotoxicosis",
+    "Anxiety"
+   ],
+   "tx": [
+    "Thyroid function tests",
+    "Serum pregnancy test",
+    "Estradiol level"
+   ]
+  },
+  {
+   "dx": [
+    "Climacteric hot flushes, 6-7 months amenorrhoea",
+    "Phaeochromocytoma",
+    "Alcohol-related flushing"
+   ],
+   "tx": [
+    "Thyroid stimulating hormone",
+    "Follicle stimulating hormone and LH",
+    "Beta-hCG"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Generalized anxiety disorder with panic attacks",
+    "Depression exacerbation"
+   ],
+   "tx": [
+    "PHQ-9",
+    "GAD-7 questionnaire",
+    "CBC"
+   ]
+  },
+  {
+   "dx": [
+    "Viral infection",
+    "Night sweats of unclear cause"
+   ],
+   "tx": [
+    "CBC with differential",
+    "Blood cultures",
+    "Chest X-ray"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Menopausal vasomotor symptoms",
+  "Peri-menopause",
+  "Postmenopausal hot flushes",
+  "Change of life",
+  "Natural menopause with hypoestrogenism"
+ ],
+ "test_variants": [
+  {
+   "key": "TSH or thyroid function tests",
+   "phrasing": "Thyroid stimulating hormone"
+  },
+  {
+   "key": "TSH or thyroid function tests",
+   "phrasing": "TFTs with free T4"
+  },
+  {
+   "key": "FSH level",
+   "phrasing": "Serum follicle stimulating hormone"
+  },
+  {
+   "key": "FSH level",
+   "phrasing": "FSH"
+  },
+  {
+   "key": "pregnancy test",
+   "phrasing": "Urine hCG"
+  },
+  {
+   "key": "pregnancy test",
+   "phrasing": "Serum beta-hCG"
+  },
+  {
+   "key": "LH level",
+   "phrasing": "Luteinizing hormone"
+  },
+  {
+   "key": "LH level",
+   "phrasing": "Serum LH"
+  },
+  {
+   "key": "estrogen level",
+   "phrasing": "Serum estradiol"
+  },
+  {
+   "key": "estrogen level",
+   "phrasing": "Oestradiol level"
+  },
+  {
+   "key": "cancer labs such as CA-125",
+   "phrasing": "CA 125 tumour marker"
+  },
+  {
+   "key": "cancer labs such as CA-125",
+   "phrasing": "Ovarian cancer marker"
+  }
+ ]
+}

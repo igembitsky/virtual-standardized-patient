@@ -29,8 +29,8 @@ function between(start, end) {
 // The page keeps its state in `app` and redraws the dots. Stand-ins for both.
 var app = { current: null, covered: new Set(), exams: [], examMiss: null };
 function drawDots() {}
-eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("markCovered"), grab("hasAny"),
-      grab("examSetup"), grab("examFind"),
+eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("plainWords"), grab("jargonWord"), grab("markCovered"), grab("hasAny"),
+      grab("examSetup"), grab("examFind"), grab("firstNamed"),
       src.match(/const JARGON = \/[\s\S]*?\/i;\n/)[0].replace("const JARGON", "var JARGON"),
       between("const EXAMS = [", "function examSetup(").replace(/\bconst (EXAMS|EXAM_ITEMS)\b/g, "var $1")
      ].join("\n"));
@@ -49,10 +49,10 @@ examSetup(c);
 const out = {
   // Credit for one question on its own, as the page gives it: nothing if the jargon catch fires.
   ask: (req.ask || []).map(q => {
-    const jw = q.match(JARGON);
+    const jw = jargonWord(c, q);
     app.covered = new Set();
     if (!jw) markCovered(q);
-    return { jargon: jw ? jw[0] : null,
+    return { jargon: jw,
              credits: c.questions.filter(x => app.covered.has(x.id)).map(x => x.label) };
   }),
   // The same line the page shows after "examine <part>".

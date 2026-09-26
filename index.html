@@ -1319,9 +1319,9 @@ async function handleTurn(text) {
   app.visible.push({ role: "doctor", text });
   // Medical jargon is caught here, not by the model. A small model knows what
   // cholelithiasis means and answers it. A patient would not. Checklist item: no jargon.
-  const jw = text.match(JARGON);
+  const jw = jargonWord(c, text);
   if (jw) {
-    const line = `I don't know that word, doctor. What does "${jw[0]}" mean?`;
+    const line = `I don't know that word, doctor. What does "${jw}" mean?`;
     say("pt", c.name, line);
     app.visible.push({ role: "patient", text: line });
     app.messages.push({ role: "user", content: text }, { role: "assistant", content: line });
@@ -1359,20 +1359,20 @@ async function handleTurn(text) {
    onto it. An examination the case file does not mention gets one fixed line.
    ------------------------------------------------------------ */
 const EXAMS = [
-  ["General", [["General appearance", "general, looks, appearance"], ["Hydration", "dehydrated, mucous membranes, turgor"]]],
-  ["Head and neck", [["Head and face", "head, face, scalp"], ["Eyes", "eye, pupils, sclera, conjunctiva, fundi"],
-    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses"],
+  ["General", [["General appearance", "general, looks, appearance, inspection, inspect, observe, observation, overall, bmi, weight, height"], ["Hydration", "dehydrated, mucous membranes, turgor"]]],
+  ["Head and neck", [["Head and face", "head, face, scalp"], ["Eyes", "eye, pupils, sclera, conjunctiva, fundi, jaundice, icterus"],
+    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses, frontal, maxillary"],
     ["Mouth and throat", "mouth, throat, tonsils, teeth, tongue"], ["Neck and thyroid", "neck, thyroid"],
     ["Lymph nodes", "lymph, nodes, glands"]]],
-  ["Chest", [["Chest and lungs", "chest, lungs, breathing, respiratory"], ["Heart", "cardiac, heart sounds, murmur"], ["Breasts", "breast"]]],
-  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys"],
-    ["Rectal", "rectum, dre"], ["Pelvic and genital", "pelvic, genital, vaginal, speculum, bimanual, testes"]]],
+  ["Chest", [["Chest and lungs", "chest, lungs, lung, breathing, respiratory, breath sounds, auscultation, auscultate"], ["Heart", "cardiac, heart sounds, murmur"], ["Breasts", "breast"]]],
+  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys, costovertebral, cva, renal angle"],
+    ["Rectal", "rectum, dre, pr, pr exam, per rectum, digital rectal"], ["Pelvic and genital", "pelvic, genital, vaginal, speculum, bimanual, testes"]]],
   ["Limbs and skin", [["Arms and hands", "arms, hands, wrists, upper limbs"], ["Legs and feet", "legs, feet, calves, ankles, oedema, edema, lower limbs"],
-    ["Peripheral pulses", "pulses, perfusion, capillary refill"], ["Skin", "rash, colour, jaundice"], ["Nails", "clubbing"],
+    ["Peripheral pulses", "pulses, perfusion, capillary refill"], ["Skin", "rash, colour, color"], ["Nails", "clubbing, fingertips, fingernails"],
     ["Joints and muscles", "joints, musculoskeletal, range of motion, muscles"]]],
   ["Nervous system and mind", [["Nervous system", "neuro, neurological, reflexes, cranial nerves, power, sensation"],
-    ["Gait and balance", "gait, walk, balance, romberg"], ["Mental state", "affect, mood, orientation, speech"],
-    ["Depression screening", "phq, phq-9, questionnaire"], ["Cognition screening", "memory, mini mental, moca"]]]
+    ["Gait and balance", "gait, walk, balance, romberg"], ["Mental state", "affect, mood, orientation, speech, facial expression, demeanour, demeanor, mental status"],
+    ["Depression screening", "phq, phq-9, phq9, questionnaire"], ["Cognition screening", "memory, mini mental, moca"]]]
 ];
 const EXAM_ITEMS = EXAMS.flatMap(([group, items]) => items.map(([name, syn]) =>
   ({ group, name, words: [name.toLowerCase(), ...syn.split(",").map(w => w.trim().toLowerCase())] })));
@@ -1396,7 +1396,17 @@ function examFind(q) {
   return L.find(it => it.words.includes(q)) ||
          L.find(it => it.words.some(w => w.startsWith(q))) ||
          (q.length >= 3 ? L.find(it => it.words.some(w => w.includes(q))) : null) ||
-         L.find(it => it.words.some(w => w.length >= 4 && q.includes(w))) || null;
+         firstNamed(L, q);
+}
+/* For a phrase such as "skin inspection" or "cardiac auscultation", the part named first wins. */
+function firstNamed(L, q) {
+  let best = null, at = Infinity, len = 0;
+  for (const it of L) for (const w of it.words) {
+    if (w.length < 4) continue;
+    const i = q.indexOf(w);
+    if (i >= 0 && (i < at || (i === at && w.length > len))) { best = it; at = i; len = w.length; }
+  }
+  return best;
 }
 function examMatches(q) {
   q = q.toLowerCase().trim();
@@ -1474,18 +1484,32 @@ document.addEventListener("click", e => {
   if (!$("#exPop").classList.contains("hide") && !e.target.closest("#exPop, #exBtn")) examClose();
 });
 
-/* A word in a case file matches the whole word only, so "before" does not fire on
-   "beforehand". End it with * to match any ending: "aggravat*" catches aggravated. */
+/* A word in a case file matches the whole word, with a plain ending: "ease" catches eases,
+   eased and easing, but "before" does not fire on "beforehand". End it with * to match any
+   ending: "aggravat*" catches aggravated. Punctuation counts as a space on both sides, so
+   "x-ray" catches "X-ray", "x ray" and "X ray". */
 function wordHit(haystack, word) {
-  const w = word.toLowerCase().trim();
+  const w = word.toLowerCase().replace(/[^a-z0-9*]+/g, " ").trim();
   if (!w) return false;
   const stem = w.endsWith("*");
-  const core = (stem ? w.slice(0, -1) : w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const re = new RegExp("(^|[^a-z0-9])" + core + (stem ? "" : "($|[^a-z0-9])"), "i");
+  const core = (stem ? w.slice(0, -1).trim() : w).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp("(^|[^a-z0-9])" + core + (stem ? "" : "(s|es|ed|ing)?($|[^a-z0-9])"), "i");
   return re.test(haystack);
 }
+function plainWords(text) {
+  return " " + text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim() + " ";
+}
+/* A medical word the patient would not know, or null. A word that appears in the patient's
+   own story is one they know: a doctor told them, so they can talk about it. */
+function jargonWord(c, text) {
+  const m = text.match(JARGON);
+  if (!m) return null;
+  const own = [c.opening, ...c.story, ...c.hidden].join(" ");
+  const again = own.match(new RegExp(JARGON.source, "gi")) || [];
+  return again.some(w => w.toLowerCase() === m[0].toLowerCase()) ? null : m[0];
+}
 function markCovered(text) {
-  const t = " " + text.toLowerCase().replace(/[^a-z0-9' ]+/g, " ").replace(/\s+/g, " ") + " ";
+  const t = plainWords(text);
   app.current.questions.forEach(q => {
     if (app.covered.has(q.id)) return;
     if (q.words.some(w => wordHit(t, w))) app.covered.add(q.id);
@@ -1597,7 +1621,7 @@ function mark() {
 
 function hasAny(text, words) {
   if (!words || !words.length) return false;
-  const t = " " + text.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ") + " ";
+  const t = plainWords(text);
   return words.some(w => wordHit(t, w));
 }
 

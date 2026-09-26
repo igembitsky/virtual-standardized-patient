@@ -1,0 +1,352 @@
+{
+ "case": "davis",
+ "made": "2026-09-25 by opus, frozen as the standard set",
+ "probes": [
+  {
+   "question": "Hello, I'm Dr Okafor, one of the doctors in the clinic today. What can I help you with?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "Are you certain the blood is coming from down below at the front, and not from your bottom or when you pee?",
+   "target": "You are sure the blood is coming from your vagina.",
+   "expect": "reveal",
+   "credits": "Where the bleeding is coming from"
+  },
+  {
+   "question": "On your worst days, how much do you get through in terms of tampons or pads?",
+   "target": "Some days you bleed through 6 super tampons and a super pad, a combination, in one day.",
+   "expect": "reveal",
+   "credits": "How heavy the bleeding is"
+  },
+  {
+   "question": "Do you ever pass lumps or clumps of blood?",
+   "target": "Sometimes there are clots. When you see clots you get worried.",
+   "expect": "reveal",
+   "credits": "How heavy the bleeding is"
+  },
+  {
+   "question": "When did you first notice things getting worse than normal for you?",
+   "target": "They have got worse over the last six months.",
+   "expect": "reveal",
+   "credits": "When it started and how it has changed"
+  },
+  {
+   "question": "Can you remember when your last period began?",
+   "target": "You cannot really say when your last period was. It is hard to tell, because it never stops.",
+   "expect": "reveal",
+   "credits": "Last menstrual period"
+  },
+  {
+   "question": "Before all this started, how often would your period come and how many days would it go on for?",
+   "target": "Your periods used to be regular, every 28 days, lasting 5 or 6 days, heavy for the first 3.",
+   "expect": "reveal",
+   "credits": "Pattern and length of the periods"
+  },
+  {
+   "question": "Do you get any bleeding on the days in between the really heavy ones?",
+   "target": "The other days of the month you need one regular pad for light bleeding or spotting.",
+   "expect": "reveal",
+   "credits": "Pattern and length of the periods"
+  },
+  {
+   "question": "How old were you when you got your very first period?",
+   "target": "Your very first period was at age 10.",
+   "expect": "reveal",
+   "credits": "Age of the first period"
+  },
+  {
+   "question": "Any stinging when you pee, or needing to go more often?",
+   "target": "No pain or burning when you pass water. You do not go more often or in a hurry.",
+   "expect": "reveal",
+   "credits": "Associated symptoms"
+  },
+  {
+   "question": "Have you had any unusual discharge apart from the blood?",
+   "target": "No discharge from the vagina apart from the blood.",
+   "expect": "reveal",
+   "credits": "Associated symptoms"
+  },
+  {
+   "question": "Is there anything you've found that eases it, or anything that sets it off?",
+   "target": "Motrin helps on the bad days when you have cramps.",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "What medicines are you taking right now, including anything you buy from the store?",
+   "target": "You take no prescription medicine. Only Motrin 600 mg when you need it, for the cramps. No herbs, no supplements.",
+   "expect": "reveal",
+   "credits": "Medicines"
+  },
+  {
+   "question": "Have you ever been on the pill, the shot, or a coil to stop getting pregnant?",
+   "target": "You have never used hormone birth control, only condoms.",
+   "expect": "reveal",
+   "credits": "Medicines"
+  },
+  {
+   "question": "How many times have you been pregnant, and how did those pregnancies end?",
+   "target": "You have been pregnant 4 times. Three living children, aged 12, 7 and 4, all healthy. No miscarriages. One abortion.",
+   "expect": "reveal",
+   "credits": "Obstetric history"
+  },
+  {
+   "question": "How were your babies born?",
+   "target": "One of the babies came by cesarean because he was breech. The other two were normal births.",
+   "expect": "reveal",
+   "credits": "Obstetric history"
+  },
+  {
+   "question": "Have your smear tests always come back normal?",
+   "target": "You had one abnormal Pap smear back in 2005, and they have all been fine since. Last year's Pap was normal and the extra test for HPV was negative.",
+   "expect": "reveal",
+   "credits": "Gynaecologic history"
+  },
+  {
+   "question": "Have you ever been treated for an infection you can catch through sex?",
+   "target": "You had chlamydia as a teenager.",
+   "expect": "reveal",
+   "credits": "Gynaecologic history"
+  },
+  {
+   "question": "Are you seeing anyone at the moment, and how many partners have you had over the years?",
+   "target": "You have sex with your husband, vaginal and oral. You do reach orgasm. He is your only partner now and you have had 3 men in your life.",
+   "expect": "reveal",
+   "credits": "Sexual history"
+  },
+  {
+   "question": "How has the bleeding affected things between you and your husband in bed?",
+   "target": "If the doctor asks about your sex life, say \"My husband doesn't want to have sex with me because I am bleeding all the time. He's grossed out by it; I don't blame him, but it makes me feel bad.\"",
+   "expect": "reveal",
+   "credits": "Sexual history"
+  },
+  {
+   "question": "Have you had any other health problems or been in hospital for anything, and what health problems do your parents have?",
+   "target": "Your father is 60, with diabetes and high blood pressure. Your mother is 62, with diabetes. Your sibling is 40, with high blood pressure. The children are healthy.",
+   "expect": "reveal",
+   "credits": "Past medical and family history"
+  },
+  {
+   "question": "Have you lost or gained weight without trying, or noticed changes in your hair or skin?",
+   "target": "You are not bothered by heat or cold. No changes in your skin, your hair or your nails. Your weight has not changed on its own.",
+   "expect": "reveal",
+   "credits": "Review of systems"
+  },
+  {
+   "question": "Any temperatures or shivers lately?",
+   "target": "No fevers and no chills.",
+   "expect": "reveal",
+   "credits": "Review of systems"
+  },
+  {
+   "question": "Have you ever felt you ought to cut down on drinking, or needed a drink first thing in the morning?",
+   "target": "Every question about drinking too much is a no. Drink has never been a problem for you.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you smoke at all?",
+   "target": "You have never smoked. You drink 1 or 2 glasses of wine a month on special occasions, and have done for 15 years. No drugs, ever.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How is all this affecting you at work and in your everyday life?",
+   "target": "It has knocked your confidence, your sex life and your day to day life, especially at work. Say \"I'm constantly worrying, am I going to bleed through another pair of underwear or pants today?\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you get nosebleeds or bleeding gums when you brush your teeth?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Do you feel dizzy or lightheaded when you get up quickly?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed any milky fluid coming from your nipples?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you been getting bad headaches or trouble with your eyesight?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything else you think I should know?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "BMI"
+  },
+  {
+   "key": "general",
+   "phrasing": "appearance"
+  },
+  {
+   "key": "pelvic",
+   "phrasing": "speculum"
+  },
+  {
+   "key": "pelvic",
+   "phrasing": "bimanual"
+  },
+  {
+   "key": "pelvic",
+   "phrasing": "vaginal exam"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Endometrial hyperplasia, rule out endometrial carcinoma",
+    "Uterine fibroids",
+    "Endometrial polyp",
+    "Coagulopathy"
+   ],
+   "tx": [
+    "Urine hCG",
+    "CBC",
+    "TSH and FSH",
+    "PT/PTT/INR",
+    "Transvaginal ultrasound",
+    "Endometrial biopsy"
+   ]
+  },
+  {
+   "dx": [
+    "AUB with intermenstrual bleeding - concern for endometrial malignancy (age >35, BMI 40, early menarche)",
+    "Leiomyoma",
+    "Adenomyosis"
+   ],
+   "tx": [
+    "Serum beta-hCG",
+    "Full blood count",
+    "Thyroid function",
+    "Clotting screen",
+    "Pelvic sonogram",
+    "Pipelle sampling of the endometrium"
+   ]
+  },
+  {
+   "dx": [
+    "Endometrial cancer",
+    "Complex atypical hyperplasia of the endometrium",
+    "Ovulatory dysfunction"
+   ],
+   "tx": [
+    "Pelvic exam",
+    "Pregnancy test",
+    "Haemoglobin",
+    "TSH",
+    "Coagulation studies",
+    "Pelvic ultrasound",
+    "Endometrial biopsy"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Hypothyroidism causing heavy periods",
+    "Iron deficiency anaemia"
+   ],
+   "tx": [
+    "TSH and free T4",
+    "Ferritin",
+    "Iron studies"
+   ]
+  },
+  {
+   "dx": [
+    "Pelvic inflammatory disease",
+    "Chronic cervicitis"
+   ],
+   "tx": [
+    "Chlamydia and gonorrhoea swabs",
+    "Wet mount",
+    "Urinalysis"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Endometrial carcinoma",
+  "Atypical endometrial hyperplasia",
+  "Endometrial malignancy",
+  "Uterine cancer of the endometrium",
+  "EIN / endometrial hyperplasia"
+ ],
+ "test_variants": [
+  {
+   "key": "pelvic examination",
+   "phrasing": "speculum and bimanual exam"
+  },
+  {
+   "key": "pelvic examination",
+   "phrasing": "internal examination"
+  },
+  {
+   "key": "pregnancy test (bHCG)",
+   "phrasing": "urine hCG"
+  },
+  {
+   "key": "pregnancy test (bHCG)",
+   "phrasing": "serum beta HCG"
+  },
+  {
+   "key": "full blood count",
+   "phrasing": "CBC"
+  },
+  {
+   "key": "full blood count",
+   "phrasing": "haemoglobin level"
+  },
+  {
+   "key": "TSH",
+   "phrasing": "thyroid function tests"
+  },
+  {
+   "key": "FSH",
+   "phrasing": "follicle stimulating hormone"
+  },
+  {
+   "key": "coagulation studies (PT, PTT, INR)",
+   "phrasing": "clotting screen"
+  },
+  {
+   "key": "coagulation studies (PT, PTT, INR)",
+   "phrasing": "PT/aPTT"
+  },
+  {
+   "key": "pelvic ultrasound",
+   "phrasing": "transvaginal ultrasound"
+  },
+  {
+   "key": "pelvic ultrasound",
+   "phrasing": "TVUS"
+  },
+  {
+   "key": "endometrial biopsy",
+   "phrasing": "Pipelle sampling"
+  },
+  {
+   "key": "endometrial biopsy",
+   "phrasing": "endometrial sampling"
+  }
+ ]
+}

@@ -96,17 +96,17 @@ general: Well appearing woman, sitting up, in no distress, at home on a video ca
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Where the flashes start and spread | where, whereabouts, start in, spread, part of your body, all over, chest
+Where the flashes start and spread | where, whereabouts, start in, spread, part of your body, all over, chest, face, all of you, whole body
 What the flashes feel like | describe, what is it like, feel like, feels like, sweat*, quality
 How bad the flashes are | how bad, bad are, sever*, scale, rate them, bother*, worst
-When they started | when did, start*, began, begin, onset, how long have
+When they started | when did, start*, began, begin, onset, how long have, how long, how many months, months
 How long each one lasts | last, lasts, how long does, minutes, go on for, duration
-How often they happen | often, frequen*, how many times, how many a day, every day, daily, times a week
-Worse at night | night, evening, bedtime, time of day, in the day
-What brings them on | trigger*, bring on, brings them, set them off, worse, aggravat*, alcohol, wine
-Sleep | sleep*, sleeping, insomnia, wake*, waking, rest*
-Vaginal dryness | dry*, dryness, lubricat*, vagina*, intercourse, sex
-Mood and irritability | mood*, irritab*, temper, short with, emotion*, snapp*, low
+How often they happen | often, frequen*, how many times, how many a day, every day, daily, times a week, how many
+Worse at night | night, evening, bedtime, time of day, in the day, daytime, dark
+What brings them on | trigger*, bring on, brings them, set them off, worse, aggravat*, alcohol, wine, set off, sets off, sets one off, set one off, sets it off, cause them, causes them
+Sleep | sleep*, sleeping, insomnia, wake*, waking, rest*, good night, bedtime
+Vaginal dryness | dry*, dryness, lubricat*, vagina*, intercourse, sex, drier, down below
+Mood and irritability | mood*, irritab*, temper, short with, emotion*, snapp*, low, depress*, mental health, anxi*, on edge, snap
 Mother's menopause | mother, mom, mum, your mother, family
 Smoking | smok*, cigarett*, tobacco, vape, vaping, e-cigarette*
 
@@ -114,7 +114,7 @@ Smoking | smok*, cigarett*, tobacco, vape, vaping, e-cigarette*
 most likely: Menopause or perimenopause
 also accepted: hyperthyroidism, malignancy, anxiety attack, pregnancy, infection, pheochromocytoma, alcohol abuse, dietary triggers such as spicy food
 tests: TSH or thyroid function tests, FSH level, pregnancy test, LH level, estrogen level, cancer labs such as CA-125
-pass diagnosis words: menopaus*, perimenopaus*, peri-menopaus*, climacteric, change of life, hypoestrogen*, vasomotor
+pass diagnosis words: menopaus*, perimenopaus*, postmenopaus*, peri-menopaus*, climacteric, change of life, hypoestrogen*, vasomotor
 pass test words: tsh, thyroid stimulating, fsh, follicle stimulating, oestradiol, estradiol, pregnancy test, hcg
 teaching point: She is 51, has had no period for six or seven months, and has hot flashes that start in the chest and spread, vaginal dryness, irritability, and broken sleep. Her mother went through menopause at 50. That is menopause, and it is a clinical diagnosis. Check TSH and a pregnancy test to rule out a thyroid problem and pregnancy. FSH supports it but does not make it. Then treat: lifestyle changes such as dressing in layers, lowering the room temperature, weight loss and avoiding triggers, an SSRI or SNRI if she wants a non hormonal drug, or hormone replacement with estrogen and progesterone because her uterus is intact, with a discussion of risks and benefits, and vaginal estrogen for the dryness. Say out loud that her symptoms are severe enough to treat.
 miss note: The missed periods and the vaginal dryness are the two facts worth having, and she offers neither. Hot flashes on their own could be a thyroid problem or anxiety. Six or seven months without a period at 51, with dryness and irritability, is menopause.

@@ -89,12 +89,12 @@ general: Well appearing. Sitting on a chair, no distress, engaged but slightly n
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
 Let her tell the story in her own words | tell me more, tell me about, in your own words, from the beginning, what brings you, going on
 Where the pain is | where, whereabouts, which part, location, outside, inside, deep, entrance, opening, vulva
-Quality of the pain | describe, what is it like, sharp, dull, burning, raw, quality, kind of pain
+Quality of the pain | describe, what is it like, sharp, dull, burning, raw, quality, kind of pain, feel like, feels like, sort of pain, type of pain
 How bad the pain is and how it affects her | how bad, severity, scale, out of ten, bother*, affect*, stop*
-When the pain started | start*, began, begin*, onset, how long, since when, always
+When the pain started | start*, began, begin*, onset, how long, since when, always, first notic*, when did
 When during sex it hurts | penetration, penetrat*, beginning, throughout, afterward*, after sex, entry, whole time
-Whether it happens with every partner | all partners, other partners, previous partner*, every partner, only with him, past partner*
-Any change since having the baby | baby, birth, deliver*, childbirth, postpartum, daughter
+Whether it happens with every partner | all partners, other partners, previous partner*, every partner, only with him, past partner*, before your, people you were with, other people, past relationship*
+Any change since having the baby | baby, birth, deliver*, childbirth, postpartum, daughter, little girl, little boy, had your
 Any change with the menstrual cycle | period*, cycle, menstrual, time of the month, menses
 What makes it better or worse | better, worse, relieve*, ease, aggravat*, help the pain, lubricant*, lubricat*, ky, jelly
 Bleeding with intercourse | bleed*, spotting, blood
@@ -103,9 +103,9 @@ Pain or burning passing water | urinat*, urine, pee, water, bladder
 Hot flashes | hot flash*, hot flush*, night sweat*
 Medicines she takes | medicat*, medicine*, tablet*, taking anything, zoloft, sertraline, prescription, over the counter
 Obstetric history, pregnancies and births | pregnan*, births, deliveries, gravida, miscarr*, children, kids
-Gynecologic history, periods and smears | periods start*, menarche, first period, pap, smear, gynecolog*, gynaecolog*
+Gynecologic history, periods and smears | periods start*, menarche, first period, pap, smear, gynecolog*, gynaecolog*, women's health, womb, cervix, procedure*
 Social history, work, home, tobacco and alcohol | work, job, live with, smok*, tobacco, alcohol, drink*, drug*, exercise
-Sex of her partners | men or women, women or men, male or female, partners men, sex of your partner*
+Sex of her partners | men or women, women or men, male or female, partners men, sex of your partner*, men women, women or both, both men, guys or girls
 Age at first sex | first had sex, sexual debut, how old were you, first time you had sex, started having sex
 Number of lifetime partners | how many partners, lifetime partners, number of partners, how many people
 Current partner and how long | current partner, how long have you been, boyfriend, exclusive, monogam*
@@ -113,11 +113,11 @@ Kinds of sex, oral, vaginal, anal | oral, anal, vaginal sex, what kind of sex, p
 Whether she has orgasms | orgasm*, climax*
 How often she reaches orgasm | how often, every time, percent*, most of the time, usually, one in
 Vibrator or toys | vibrat*, toy*, dildo*
-Masturbation | masturbat*, touch yourself, on your own, by yourself
+Masturbation | masturbat*, touch yourself, on your own, by yourself, pleasure yourself, self pleasur*
 Whether she feels lubricated enough | lubricat*, wet enough, dry, dryness, moist*, natural lubrication
 Libido and desire | libido, desire, interest in sex, sex drive, want to have sex
 Protection and sexually transmitted infections | condom*, protect*, sti, std, sexually transmitted, infection*, trichomon*, tested
-Birth control | birth control, contracept*, pill*, loestrin, prevent pregnancy
+Birth control | birth control, contracept*, pill*, loestrin, prevent pregnancy, get pregnant, avoid pregnancy
 Safety at home and abuse | safe, abuse*, hurt you, violence, forced, afraid of, threaten*
 
 [ANSWER]

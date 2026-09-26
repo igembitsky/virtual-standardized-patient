@@ -270,9 +270,20 @@ def run_student(c, path, a):
 def run_examiner(c, path, a):
     t0 = time.time()
     labels = [q["label"] for q in c["questions"]]
-    plan = claude(a.planner, PLAN_SYS, "CASE FILE\n" + c["raw"] +
-                  "\n\nCHECKLIST LABELS, use exactly one of these or \"\" in credits:\n" +
-                  "\n".join("- " + l for l in labels), PLAN_SCHEMA)
+    # The standard script for this case, so every run asks the same words. A case without one
+    # gets one written now and saved. --fresh writes a new one for this run only.
+    frozen = os.path.join(HERE, "scripts", c["id"] + ".json")
+    if os.path.exists(frozen) and not a.fresh:
+        plan = json.load(open(frozen)); script = "standard"
+    else:
+        plan = claude(a.planner, PLAN_SYS, "CASE FILE\n" + c["raw"] +
+                      "\n\nCHECKLIST LABELS, use exactly one of these or \"\" in credits:\n" +
+                      "\n".join("- " + l for l in labels), PLAN_SCHEMA)
+        script = "fresh"
+        if not os.path.exists(frozen):
+            json.dump({"case": c["id"], "made": datetime.now().strftime("%Y-%m-%d") + f" by {a.planner}", **plan},
+                      open(frozen, "w"), indent=1, ensure_ascii=False)
+            script = "new standard"
     probes = plan["probes"]
     chk = page_check(path, {
         "ask": [p["question"] for p in probes],
@@ -324,7 +335,7 @@ def run_examiner(c, path, a):
     topdx = [{"phrasing": v, "counted": m["dxHit"]} for v, m in zip(plan["top_dx_variants"], take(len(plan["top_dx_variants"])))]
     tests = [{"key": v["key"], "phrasing": v["phrasing"], "counted": m["txHit"]}
              for v, m in zip(plan["test_variants"], take(len(plan["test_variants"])))]
-    return {"suite": "examiner", "case": c["id"], "name": c["name"], "plan": plan,
+    return {"suite": "examiner", "case": c["id"], "name": c["name"], "plan": plan, "script": script,
             "verdicts": counts, "overall": overall, "transcript": turns,
             "credit": credit_rows, "covered": covered, "total": len(labels),
             "missed": [l for l in labels if l not in covered],
@@ -437,6 +448,7 @@ def main():
     ap.add_argument("--student", default="sonnet")
     ap.add_argument("--planner", default="opus")
     ap.add_argument("--judge", default="opus")
+    ap.add_argument("--fresh", action="store_true", help="examiner writes a new script, not the standard one")
     ap.add_argument("--out", default=os.path.join(HERE, "results"))
     a = ap.parse_args()
     files = sorted(f for f in os.listdir(os.path.join(ROOT, "cases")) if f.endswith(".txt"))
@@ -461,7 +473,12 @@ def main():
             print(f"   verdicts {r['verdicts']}, {r['seconds']}s", flush=True)
             json.dump(r, open(os.path.join(outdir, f"{c['id']}-{s}.json"), "w"), indent=1, ensure_ascii=False)
             open(os.path.join(outdir, "report.md"), "w").write(report(rows, a, stamp))
-    print(f"\nDONE {len(rows)} runs. Report: {os.path.join(outdir, 'report.md')}")
+    import score
+    sc = score.scorecard(rows)
+    json.dump(sc, open(os.path.join(outdir, "scorecard.json"), "w"), indent=1)
+    gates = score.gate_md(sc)
+    open(os.path.join(outdir, "report.md"), "a").write("\n" + gates)
+    print("\n" + gates + f"\nDONE {len(rows)} runs. Report: {os.path.join(outdir, 'report.md')}")
 
 if __name__ == "__main__":
     main()

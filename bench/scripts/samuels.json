@@ -1,0 +1,418 @@
+{
+ "case": "samuels",
+ "made": "2026-09-25 by opus, frozen as the standard set",
+ "probes": [
+  {
+   "question": "Hi there, what's brought you in to see us today?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Asked the chief complaint"
+  },
+  {
+   "question": "When did you first start feeling unwell with this?",
+   "target": "You started not to feel right three days ago. At first just a bit under the weather, tired, a bit achy and a slight headache.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Where exactly are you feeling the pressure or pain?",
+   "target": "Your head hurt even more, and you felt a lot of pressure in your facial sinuses and in your ears, especially on the right side. Say \"It almost feels like I am underwater.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you been running a temperature at all?",
+   "target": "You took some decongestant, but yesterday your temperature popped up to 102.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What does it look like when you blow your nose?",
+   "target": "When you blow your nose all this thick yellow to greenish stuff comes out. A moderate amount.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Does it hurt if you push on your forehead or around your eyes?",
+   "target": "(only if asked) Pressing on your forehead or around your eyes hurts.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you seen any blood when you blow your nose?",
+   "target": "(only if asked) There is no blood in what comes out of your nose.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How often do you end up with infections like this one?",
+   "target": "You get sinus and ear infections two or three times a year. Sometimes it even goes into pneumonia.",
+   "expect": "reveal",
+   "credits": "Long history of infections"
+  },
+  {
+   "question": "How old were you when these sinus and ear infections started happening?",
+   "target": "(only if asked) You have had many sinus and ear infections since you were about 18 years old.",
+   "expect": "reveal",
+   "credits": "Long history of infections"
+  },
+  {
+   "question": "What were you like health-wise when you were little? Did you get sick a lot back then?",
+   "target": "(only if asked) As a child you were always very healthy. You rarely got colds and you never even had tubes in your ears. Your infections started in your late teens, around 17 or 18.",
+   "expect": "reveal",
+   "credits": "Infections during childhood"
+  },
+  {
+   "question": "Have you ever had a chest infection, like pneumonia?",
+   "target": "You have had pneumonia three times in the last ten years, and that is with the pneumonia vaccine.",
+   "expect": "reveal",
+   "credits": "Long history of infections"
+  },
+  {
+   "question": "Does it ever spread down into your chest?",
+   "target": "(only if asked) It often goes into your chest and you get bronchitis, about once a year.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you get out of breath at the moment?",
+   "target": "(only if asked) Are you short of breath? Not more than you usually are. Your bronchiectasis is mild and you only get short of breath if you exert yourself, like walking up a couple of flights of stairs.",
+   "expect": "reveal",
+   "credits": "Short of breath"
+  },
+  {
+   "question": "Has your cough got any worse over these last few days?",
+   "target": "(only if asked) Are you coughing more? Your cough is generally mild but daily. It is not worse than it has been.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you bringing up more mucus from your chest than you normally do?",
+   "target": "(only if asked) You are not bringing up more phlegm than usual.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Any pain in your chest?",
+   "target": "(only if asked) You have no chest pain.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever coughed up any blood?",
+   "target": "(only if asked) You do not cough up blood.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you dropped any weight without trying?",
+   "target": "(only if asked) You have not lost any weight.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Any trouble with your kidneys, or any change when you pee?",
+   "target": "(only if asked) You have no kidney problems and nothing has changed about your water.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed any spots or rashes on your skin lately?",
+   "target": "(only if asked) Lately you notice these little red dots on your legs and arms, where you were holding some groceries. They don't itch, they don't hurt, they don't seem to be getting worse, and they fade. You weren't that concerned about them.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you find you bruise more easily than you used to?",
+   "target": "(only if asked) Lately you seem to be bruising a bit more easily. They come out of nowhere, mostly on your legs, and you noticed one on your arm where you were carrying a bag of milk.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How are your bowels? Any diarrhoea or loose stools?",
+   "target": "(only if asked) You have watery stools every day and have done for a long time. No blood in them. You have never had a stomach bug like salmonella or giardia. You put it down to irritable bowel syndrome.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever felt lumps or swollen glands in your neck, armpits or groin?",
+   "target": "(only if asked) You have no swollen glands and have never had swollen glands.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you ever been diagnosed with any kind of cancer?",
+   "target": "(only if asked) You have never had cancer and no lymphoma.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What other health problems have you had in the past? Any operations or hospital stays?",
+   "target": "(only if asked) Your past illnesses are the early bronchiectasis, bronchitis at least once a year, and the three bouts of pneumonia. No surgery, no accidents, never been in hospital.",
+   "expect": "reveal",
+   "credits": "Long history of infections"
+  },
+  {
+   "question": "Are you on any regular medication or supplements?",
+   "target": "(only if asked) You take no medicines at all. No prescriptions, nothing over the counter, no herbs or supplements.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you allergic to anything?",
+   "target": "(only if asked) You have no allergies to medicines, to food, or to anything in the air.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are your vaccinations up to date? Which ones have you had?",
+   "target": "(only if asked) You have the flu shot every November and you had all your childhood vaccines. You had the pneumonia vaccine several years ago. Say \"It was supposed to help with my sinus issues and prevent me from having pneumonia again, but apparently it didn't work out too well.\"",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you smoke, drink alcohol or use any recreational drugs?",
+   "target": "(only if asked) You never smoked. A glass of wine at the weekend if you go out to dinner. No drugs.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How much caffeine do you have in a day?",
+   "target": "(only if asked) A coffee in the morning and one or two teas in the afternoon. Iced tea in the summer. A coke now and then.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Tell me about your diet, exercise and how you're sleeping.",
+   "target": "(only if asked) You try to eat a well balanced healthy diet. No formal exercise, but you walk the dog half a mile every morning and evening. You normally sleep a full night.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything that runs in your family? How are your parents?",
+   "target": "(only if asked) Your mother is 76 and alive, with high blood pressure and high cholesterol. Your father is 77 and alive, with gout. Nobody in the family gets infections the way you do.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Who's at home with you?",
+   "target": "(only if asked) You have been married to your high school sweetheart for 15 years and he is your only ever partner. You have three young children. Your husband runs a restaurant and works evenings and weekends, so most of the childcare is yours.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How do all these infections affect your everyday life?",
+   "target": "If you get your antibiotics you do fine and there is no impact. If you don't get your antibiotics, then you get sick really fast.",
+   "expect": "reveal",
+   "credits": "Impact on your life"
+  },
+  {
+   "question": "Has being ill so often held you back from anything you wanted to do?",
+   "target": "(only if asked) You were working on your masters but couldn't keep up with it between the children, work and getting sick so often. You have put it off for a few years.",
+   "expect": "reveal",
+   "credits": "Impact on your life"
+  },
+  {
+   "question": "What do you think keeps causing all these infections?",
+   "target": "(only if asked) You blame all of it on your job, because you are with kindergarten children all day.",
+   "expect": "reveal",
+   "credits": "Your concerns and what you think is going on"
+  },
+  {
+   "question": "Is there anything in particular you're worried about with this one?",
+   "target": "It just feels like a typical sinus infection. You don't want it to go into your lungs, so you want antibiotics before it spreads there.",
+   "expect": "reveal",
+   "credits": "Your concerns and what you think is going on"
+  },
+  {
+   "question": "Have you been abroad anywhere recently?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Any problems with your eyesight, like blurry or double vision?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have your joints been sore or swollen at all?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you had a sore throat with this?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Right, just to recap: three days of blocked sinuses, a sore right ear and a fever, and you get these infections a few times a year, plus pneumonia three times. Have I got that right?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Summarised the history back to the patient"
+  },
+  {
+   "question": "Is there anything else you'd like to tell me before I examine you?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "ears",
+   "phrasing": "otoscope"
+  },
+  {
+   "key": "sinuses",
+   "phrasing": "frontal tenderness"
+  },
+  {
+   "key": "neck",
+   "phrasing": "thyroid"
+  },
+  {
+   "key": "chest",
+   "phrasing": "lung auscultation"
+  },
+  {
+   "key": "heart",
+   "phrasing": "cardiac"
+  },
+  {
+   "key": "abdomen",
+   "phrasing": "belly palpation"
+  },
+  {
+   "key": "skin",
+   "phrasing": "rash"
+  },
+  {
+   "key": "nails",
+   "phrasing": "fingers clubbing"
+  },
+  {
+   "key": "general",
+   "phrasing": "appearance"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Acute sinusitis with R otitis media secondary to CVID",
+    "Granulomatosis with polyangiitis"
+   ],
+   "tx": [
+    "Serum IgG, IgA, IgM",
+    "Pneumococcal vaccine antibody titres",
+    "B and T cell subsets by flow cytometry",
+    "ANCA",
+    "ESR"
+   ]
+  },
+  {
+   "dx": [
+    "Common variable immune deficiency - recurrent sinopulmonary infections, bronchiectasis, adult onset",
+    "Wegener's granulomatosis"
+   ],
+   "tx": [
+    "Quantitative immunoglobulins",
+    "Vaccine response titers (tetanus, pneumococcal)",
+    "Lymphocyte subsets CD19/CD3",
+    "c-ANCA and p-ANCA",
+    "Sed rate"
+   ]
+  },
+  {
+   "dx": [
+    "Primary hypogammaglobulinemia (common variable immunodeficiency) with bacterial sinusitis",
+    "Small vessel vasculitis"
+   ],
+   "tx": [
+    "Immunoglobulin levels",
+    "Post-vaccination antibody titres",
+    "Flow cytometry for B cells and T cells",
+    "ANCA serology",
+    "Erythrocyte sedimentation rate"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Acute bacterial rhinosinusitis",
+    "Acute right otitis media"
+   ],
+   "tx": [
+    "Clinical diagnosis, no tests needed",
+    "Start amoxicillin-clavulanate"
+   ]
+  },
+  {
+   "dx": [
+    "Chronic rhinosinusitis",
+    "Community-acquired pneumonia"
+   ],
+   "tx": [
+    "Chest X-ray",
+    "CT of the sinuses",
+    "Full blood count"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "CVID",
+  "common variable immune deficiency",
+  "acquired hypogammaglobulinaemia",
+  "primary antibody deficiency (CVID) causing recurrent sinusitis",
+  "recurrent sinopulmonary infections due to common variable immunodeficiency"
+ ],
+ "test_variants": [
+  {
+   "key": "immunoglobulin levels",
+   "phrasing": "serum IgG, IgA and IgM"
+  },
+  {
+   "key": "immunoglobulin levels",
+   "phrasing": "quantitative immunoglobulins"
+  },
+  {
+   "key": "T cell and B cell counts",
+   "phrasing": "lymphocyte subsets by flow cytometry"
+  },
+  {
+   "key": "T cell and B cell counts",
+   "phrasing": "CD19 and CD3 counts"
+  },
+  {
+   "key": "functional response to vaccination measured by titres",
+   "phrasing": "pneumococcal antibody titers after vaccination"
+  },
+  {
+   "key": "functional response to vaccination measured by titres",
+   "phrasing": "tetanus and pneumococcal vaccine response"
+  },
+  {
+   "key": "ANCA",
+   "phrasing": "antineutrophil cytoplasmic antibodies"
+  },
+  {
+   "key": "ANCA",
+   "phrasing": "c-ANCA / PR3"
+  },
+  {
+   "key": "ESR",
+   "phrasing": "erythrocyte sedimentation rate"
+  },
+  {
+   "key": "ESR",
+   "phrasing": "sed rate"
+  }
+ ],
+ "edits": [
+  "2026-09-25: exam for neck changed from 'lymph nodes' to 'thyroid'. Lymph nodes is its own examination."
+ ]
+}

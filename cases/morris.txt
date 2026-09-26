@@ -57,12 +57,12 @@ general: Lying still on the back, uncomfortable, guarding the left lower abdomen
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Where the pain is | where, whereabouts, point, show me, which part, location
-Quality of the pain | describe, what is it like, sharp, dull, burning, quality, kind of pain
-Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, wave*
-What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain
-Colour of the urine | urine, water, wee, pass water, urinat*
-Bowels and stools | stool*, bowel, motion*, faeces, feces, poo, constipat*, open your bowels
+Where the pain is | where, whereabouts, point, show me, which part, location, spread*, move*, radiat*, go anywhere
+Quality of the pain | describe, what is it like, sharp, dull, burning, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words
+Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, wave*, whole time, ease off, eases off, on and off, off and on, comes back
+What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, eases, helps, set it off, sets it off, hurt more
+Colour of the urine | urine, water, wee, pass water, urinat*, pee, peed, peeing
+Bowels and stools | stool*, bowel, motion*, faeces, feces, poo, constipat*, open your bowels, toilet, number two
 Fever or chills | fever, chill*, temperature, hot, shiver*, shaking, rigor, sweat*
 Had this pain before | before, previous, past, ever had, first time
 

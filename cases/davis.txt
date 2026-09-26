@@ -89,25 +89,25 @@ pelvic: The doctor must ask for this examination. Normal external genitalia. Blo
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
 Where the bleeding is coming from | vagina*, where, coming from, source, front, back passage, bladder
-How heavy the bleeding is | how many pads, how many tampons, pad*, tampon*, soak*, heavy, through, clot*, flood*
+How heavy the bleeding is | how many pads, how many tampons, pad*, tampon*, soak*, heavy, through, clot*, flood*, lump*, clump*
 When it started and how it has changed | start*, began, begin, when did, how long, getting worse, chang*, first notic*
 Last menstrual period | last period, lmp, last menstrual, when was your last, last bleed
 Pattern and length of the periods | regular, irregular, cycle, how often, every, how many days, last for, in between, between period*
 Age of the first period | menarche, first period, how old were you, started your periods
-Associated symptoms | discharge, urin*, burning, pass water, bowel*, poo, stool*, diarrh*, constipat*, pain with sex, bleeding after sex
-What makes it better or worse | better, worse, helps, help the, reliev*, motrin, ibuprofen, aggravat*, taken anything
+Associated symptoms | discharge, urin*, burning, pass water, bowel*, poo, stool*, diarrh*, constipat*, pain with sex, bleeding after sex, pee, sting*
+What makes it better or worse | better, worse, helps, help the, reliev*, motrin, ibuprofen, aggravat*, taken anything, ease, easier, set it off, sets it off
 Medicines | medicat*, medicine*, tablet*, pill*, taking anything, over the counter, birth control, hormone*
-Obstetric history | pregnan*, children, kids, births, deliver*, cesarean, c-section, miscarriage*, abortion*, gravida, para
+Obstetric history | pregnan*, children, kids, births, deliver*, cesarean, c-section, miscarriage*, abortion*, gravida, para, babies, baby, born
 Gynaecologic history | pap, smear, cervical, sti*, std*, infection*, chlamydia, gonorrh*, fibroid*, gynae*, gyn
-Sexual history | sex, sexual, partner*, intercourse, condom*, contracept*, protection
-Past medical and family history | past medical, illness*, operation*, surger*, thyroid, diabet*, bleeding disorder, brui*, family, mother, father, run* in the family
-Review of systems | weight, fever*, chill*, tired*, hair, skin, nail*, cold, heat, appetite
+Sexual history | sex, sexual, partner*, intercourse, condom*, contracept*, protection, in bed, intima*
+Past medical and family history | past medical, illness*, operation*, surger*, thyroid, diabet*, bleeding disorder, brui*, family, mother, father, run* in the family, health problems, hospital*, parents, relatives
+Review of systems | weight, fever*, chill*, tired*, hair, skin, nail*, cold, heat, appetite, temperature*, shiver*, sweat*
 
 [ANSWER]
 most likely: Endometrial hyperplasia or endometrial cancer
 also accepted: uterine polyp, uterine leiomyoma, fibroids, adenomyosis, ovulatory dysfunction, coagulation disorder
 tests: pelvic examination, pregnancy test (bHCG), full blood count, TSH, FSH, coagulation studies (PT, PTT, INR), pelvic ultrasound, endometrial biopsy
-pass diagnosis words: hyperplasia, cancer*, malignan*, carcinoma, endometrial hyperplasia, endometrial cancer
+pass diagnosis words: hyperplasia, cancer*, malignan*, carcinoma, endometrial hyperplasia, endometrial cancer, adenocarcinoma
 pass test words: biopsy, endometrial biopsy, ultrasound, ultrasonograph*, sonogram*, transvaginal
 teaching point: The menstrual history is what narrows this. She is not simply having heavy periods. She is bleeding between them, near enough every day for six months, with clots. Add her age over 35, a body mass index of 40, her first period at 10, and no hormone birth control ever, and the endometrium is where you look. The uterus is slightly enlarged, though the examination is limited by her size. The work up is a pelvic examination, a pregnancy test, blood count, thyroid test, clotting studies, a pelvic ultrasound and an endometrial biopsy.
 miss note: The menstrual history was the one worth having. Ask when the last period was and how the bleeding sits against the cycle. Bleeding between periods, every day, is a different problem from heavy periods, and it is what points at the lining of the womb rather than at fibroids alone.

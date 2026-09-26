@@ -1,0 +1,244 @@
+{
+ "case": "lewis",
+ "made": "2026-09-25 by opus, frozen as the standard set",
+ "probes": [
+  {
+   "question": "Hello, I'm Dr Rivera, one of the family doctors at the clinic in Burns. Can you hear and see me alright?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "When the sleep trouble started, was it mostly getting to sleep, or something else?",
+   "target": "About a month ago you began to have trouble falling asleep. You often lie awake well past 10, and sometimes later.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Once you do drop off, do you stay asleep through the night?",
+   "target": "When you do finally fall asleep you wake up often, tossing and turning.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Is this happening every single night, or just some nights?",
+   "target": "It happens every night, and it has done every night for the month.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "What have you already tried to help yourself get to sleep?",
+   "target": "You have tried everything. You don't watch TV in bed, you don't drink alcohol right before bed, and you have tried reading to help you fall asleep. Nothing has worked.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Who's at home with you these days?",
+   "target": "You live alone. You have been widowed for just over a year.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How have your spirits been lately? Have you been feeling low or blue?",
+   "target": "(only if asked) Your mood is low.",
+   "expect": "reveal",
+   "credits": "Asked about depression as a cause of the sleeping trouble"
+  },
+  {
+   "question": "Sometimes when people feel this worn out, they have thoughts that life isn't worth living, or of hurting themselves or someone else. Has anything like that crossed your mind?",
+   "target": "(only if asked) You have no thoughts of suicide and no thoughts of harming yourself. You have no thoughts of harming anyone else.",
+   "expect": "reveal",
+   "credits": "Asked about thoughts of suicide or self harm"
+  },
+  {
+   "question": "Have you ever gone through a stretch of days when you felt unusually wound up, full of energy, barely needed any sleep, and your thoughts were going a mile a minute?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": "Screened for a history of mania"
+  },
+  {
+   "question": "Do you have a drink now and then, like beer or wine?",
+   "target": "You drink three glasses of wine a week, never more.",
+   "expect": "reveal",
+   "credits": "Asked about alcohol and substance use"
+  },
+  {
+   "question": "Is that more or less than you used to drink, say a year or two ago?",
+   "target": "(only if asked) If the doctor asks whether your drinking has changed: yes, it has gone up. Before your partner died you drank much less. You have drunk three glasses a week for less than a year.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you taken anything for sleep, from the doctor or from the drugstore?",
+   "target": "You take no medicines at all, nothing on prescription and nothing over the counter.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you had any intimate partners since your spouse passed?",
+   "target": "(only if asked) You were only ever sexually active with your partner. You have had no new partners since they passed away. There is no risk of pregnancy.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Do you remember how you answered those forms the assistant had you fill out before we started?",
+   "target": "(only if asked) You can't really remember what you answered on the forms, but you think the assistant said the doctor can get the results somewhere in the telemedicine room.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Has anyone told you that you snore loudly or stop breathing while you sleep?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Do your legs get restless or crawly when you lie down at night?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Are you waking up soaked in sweat at night?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything else going on in your life that you think I should know about?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  },
+  {
+   "question": "Before we wrap up, is there anything you'd like to ask me or anything that's worrying you?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Asked whether there were other questions or concerns"
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "appearance"
+  },
+  {
+   "key": "general",
+   "phrasing": "how they look"
+  },
+  {
+   "key": "affect",
+   "phrasing": "mood"
+  },
+  {
+   "key": "affect",
+   "phrasing": "facial expression"
+  },
+  {
+   "key": "depression screening",
+   "phrasing": "PHQ-9"
+  },
+  {
+   "key": "depression screening",
+   "phrasing": "questionnaire results"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Major depressive disorder, moderate (PHQ-9 = 15), with insomnia, following bereavement"
+   ],
+   "tx": [
+    "Downloaded and reviewed the PHQ-9",
+    "Suicide and self-harm risk assessment: negative",
+    "Asked about past manic episodes: none",
+    "Alcohol and drug history: 3 glasses of wine a week, more since widowed"
+   ]
+  },
+  {
+   "dx": [
+    "MDD, moderate severity; insomnia secondary to depression"
+   ],
+   "tx": [
+    "PHQ9 questionnaire result reviewed with patient",
+    "Screened for suicidal ideation",
+    "Mania/bipolar screen",
+    "Substance use history taken"
+   ]
+  },
+  {
+   "dx": [
+    "Moderate major depression presenting as sleeplessness in a widowed patient"
+   ],
+   "tx": [
+    "Patient health questionnaire score 15",
+    "Asked about thoughts of self-harm",
+    "Screened for history of mania",
+    "Alcohol intake assessed"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Primary insomnia"
+   ],
+   "tx": [
+    "Sleep diary for two weeks",
+    "Sleep hygiene counselling",
+    "Short course of a sleeping tablet"
+   ]
+  },
+  {
+   "dx": [
+    "Possible obstructive sleep apnea causing daytime fatigue"
+   ],
+   "tx": [
+    "Overnight sleep study",
+    "Thyroid function tests",
+    "Complete blood count"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Major depression, moderate",
+  "Moderate MDD",
+  "Major depressive episode",
+  "Clinical depression",
+  "Unipolar depression, moderate severity"
+ ],
+ "test_variants": [
+  {
+   "key": "PHQ-9 depression screening downloaded from the telemedicine system",
+   "phrasing": "Reviewed PHQ9 score from telehealth platform"
+  },
+  {
+   "key": "PHQ-9 depression screening downloaded from the telemedicine system",
+   "phrasing": "Depression questionnaire results pulled up"
+  },
+  {
+   "key": "a suicide and self harm risk assessment",
+   "phrasing": "Screened for suicidal ideation"
+  },
+  {
+   "key": "a suicide and self harm risk assessment",
+   "phrasing": "Asked about thoughts of hurting self"
+  },
+  {
+   "key": "a screen for a history of mania",
+   "phrasing": "Asked about prior manic or hypomanic episodes"
+  },
+  {
+   "key": "a screen for a history of mania",
+   "phrasing": "Bipolar screen"
+  },
+  {
+   "key": "an alcohol and substance use history",
+   "phrasing": "Alcohol and drug use history"
+  },
+  {
+   "key": "an alcohol and substance use history",
+   "phrasing": "Asked about drinking, smoking and drugs"
+  }
+ ]
+}

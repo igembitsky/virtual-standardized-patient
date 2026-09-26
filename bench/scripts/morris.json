@@ -1,0 +1,255 @@
+{
+ "case": "morris",
+ "made": "2026-09-25 by opus, frozen as the standard set",
+ "probes": [
+  {
+   "question": "Good morning, I'm Dr Alvarez, one of the doctors working in emergency this morning. What's brought you in?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "When did this all start?",
+   "target": "The pain began about a week ago. It was mild, about 3 out of 10, and came in waves lasting half an hour every two or three hours.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Can you show me exactly where it hurts?",
+   "target": "The pain is in the lower left side of your stomach. Say \"It is kind of in my lower abdomen, over here\" and that you point to the left lower side.",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "Does the pain spread or move anywhere else, like your back or your legs?",
+   "target": "It has always been in that same place. It does not go anywhere else.",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "How would you describe the feeling of the pain right now?",
+   "target": "Right now it is sharp and steady, about 6 out of 10.",
+   "expect": "reveal",
+   "credits": "Quality of the pain"
+  },
+  {
+   "question": "Is it there all the time, or does it come and go?",
+   "target": "Every day it got a little worse. Yesterday morning it became constant, more severe, and worse when you move.",
+   "expect": "reveal",
+   "credits": "Constant or comes and goes"
+  },
+  {
+   "question": "Is there anything that eases it or makes it hurt more?",
+   "target": "Lying on your back helps a little. The Tylenol did not help at all. Moving and sneezing make it worse. You have spring allergies.",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "Have you taken anything for the pain?",
+   "target": "Last night you felt feverish and your thermometer read 101. You took two Tylenol and went back to sleep.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you been feeling hot or shivery at all?",
+   "target": "Last night you felt feverish and your thermometer read 101. You took two Tylenol and went back to sleep.",
+   "expect": "reveal",
+   "credits": "Fever or chills"
+  },
+  {
+   "question": "How has your eating been this week?",
+   "target": "You have had no appetite all week and no solid food since yesterday. You are not hungry.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When did you last go to the toilet for a poo?",
+   "target": "You have not had a bowel movement for two days.",
+   "expect": "reveal",
+   "credits": "Bowels and stools"
+  },
+  {
+   "question": "Were your bowels any different when this first started?",
+   "target": "You had a few loose stools when the pain first started a week ago.",
+   "expect": "reveal",
+   "credits": "Bowels and stools"
+  },
+  {
+   "question": "Any change when you pass water, like the colour or how it looks?",
+   "target": "You have not noticed anything wrong with your urine.",
+   "expect": "reveal",
+   "credits": "Colour of the urine"
+  },
+  {
+   "question": "Has anything like this ever happened to you in the past?",
+   "target": "You have never had this pain before.",
+   "expect": "reveal",
+   "credits": "Had this pain before"
+  },
+  {
+   "question": "Have you seen any blood when you go to the toilet?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you had any unusual discharge from down below?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you travelled anywhere recently?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you been losing weight without trying over the last few months?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything else you think I should know?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "abdomen",
+   "phrasing": "belly palpation"
+  },
+  {
+   "key": "chest",
+   "phrasing": "lungs"
+  },
+  {
+   "key": "heart",
+   "phrasing": "stethoscope heart"
+  },
+  {
+   "key": "eyes",
+   "phrasing": "sclera"
+  },
+  {
+   "key": "skin",
+   "phrasing": "rash"
+  },
+  {
+   "key": "rectal",
+   "phrasing": "PR exam"
+  },
+  {
+   "key": "general",
+   "phrasing": "appearance"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Perforated sigmoid diverticulitis",
+    "Acute pancreatitis",
+    "Perforated appendix"
+   ],
+   "tx": [
+    "CT abdomen and pelvis with contrast",
+    "FBC",
+    "Serum lipase"
+   ]
+  },
+  {
+   "dx": [
+    "Complicated diverticulitis with localized perforation / peritonitis",
+    "Constipation",
+    "Gastritis"
+   ],
+   "tx": [
+    "CBC with differential",
+    "Amylase and lipase",
+    "CAT scan of abdomen"
+   ]
+  },
+  {
+   "dx": [
+    "Diverticular abscess, likely perforated",
+    "Colitis",
+    "Pancreatitis"
+   ],
+   "tx": [
+    "Computed tomography abdomen",
+    "U&E / electrolytes",
+    "Full blood count"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Ovarian torsion",
+    "Pelvic inflammatory disease",
+    "Ectopic pregnancy"
+   ],
+   "tx": [
+    "Pelvic ultrasound",
+    "Urine pregnancy test",
+    "High vaginal swab"
+   ]
+  },
+  {
+   "dx": [
+    "Left ureteric stone",
+    "Urinary tract infection",
+    "Gastroenteritis"
+   ],
+   "tx": [
+    "Urine dipstick",
+    "Urine culture",
+    "KUB X-ray"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Perforated diverticulitis",
+  "Acute diverticulitis with perforation",
+  "Sigmoid diverticular perforation",
+  "Complicated diverticulitis (Hinchey II)",
+  "Diverticulitis with pericolic abscess and perforation"
+ ],
+ "test_variants": [
+  {
+   "key": "full blood count",
+   "phrasing": "CBC"
+  },
+  {
+   "key": "full blood count",
+   "phrasing": "white cell count"
+  },
+  {
+   "key": "amylase",
+   "phrasing": "serum amylase"
+  },
+  {
+   "key": "lipase",
+   "phrasing": "serum lipase level"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "U&Es"
+  },
+  {
+   "key": "electrolytes",
+   "phrasing": "basic metabolic panel"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CT abdomen pelvis with contrast"
+  },
+  {
+   "key": "abdominal CT",
+   "phrasing": "CAT scan of the belly"
+  }
+ ]
+}

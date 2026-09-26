@@ -1,0 +1,419 @@
+{
+ "case": "bellevue",
+ "made": "2026-09-25 by opus, frozen as the standard set",
+ "probes": [
+  {
+   "question": "Hello, I'm Dr Okafor, one of the doctors in this clinic. What's brought you in today?",
+   "target": "It hurts when we have sex.",
+   "expect": "reveal",
+   "credits": "Introduced yourself by name and role"
+  },
+  {
+   "question": "Take your time and tell me what's been going on, however you'd like to start.",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": "Let her tell the story in her own words"
+  },
+  {
+   "question": "Can you show me or tell me where exactly it hurts?",
+   "target": "The pain is in your vagina. Say it hurts \"on the outside part\" and a little \"on the inside\".",
+   "expect": "reveal",
+   "credits": "Where the pain is"
+  },
+  {
+   "question": "What does the pain actually feel like for you?",
+   "target": "The pain feels like you are being rubbed raw, almost a burning feeling.",
+   "expect": "reveal",
+   "credits": "Quality of the pain"
+  },
+  {
+   "question": "Does the pain move anywhere else, like into your tummy or your back?",
+   "target": "It does not spread anywhere else.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "When did you first notice this?",
+   "target": "You have always had pain when you have sex. You noticed it when you first started having sex as a teenager, and you thought it would get better, but it never really has.",
+   "expect": "reveal",
+   "credits": "When the pain started"
+  },
+  {
+   "question": "Is it worst when he first goes in, or does it last the whole time, or after you've finished?",
+   "target": "It is worse when you start having sex, but it carries on the whole time, and you are sore for a few hours afterwards.",
+   "expect": "reveal",
+   "credits": "When during sex it hurts"
+  },
+  {
+   "question": "How strong is the pain? Has it ever been so bad you've had to stop?",
+   "target": "It is hard to put a number on it. You have never had to stop because of the pain.",
+   "expect": "reveal",
+   "credits": "How bad the pain is and how it affects her"
+  },
+  {
+   "question": "How is all this affecting things between you and your partner?",
+   "target": "It is affecting your relationship with your boyfriend. He feels bad, because it really hurts.",
+   "expect": "reveal",
+   "credits": "How bad the pain is and how it affects her"
+  },
+  {
+   "question": "Was it the same with people you were with before your current boyfriend?",
+   "target": "It is the same with your boyfriend as it was with anyone before him.",
+   "expect": "reveal",
+   "credits": "Whether it happens with every partner"
+  },
+  {
+   "question": "Did anything change after you had your little girl?",
+   "target": "Having the baby made no difference to it. It was the same before and after.",
+   "expect": "reveal",
+   "credits": "Any change since having the baby"
+  },
+  {
+   "question": "Is it any worse around your period?",
+   "target": "It only happens with sex. It is not worse at any particular time of the month.",
+   "expect": "reveal",
+   "credits": "Any change with the menstrual cycle"
+  },
+  {
+   "question": "Have you found anything that makes it easier, or anything that makes it worse?",
+   "target": "KY jelly helps at the beginning, but you are still sore at the end. If you put more on it helps, but it is hard to \"kill the moment\", and your boyfriend feels bad when you use it because he feels like \"he isn't doing his job\".",
+   "expect": "reveal",
+   "credits": "What makes it better or worse"
+  },
+  {
+   "question": "Does it hurt any less when you're really in the mood?",
+   "target": "Sometimes it hurts a little less when you are \"more into it\".",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you noticed any blood after sex?",
+   "target": "There is no discharge that smells bad. No pain or burning when you pass water. No itching down there. No bleeding after sex.",
+   "expect": "reveal",
+   "credits": "Bleeding with intercourse"
+  },
+  {
+   "question": "Any unusual discharge, bad smell or itchiness down below?",
+   "target": "There is no discharge that smells bad. No pain or burning when you pass water. No itching down there. No bleeding after sex.",
+   "expect": "reveal",
+   "credits": "Discharge, odour or itching"
+  },
+  {
+   "question": "Does it sting when you go to pee?",
+   "target": "There is no discharge that smells bad. No pain or burning when you pass water. No itching down there. No bleeding after sex.",
+   "expect": "reveal",
+   "credits": "Pain or burning passing water"
+  },
+  {
+   "question": "Do you ever get sudden hot flushes or wake up sweaty at night?",
+   "target": "You have no hot flashes. You feel well in yourself otherwise.",
+   "expect": "reveal",
+   "credits": "Hot flashes"
+  },
+  {
+   "question": "Has anyone else checked you over for this recently?",
+   "target": "You saw your family doctor last week for a well woman check and she said the internal examination was normal. She sent you here.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you on any regular medicines or pills?",
+   "target": "You take Zoloft, 25 milligrams every day, for mild depression.",
+   "expect": "reveal",
+   "credits": "Medicines she takes"
+  },
+  {
+   "question": "What are you using at the moment so you don't get pregnant?",
+   "target": "You take Loestrin every day for birth control.",
+   "expect": "reveal",
+   "credits": "Birth control"
+  },
+  {
+   "question": "Are you allergic to anything?",
+   "target": "You have no allergies to any medicine and no allergies to anything else.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "How many times have you been pregnant?",
+   "target": "You have been pregnant twice. You have a daughter aged 3. The other pregnancy was the miscarriage.",
+   "expect": "reveal",
+   "credits": "Obstetric history, pregnancies and births"
+  },
+  {
+   "question": "Have you ever had any women's health problems or procedures, anything done on your womb?",
+   "target": "You had a miscarriage that did not clear on its own, and they had to do a scrape of the womb.",
+   "expect": "reveal",
+   "credits": "Gynecologic history, periods and smears"
+  },
+  {
+   "question": "How old were you when you first became sexually active?",
+   "target": "You were 17 the first time you had sex.",
+   "expect": "reveal",
+   "credits": "Age at first sex"
+  },
+  {
+   "question": "Do you sleep with men, women, or both?",
+   "target": "You have only ever had sex with men.",
+   "expect": "reveal",
+   "credits": "Sex of her partners"
+  },
+  {
+   "question": "Roughly how many people have you slept with altogether?",
+   "target": "You have had five men in your life altogether.",
+   "expect": "reveal",
+   "credits": "Number of lifetime partners"
+  },
+  {
+   "question": "Are you seeing anyone right now, and how long have you been together?",
+   "target": "You have been with your boyfriend for four years, and only him.",
+   "expect": "reveal",
+   "credits": "Current partner and how long"
+  },
+  {
+   "question": "What sort of sex do you two usually have, oral, vaginal, anal?",
+   "target": "You have oral sex and vaginal sex. You have never had anal sex.",
+   "expect": "reveal",
+   "credits": "Kinds of sex, oral, vaginal, anal"
+  },
+  {
+   "question": "With oral, is that you giving, receiving, or both?",
+   "target": "You give oral sex, and sometimes you receive it.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Are you able to come, or have an orgasm?",
+   "target": "You have had an orgasm before, so you know you can.",
+   "expect": "reveal",
+   "credits": "Whether she has orgasms"
+  },
+  {
+   "question": "How often does that happen for you when you're together?",
+   "target": "You only get there about one time in five, or less.",
+   "expect": "reveal",
+   "credits": "How often she reaches orgasm"
+  },
+  {
+   "question": "Do you ever use a vibrator or other toys?",
+   "target": "You use a vibrator sometimes and that helps you get there. You have never used a dildo.",
+   "expect": "reveal",
+   "credits": "Vibrator or toys"
+  },
+  {
+   "question": "Do you ever pleasure yourself when you're alone?",
+   "target": "You masturbate sometimes.",
+   "expect": "reveal",
+   "credits": "Masturbation"
+  },
+  {
+   "question": "Do you feel you get wet enough on your own when you're turned on?",
+   "target": "You do not feel you get wet enough. You use a lubricant sometimes and it does seem to help.",
+   "expect": "reveal",
+   "credits": "Whether she feels lubricated enough"
+  },
+  {
+   "question": "How is your sex drive generally? Do you feel like having sex?",
+   "target": "Your interest in sex is fine. You would call it average.",
+   "expect": "reveal",
+   "credits": "Libido and desire"
+  },
+  {
+   "question": "Do you use condoms at all?",
+   "target": "You used to use condoms. You stopped because you were worried you might be allergic to latex. Now you use them now and again.",
+   "expect": "reveal",
+   "credits": "Protection and sexually transmitted infections"
+  },
+  {
+   "question": "Have you ever caught an infection from sex?",
+   "target": "You had trichomonas with your first partner when you were a teenager. Nothing since then.",
+   "expect": "reveal",
+   "credits": "Protection and sexually transmitted infections"
+  },
+  {
+   "question": "Do you feel safe at home? Has anyone ever hurt you or pushed you into something sexual you didn't want?",
+   "target": "You feel safe with your boyfriend. Nobody has ever hit you, hurt you or forced you into anything.",
+   "expect": "reveal",
+   "credits": "Safety at home and abuse"
+  },
+  {
+   "question": "Who's at home with you, and what do you do for work?",
+   "target": "You live in a rented two bedroom house in Durham with your boyfriend and your daughter. He is the father.",
+   "expect": "reveal",
+   "credits": "Social history, work, home, tobacco and alcohol"
+  },
+  {
+   "question": "Do you smoke, drink or use any drugs?",
+   "target": "You have never smoked. You have a drink at special occasions, about one glass a month. No street drugs.",
+   "expect": "reveal",
+   "credits": "Social history, work, home, tobacco and alcohol"
+  },
+  {
+   "question": "Do any illnesses run in your family?",
+   "target": "Your father is 65 with high blood pressure. Your mother is 62 and had breast cancer at 61, now in remission. Your sister is 35 with type 2 diabetes. Your daughter is 3 and healthy.",
+   "expect": "reveal",
+   "credits": ""
+  },
+  {
+   "question": "Have you seen any blisters, sores or lumps down there?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Any trouble with your bowels, like constipation or pain when you go?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Have you been feeling unusually tired or cold, or put on weight lately?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Do you get any aching or swelling in your joints?",
+   "target": "NOT IN CASE",
+   "expect": "deny",
+   "credits": ""
+  },
+  {
+   "question": "Is there anything else on your mind that we haven't talked about?",
+   "target": "OPEN",
+   "expect": "open",
+   "credits": ""
+  }
+ ],
+ "exams": [
+  {
+   "key": "general",
+   "phrasing": "general appearance"
+  },
+  {
+   "key": "general",
+   "phrasing": "observe patient"
+  },
+  {
+   "key": "general",
+   "phrasing": "inspection"
+  }
+ ],
+ "correct_notes": [
+  {
+   "dx": [
+    "Inhibited arousal with inadequate lubrication",
+    "Possible SSRI / OCP contribution"
+   ],
+   "tx": [
+    "Refer to pelvic floor physiotherapy",
+    "Discuss more foreplay and arousal techniques, validate her pain",
+    "Advise on lubricant choice and applying it early",
+    "Consider switching sertraline to a different antidepressant",
+    "Consider changing Loestrin to another contraceptive method"
+   ]
+  },
+  {
+   "dx": [
+    "Superficial dyspareunia due to poor arousal and insufficient vaginal lubrication"
+   ],
+   "tx": [
+    "Pelvic floor physical therapy referral",
+    "Referral to sex therapist / couples counselling",
+    "Lubricant counselling",
+    "Review Zoloft - swap SSRI for agent with fewer sexual side effects"
+   ]
+  },
+  {
+   "dx": [
+    "Female sexual arousal disorder -> lubrication deficit, ? medication side effect (SSRI, low-dose pill)"
+   ],
+   "tx": [
+    "Sex therapy referral",
+    "Encourage foreplay, vibrator use during partnered sex",
+    "Water or silicone based lubricant used generously from the start",
+    "Change oral contraceptive to non-hormonal or different formulation",
+    "Discuss alternative antidepressant e.g. bupropion"
+   ]
+  }
+ ],
+ "wrong_notes": [
+  {
+   "dx": [
+    "Endometriosis"
+   ],
+   "tx": [
+    "Transvaginal pelvic ultrasound",
+    "Diagnostic laparoscopy",
+    "Trial of NSAIDs"
+   ]
+  },
+  {
+   "dx": [
+    "Chlamydia cervicitis"
+   ],
+   "tx": [
+    "NAAT swab for chlamydia and gonorrhoea",
+    "Empirical doxycycline",
+    "Partner notification"
+   ]
+  }
+ ],
+ "top_dx_variants": [
+  "Female sexual arousal disorder",
+  "Insufficient lubrication secondary to low arousal",
+  "Arousal-related superficial dyspareunia",
+  "Poor sexual arousal causing vaginal dryness",
+  "Lubrication deficiency from inhibited sexual arousal"
+ ],
+ "test_variants": [
+  {
+   "key": "Offer or refer to pelvic floor physical therapy",
+   "phrasing": "Pelvic floor physio referral"
+  },
+  {
+   "key": "Offer or refer to pelvic floor physical therapy",
+   "phrasing": "PT for pelvic floor muscles"
+  },
+  {
+   "key": "Validate the pain and discuss foreplay and other arousal techniques",
+   "phrasing": "Acknowledge her pain, counsel on longer foreplay"
+  },
+  {
+   "key": "Validate the pain and discuss foreplay and other arousal techniques",
+   "phrasing": "Arousal strategies incl. vibrator with partner"
+  },
+  {
+   "key": "Review lubricant options and how and when to use them",
+   "phrasing": "Lubricant counselling - apply early and generously"
+  },
+  {
+   "key": "Review lubricant options and how and when to use them",
+   "phrasing": "Silicone or water based lube advice"
+  },
+  {
+   "key": "Offer or refer to a sex therapist",
+   "phrasing": "Sex therapy referral"
+  },
+  {
+   "key": "Offer or refer to a sex therapist",
+   "phrasing": "Refer to sexual health counsellor / couples therapy"
+  },
+  {
+   "key": "Discuss changing the SSRI to another antidepressant with a different side effect profile",
+   "phrasing": "Switch sertraline to alternative antidepressant"
+  },
+  {
+   "key": "Discuss changing the SSRI to another antidepressant with a different side effect profile",
+   "phrasing": "Review Zoloft for sexual side effects, consider bupropion"
+  },
+  {
+   "key": "Discuss changing the oral contraceptive pill to another contraceptive with a different side effect profile",
+   "phrasing": "Change Loestrin to different contraception"
+  },
+  {
+   "key": "Discuss changing the oral contraceptive pill to another contraceptive with a different side effect profile",
+   "phrasing": "Consider IUD instead of low-dose OCP"
+  }
+ ]
+}
