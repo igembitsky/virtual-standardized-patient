@@ -12,8 +12,10 @@ ASK_MEANING=re.compile(r"what (does|do) (that|it|you) mean|not sure what (that|i
 DENIAL=re.compile(r"that'?s all",re.I)
 JARGON_RX=re.compile(r"cholelith|cholang|biliary|icterus|hematemesis|melena|nsaid|dyspep|peritonit|anhedonia|polyuria|dyspareunia|diaphoresis|menorrhagia|intermenstrual|vasomotor|dexa|hepatomeg|murphy|scleral|pruritus|dysuria|hematuria|orthopnea",re.I)
 SPECIFIC=re.compile(r"\d|last year|years ago|every (day|year)|normal range|checked",re.I)
-LEAK={"graham":r"\btea\b|lighter|pale|operation|frightened",
-      "travis":r"ibuprofen|\bblack\b|greenish|coffee ground",
+# Graham and Travis were revised to their originals on 26 September: the dark urine is now said
+# freely, and Travis has no ulcer history. Their probes predate that, so only safe patterns stay.
+LEAK={"graham":r"lighter|operation",
+      "travis":None,
       "lewis":r"suicide|harm(ing)? (my|any)|more than (i|you) used to|sexually",
       "springfield":None}
 def rules_variant(system, name):

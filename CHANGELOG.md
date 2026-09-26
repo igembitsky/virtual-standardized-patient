@@ -27,8 +27,15 @@ Easier to start and to stop, lighter on your computer, and easy to report a prob
   the test questions, up from 67%. More examination names work, such as "PR exam" and
   "auscultation". A test written as "chest X-ray" now counts. A patient can use a medical word
   that their own doctor told them.
-- **Clearer cases.** Unclear lines in five cases were rewritten and checked against the original
-  MedEdPORTAL cases, so that no case moved away from what its authors published.
+- **Cases checked against their originals.** A new check compares each case with the MedEdPORTAL
+  case it came from. Three cases had moved away from their originals and were revised:
+  - **Terri Travis** no longer has an invented ulcer history (daily ibuprofen, months of
+    indigestion, black stools). She takes Motrin now and then for headaches, as in the original.
+  - **Marsha Morris** now has her two or three earlier, milder attacks, and her real job.
+  - **Jerry Graham** no longer has yellow eyes, which the original does not give. He mentions his
+    dark urine himself, as in the original. Only cholangitis passes as the most likely diagnosis.
+  - In all three, examinations the original does not describe now show "nothing abnormal".
+  Unclear lines in Bellevue, Davis, Lewis, Samuels and Springfield were also rewritten.
 - **A public benchmark.** [The benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html)
   shows how well each model plays a patient, and the bar a model must meet to be approved.
 - Copies from before 1.2 cannot update themselves to 1.2, because the folder changed. Download

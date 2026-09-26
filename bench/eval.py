@@ -328,8 +328,9 @@ def run_examiner(c, path, a):
     exam_rows = []
     for e, r in zip(plan["exams"], chk["examine"]):
         want = (c["examine"].get(e["key"].lower()) or "").strip()
-        exam_rows.append({"key": e["key"], "phrasing": e["phrasing"], "got": r["finding"],
-                          "ok": bool(want) and r["finding"].strip() == want})
+        # a part with no finding in the case shows "nothing abnormal"; it must still be found
+        ok = r["finding"].strip() == want if want else r["name"] is not None
+        exam_rows.append({"key": e["key"], "phrasing": e["phrasing"], "got": r["finding"], "ok": ok})
     notes = chk["notes"]; k = 0
     def take(n):
         nonlocal k

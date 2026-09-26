@@ -39,7 +39,8 @@ def check(cid):
         if q["label"] not in reached: bad.append(f"checklist  never reached: {q['label']}")
     for e, x in zip(plan["exams"], r["examine"]):
         want = (c["examine"].get(e["key"].lower()) or "").strip()
-        ok = bool(want) and x["finding"].strip() == want; n["exams"][0] += ok; n["exams"][1] += 1
+        ok = x["finding"].strip() == want if want else x["name"] is not None
+        n["exams"][0] += ok; n["exams"][1] += 1
         if not ok: bad.append(f"exam       {e['phrasing']!r} for {e['key']} gave: {x['finding'][:60]}")
     for (kind, note), x in zip(notes, r["notes"]):
         if kind == "correct": ok = x["pass"]

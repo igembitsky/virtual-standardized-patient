@@ -21,9 +21,9 @@ SOURCES = os.environ.get("VSP_SOURCES") or os.path.join(os.path.dirname(ROOT), "
 # Which original files each case comes from. The learner-facing files (door card, scoring) are
 # included too, because the answer key and the task come from them.
 MAP = {
-    "graham":      ("mededportal_8139", ["Jennifer_Jerry_Graham_Cholangitis_OSCE_2010", "Jennifer_Jerry_Graham_Checklist_2010", "Instructor's_Guide"]),
-    "morris":      ("mededportal_8139", ["Mark_Marsha_Morris_Diverticulitis_OSCE_2010", "Mark_Marsha_Morris_Checklist_2010", "Instructor's_Guide"]),
-    "travis":      ("mededportal_8139", ["Tim_Terri_Travis_Perforated_Ulcer_OSCE_2010", "Tim_Terri_Travis_Checklist_2010", "Instructor's_Guide"]),
+    "graham":      ("mededportal_8139", ["Jennifer_Jerry_Graham_Cholangitis_OSCE_2010", "Jennifer_Jerry_Graham_Checklist_2010", "Jennifer_Jerry_Graham_Primer_2010", "Instructor's_Guide"]),
+    "morris":      ("mededportal_8139", ["Mark_Marsha_Morris_Diverticulitis_OSCE_2010", "Mark_Marsha_Morris_Checklist_2010", "Mark_Morris_Primer_2010", "Instructor's_Guide"]),
+    "travis":      ("mededportal_8139", ["Tim_Terri_Travis_Perforated_Ulcer_OSCE_2010", "Tim_Terri_Travis_Checklist_2010", "Tim_Terri_Travis_Primer_2010", "Instructor's_Guide"]),
     "lewis":       ("mededportal_10867", None),
     "springfield": ("mededportal_11146", None),
     "samuels":     ("mededportal_10837", None),
