@@ -93,7 +93,7 @@ def load_case(path):
     return json.loads(out)
 
 def patient_say(model, messages):
-    body = json.dumps({"model": model, "messages": messages, "stream": False, "keep_alive": "20m",
+    body = json.dumps({"model": model, "messages": messages, "stream": False, "think": False, "keep_alive": "20m",
                        "options": {"temperature": 0.6, "num_ctx": 8192, "num_predict": 300}}).encode()
     req = urllib.request.Request(OLLAMA + "/api/chat", data=body, headers={"Content-Type": "application/json"})
     t0 = time.time()

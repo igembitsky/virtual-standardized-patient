@@ -37,7 +37,7 @@ def rules_variant(system, name):
 def load_case(cid):
     return json.loads(subprocess.run(["node",os.path.join(HERE,"case.js"),os.path.join(ROOT,"index.html"),os.path.join(ROOT,"cases",cid+".txt")],capture_output=True,text=True,check=True).stdout)
 def chat(model,msgs,temp):
-    b=json.dumps({"model":model,"messages":msgs,"stream":False,"keep_alive":"20m","options":{"temperature":temp,"num_ctx":8192,"num_predict":300}}).encode()
+    b=json.dumps({"model":model,"messages":msgs,"stream":False,"think":False,"keep_alive":"20m","options":{"temperature":temp,"num_ctx":8192,"num_predict":300}}).encode()
     with urllib.request.urlopen(urllib.request.Request(OLLAMA+"/api/chat",data=b,headers={"Content-Type":"application/json"}),timeout=600) as r:
         return json.load(r)["message"]["content"].strip()
 def probes_for(cid, k):

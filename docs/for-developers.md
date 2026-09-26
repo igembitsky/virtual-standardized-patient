@@ -35,23 +35,30 @@ worth trying:
 | Memory | Models to try | Command |
 |---|---|---|
 | 8 GB | `qwen3:4b-instruct` | already set |
-| 16 GB or more | `qwen3:8b`, `gemma3:12b` | `ollama pull qwen3:8b` |
-| 32 GB or more | `qwen3:14b`, `qwen3:30b-a3b`, `gemma3:27b` | `ollama pull qwen3:14b` |
+| 8 GB | `qwen3.5:4b`, `granite4.2:3b` | `ollama pull qwen3.5:4b` |
+| 16 GB or more | `gemma4:e4b-it-qat`, `granite4.2:8b`, `qwen3.5:9b` | `ollama pull gemma4:e4b-it-qat` |
 
-Only `qwen3:4b-instruct` has been tested with this program. The Qwen 3 models are listed first
-because they are from the same family, so the patient rules are most likely to carry over.
-`llama3.1:8b` was tested and did worse: it added stage directions and invented findings.
+Only `qwen3:4b-instruct` has been tested with this program. `llama3.1:8b` was tested and did
+worse: it added stage directions and invented findings. Test a new model with the bench before
+you use it with learners. See `bench/README.md`.
 
-To compare open-weight models by size and score:
+Some models, such as Qwen 3.5 and Granite 4.2, can "think" before they answer. The program
+turns this off in every request, so the patient answers at once.
 
-- [Artificial Analysis](https://artificialanalysis.ai/models/open-source), filter by open
-  weights and by size.
-- [Hugging Face](https://huggingface.co/models?pipeline_tag=text-generation&sort=trending),
-  the largest catalogue of open-weight models.
-- [LMArena](https://lmarena.ai/leaderboard), rankings from blind human votes.
+To find new open-weight models and compare them:
+
+- [Ollama, newest first](https://ollama.com/search?o=newest), what you can download, with sizes.
+- [Artificial Analysis IFBench](https://artificialanalysis.ai/evaluations/ifbench), how well
+  models follow instructions.
+- [EQ-Bench](https://eqbench.com/), the nearest public test of role-play and character.
+- [Arena](https://arena.ai/leaderboard/text?license=open-source), rankings from blind human votes.
+
+No public leaderboard tests a simulated patient. The bench in this repository does.
 
 Run the pull command in a terminal. Then open `index.html` in a text editor, find the line
-`model: "qwen3:4b-instruct"` near the top of the script, and put the new name there.
+`model: "qwen3:4b-instruct"` near the top of the script, and put the new name there. The
+program uses that model if it is installed. If it is not, the program uses the first installed
+model from `fallbackModels` on the next line.
 
 **A hosted model.** The program uses Ollama's standard interface, so it can talk to any server
 that uses it. Ollama offers cloud models with a free account: run `ollama signin`, pull a cloud

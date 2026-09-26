@@ -926,7 +926,8 @@ async function checkConnection() {
       .filter(m => !m.capabilities || m.capabilities.includes("completion"))
       .filter(m => !/embed|bge-|nomic-embed|all-minilm/i.test(m.name))
       .map(m => m.name);
-    const pick = CFG.fallbackModels.find(m =>
+    // CFG.model first, then the fallbacks, so changing model: above is enough to swap
+    const pick = [CFG.model, ...CFG.fallbackModels].find(m =>
       names.some(n => n === m || n === m + ":latest" || n.startsWith(m + ":")));
     if (pick) {
       CFG.model = names.find(n => n === pick || n === pick + ":latest" || n.startsWith(pick + ":")) || pick;
@@ -1021,7 +1022,9 @@ async function askModel(messages, onDelta) {
     headers: { "Content-Type": "application/json" },
     signal: app.abort.signal,
     body: JSON.stringify({
-      model: CFG.model, messages, stream: true, keep_alive: "20m",
+      // think: false turns off hidden reasoning in models that have it (Qwen 3.5, Granite 4.2).
+      // Models without it ignore the flag.
+      model: CFG.model, messages, stream: true, think: false, keep_alive: "20m",
       options: { temperature: 0.6, num_ctx: 8192, num_predict: 300 }
     })
   });
