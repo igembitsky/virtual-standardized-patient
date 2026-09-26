@@ -1,0 +1,41 @@
+#!/bin/sh
+# Virtual Standardized Patient Simulator, macOS launcher.
+# Double-click "Start on Mac". No Terminal window opens. It:
+#   1. Opens Ollama in the background if it is not running.
+#   2. Starts app/server.pl with the Perl that macOS ships, which opens the browser.
+# The simulator stops by itself when you close its browser tab, or press Quit in the page.
+# Messages go to a log file in the temporary folder, for troubleshooting.
+LOG="${TMPDIR:-/tmp}/virtual-standardized-patient.log"
+exec >"$LOG" 2>&1
+
+say() { /usr/bin/osascript -e "display dialog \"$1\" with title \"Virtual Standardized Patient\" buttons {\"OK\"} default button 1 with icon caution" >/dev/null; }
+
+bundle="$(cd "$(dirname "$0")/../.." && pwd -P)"
+
+# macOS runs an app it has just downloaded from a read-only copy in a hidden folder, which
+# cannot see the files beside it. Find the real one, clear the download flag on its
+# folder, and open it again from there. This happens once.
+case "$bundle" in
+  */AppTranslocation/*)
+    real=$(/sbin/mount | /usr/bin/awk -v m="$bundle" '{ i = index($0, " on " m " ("); if (i) { print substr($0, 1, i - 1); exit } }')
+    if [ -z "$real" ]; then
+      parent=$(/sbin/mount | /usr/bin/awk -v m="$(dirname "$bundle")" '{ i = index($0, " on " m " ("); if (i) { print substr($0, 1, i - 1); exit } }')
+      [ -n "$parent" ] && real="$parent/$(basename "$bundle")"
+    fi
+    if [ -n "$real" ] && [ -d "$real" ]; then
+      /usr/bin/xattr -dr com.apple.quarantine "$(dirname "$real")"
+      exec /usr/bin/open -n "$real"
+    fi
+    say "macOS opened a protected copy of this app. In Finder, drag Start on Mac out of its folder onto the Desktop, then back into the folder. Then open it again."
+    exit 1 ;;
+esac
+
+cd "$(dirname "$bundle")/app" 2>/dev/null && [ -f server.pl ] || {
+  say "Could not open the app folder. Keep Start on Mac in the folder you downloaded, next to the app folder. If macOS asked to access your Desktop or Downloads folder and you pressed Don't Allow, turn it on in System Settings, Privacy and Security, Files and Folders."
+  exit 1
+}
+
+# Ollama: open it in the background if it is not running. The page reports anything else.
+/usr/bin/curl -s -m 2 http://127.0.0.1:11434/api/tags >/dev/null || /usr/bin/open -g -a Ollama
+
+exec /usr/bin/perl server.pl

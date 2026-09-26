@@ -1,0 +1,12 @@
+# What participants get. GitHub's "Download ZIP", and the Update button, leave these out,
+# so the downloaded folder holds only the three Start files, the app folder, and the notes.
+# They stay in the repository.
+.gitattributes  export-ignore
+.gitignore      export-ignore
+.github         export-ignore
+bench           export-ignore
+docs            export-ignore
+VERSION         export-ignore
+
+# Keep the Windows launcher's line endings as Windows expects.
+*.bat           text eol=crlf

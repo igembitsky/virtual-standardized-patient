@@ -1,5 +1,5 @@
 // Reads a case file through the live parser and prompt builder in index.html.
-// Usage: node bench/case.js index.html cases/graham.txt
+// Usage: node bench/case.js app/index.html app/cases/graham.txt
 // Prints JSON. The bench must test the real prompt, so nothing here is a copy.
 const fs = require("fs");
 const [,, html, casefile] = process.argv;

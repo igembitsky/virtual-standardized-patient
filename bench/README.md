@@ -2,14 +2,14 @@
 
 `bench.py` plays one consultation per case with no knowledge of the answers, then has a second
 model judge every patient line against the case file. It exists to answer two questions after
-any change to a case file or to `systemPrompt()` in `index.html`:
+any change to a case file or to `systemPrompt()` in `app/index.html`:
 
 1. Can a competent doctor pass this case in one attempt, with these questions and these answer words?
 2. Did the patient say anything inaccurate, invented, leaked, canned, or out of character?
 
 ## What it uses
 
-- The **real prompt**. `case.js` runs the parser and prompt builder from `index.html` itself.
+- The **real prompt**. `case.js` runs the parser and prompt builder from `app/index.html` itself.
 - The **real patient**. The same Ollama call, model, and options as the page.
 - The **real marking**. Question credit and pass rules are ports of the page's own word matching.
 - A **Claude doctor** through `claude -p`, which sees only the door card: name, age, setting,
@@ -46,7 +46,7 @@ in `[ANSWER]` are too narrow, or the doctor never asked. The transcript shows wh
 
 `probe.py` is the free, local loop. It runs prompt rule variants against the real patient over
 a long conversation of tagged clinical questions and scores the replies with word rules.
-`V0` is always the live prompt in `index.html`. The other variants replace the jargon,
+`V0` is always the live prompt in `app/index.html`. The other variants replace the jargon,
 open-question and unknown-fact rules; they were written against the 1 September prompt.
 
 ```

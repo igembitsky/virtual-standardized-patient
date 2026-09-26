@@ -77,6 +77,13 @@ h1[tabindex="-1"]:focus,.back[tabindex="-1"]:focus{outline:none}
 .upd button.x{background:none;color:inherit;padding:2px 6px;font-weight:400;opacity:.7;margin-left:2px}
 .upd .spin{margin-right:8px;width:11px;height:11px;border:2px solid var(--muted);border-top-color:transparent;
   border-radius:50%;animation:sp .7s linear infinite;flex:0 0 auto}
+/* the first-run box on the welcome screen: Ollama missing, or the model downloading */
+.setup{background:var(--amber-soft);color:var(--ink);border-radius:12px;padding:14px 18px;margin:0 0 26px;
+  max-width:62ch;font-size:1rem;border:1px solid color-mix(in srgb,var(--amber) 30%,transparent)}
+.setup p{margin:0}
+.setup a{color:inherit;font-weight:600}
+.setup .bar{height:8px;background:var(--sunk);border-radius:99px;overflow:hidden;margin-top:12px}
+.setup .bar i{display:block;height:100%;width:0;background:var(--green);transition:width .4s}
 .clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1rem;
   color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:8px;
   padding:4px 12px}
@@ -373,6 +380,7 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
   <span class="clock hide" id="clock" role="timer" aria-live="off" aria-label="Time remaining">00:00</span>
   <span class="sr" id="announce" role="status" aria-live="assertive"></span>
   <button class="btn ghost small hide" id="quit">Finish and write my note</button>
+  <button class="btn ghost small" id="stopApp" title="Stop the simulator and give back the memory it uses">Quit</button>
 </header>
 
 <!-- ============ WELCOME ============ -->
@@ -380,6 +388,11 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
   <h1>Virtual Standardized Patient Simulator</h1>
   <p class="lede">Practise a clinical consultation with a patient who lives on your own computer.
     It is free, and it works with the internet switched off.</p>
+
+  <div class="setup hide" id="setup" role="status" aria-live="polite">
+    <p id="setupText"></p>
+    <div class="bar hide" id="setupBar"><i id="setupFill"></i></div>
+  </div>
 
   <div class="steps">
     <div><span class="sn">1</span>
@@ -549,8 +562,8 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
   <p class="sm" id="cardTiming"></p>
   <div class="row" style="margin-top:20px">
     <button class="btn" id="startBtn">Start the clock</button>
-    <p class="hint hide" id="startBlocked">Ollama is not running, so the patient cannot answer.
-      Open the Ollama app, then reload this page.</p>
+    <p class="hint hide" id="startBlocked">The patient cannot answer yet. The line at the top of
+      the page says why.</p>
   </div>
   <p class="cite" style="margin-top:26px" id="cardCredit"></p>
 </main>
@@ -745,10 +758,11 @@ const CFG = {
   storeKey: "vsp.encounters.v1",
   // Updates. The page asks GitHub for VERSION once at start, one small text file, nothing sent.
   // The launcher does the actual update, from the ZIP, when the Update button is pressed.
-  version: "1.1",
+  version: "2.0",
   versionUrl: "https://raw.githubusercontent.com/igembitsky/virtual-standardized-patient/main/VERSION",
   zipUrl: "https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip"
 };
+const WANTED = CFG.model;   // downloaded on first run if none of the models above is there
 
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -917,6 +931,7 @@ function seedTurns(c) {
    3. TALKING TO OLLAMA
    ============================================================ */
 async function checkConnection() {
+  if (app.pulling) return false;
   try {
     const r = await fetch(CFG.ollama + "/api/tags", { cache: "no-store" });
     if (!r.ok) throw new Error("HTTP " + r.status);
@@ -926,25 +941,95 @@ async function checkConnection() {
       .filter(m => !m.capabilities || m.capabilities.includes("completion"))
       .filter(m => !/embed|bge-|nomic-embed|all-minilm/i.test(m.name))
       .map(m => m.name);
-    const pick = CFG.fallbackModels.find(m =>
+    const pick = [WANTED, ...CFG.fallbackModels].find(m =>
       names.some(n => n === m || n === m + ":latest" || n.startsWith(m + ":")));
-    if (pick) {
-      CFG.model = names.find(n => n === pick || n === pick + ":latest" || n.startsWith(pick + ":")) || pick;
-    } else if (names.length) {
-      CFG.model = names[0];
-    } else {
-      setStatus("bad", "Ollama is running but has no models. Run: ollama pull qwen3:4b-instruct");
-      return false;
-    }
+    if (!pick) { pullModel(); return false; }
+    CFG.model = names.find(n => n === pick || n === pick + ":latest" || n.startsWith(pick + ":")) || pick;
     const el = $("#techModel"); if (el) el.textContent = CFG.model;
+    setSetup("");
     setStatus("ok", "ready · " + CFG.model + " · nothing leaves this computer");
     return true;
   } catch (e) {
-    setStatus("bad", location.protocol === "file:"
-      ? "Opened as a file. Close this tab and start the program with the launcher instead."
-      : "Ollama is not running. Open the Ollama app, then reload this page.");
+    setStatus("bad", "Ollama is not running");
+    setSetup(`<b>Ollama is not running.</b> Open the Ollama app. If it is not installed yet, get it
+      free from <a href="https://ollama.com/download" target="_blank" rel="noopener">ollama.com/download</a>,
+      install it, and open it once. This page notices by itself.`);
     return false;
   }
+}
+/* First run: download the patient model through Ollama, with the progress on the page.
+   Ollama keeps what has arrived, so a download that stops carries on where it stopped. */
+async function pullModel() {
+  if (app.pulling || Date.now() - (app.pullFailed || 0) < 20000) return;
+  app.pulling = true; app.pullFailed = 0;
+  setStatus("wait", "downloading the patient model");
+  setSetup(`<b>Downloading the patient model</b>, ${esc(WANTED)}. About 2.5 GB, once. Keep this page open.`, 0);
+  try {
+    const r = await fetch(CFG.ollama + "/api/pull", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: WANTED, name: WANTED, stream: true })
+    });
+    if (!r.ok) throw new Error("Ollama replied " + r.status);
+    const reader = r.body.getReader(), dec = new TextDecoder();
+    let buf = "", ok = false;
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split("\n");
+      buf = lines.pop();
+      for (const ln of lines) {
+        let j; try { j = JSON.parse(ln); } catch { continue; }
+        if (j.error) throw new Error(j.error);
+        if (j.status === "success") ok = true;
+        if (j.total > 100e6 && j.completed != null) {        // the model itself, not the small parts
+          const pct = Math.floor(j.completed * 100 / j.total), gb = (j.total / 1e9).toFixed(1);
+          setStatus("wait", "downloading the patient model · " + pct + "%");
+          setSetup(`<b>Downloading the patient model:</b> ${pct}% of ${gb} GB. This happens once.
+            Keep this page open.`, pct);
+        }
+      }
+    }
+    if (!ok) throw new Error("the connection closed");
+  } catch (e) {
+    app.pullFailed = Date.now();
+    setStatus("bad", "the model download stopped");
+    setSetup(`<b>The download stopped:</b> ${esc(e.message)}. Check the internet connection.
+      It tries again by itself in a moment, and carries on from where it stopped.`);
+  }
+  app.pulling = false;
+  if (!app.pullFailed) checkConnection();
+}
+function setSetup(html, pct) {
+  $("#setup").classList.toggle("hide", !html);
+  if (!html) return;
+  $("#setupText").innerHTML = html;
+  $("#setupBar").classList.toggle("hide", pct == null);
+  if (pct != null) $("#setupFill").style.width = pct + "%";
+}
+
+/* ---- the launcher ---------------------------------------------------------
+   The launcher has no window. It stops by itself, and frees the model's memory, a few
+   seconds after the last tab closes. So each tab says it is open every 15 seconds, and
+   says goodbye when it closes. Quit stops it at once. */
+const TAB = Math.random().toString(36).slice(2, 12);
+function alive() { fetch("/alive?tab=" + TAB, { cache: "no-store" }).catch(() => {}); }
+function heartbeat() {
+  alive();
+  setInterval(alive, 15000);
+  addEventListener("pagehide", () => { try { navigator.sendBeacon("/bye?tab=" + TAB); } catch {} });
+  addEventListener("pageshow", e => { if (e.persisted) alive(); });
+}
+async function quitApp() {
+  try { await fetch("/quit", { method: "POST" }); } catch {}
+  document.body.innerHTML =
+    `<div class="wrap narrow" style="padding-top:60px">
+       <h1>The simulator has stopped</h1>
+       <p class="lede">It is no longer running, and the model's memory has been given back.
+       You can close this tab.</p>
+       <p>To use it again, open the simulator folder and double-click the Start file for your
+       computer. Your saved encounters are kept.</p>
+     </div>`;
 }
 /* ---- updates ------------------------------------------------------------
    One request to GitHub for VERSION, 3 second limit, nothing sent. A newer number
@@ -1021,7 +1106,7 @@ async function askModel(messages, onDelta) {
     headers: { "Content-Type": "application/json" },
     signal: app.abort.signal,
     body: JSON.stringify({
-      model: CFG.model, messages, stream: true, keep_alive: "20m",
+      model: CFG.model, messages, stream: true, keep_alive: "10m",
       options: { temperature: 0.6, num_ctx: 8192, num_predict: 300 }
     })
   });
@@ -1065,6 +1150,7 @@ function go(name) {
   $("#foot").classList.toggle("hide", name === "consult" || name === "note");
   $("#clock").classList.toggle("hide", !(name === "consult" || name === "note"));
   $("#quit").classList.toggle("hide", name !== "consult");
+  $("#stopApp").classList.toggle("hide", name === "consult" || name === "note");
   window.scrollTo(0, 0);
   const heading = $("#s-" + name).querySelector("h1, .back");
   if (heading) { heading.setAttribute("tabindex", "-1"); heading.focus({ preventScroll: true }); }
@@ -1951,14 +2037,16 @@ window.addEventListener("beforeunload", e => {
          file talk to a program on your computer. Nothing here can work that way.</p>
          <h3>What to do</h3>
          <ul>
-           <li><b>macOS.</b> Double-click <code>start-mac.command</code></li>
-           <li><b>Windows.</b> Double-click <code>start-windows.bat</code></li>
-           <li><b>Linux.</b> Run <code>./start-linux.sh</code></li>
+           <li><b>Mac.</b> Double-click <code>Start on Mac</code></li>
+           <li><b>Windows.</b> Double-click <code>Start on Windows</code></li>
+           <li><b>Linux.</b> Double-click <code>Start on Linux</code>, or run <code>python3 app/server.py</code></li>
          </ul>
          <p>Your browser will open at <code>http://127.0.0.1:8756/</code>. Close this tab.</p>
        </div>`;
     return;
   }
+  heartbeat();
+  $("#stopApp").onclick = quitApp;
   await loadCases();
   $("#ver").textContent = CFG.version;
   const ok = await checkConnection();

@@ -4,7 +4,7 @@ conversation of realistic clinical questions and scores the replies with word ru
 Ollama only, no cloud cost.  python3 bench/probe.py [--runs 3] [--variants V0,Vnone] [--temp 0.6]
 """
 import argparse, hashlib, json, os, random, re, subprocess, sys, time, urllib.request
-HERE=os.path.dirname(os.path.abspath(__file__)); ROOT=os.path.dirname(HERE)
+HERE=os.path.dirname(os.path.abspath(__file__)); ROOT=os.path.join(os.path.dirname(HERE),"app")
 OLLAMA="http://127.0.0.1:11434"
 CASES=["graham","travis","lewis","springfield"]
 CANNED=re.compile(r"don'?t know that word|not following you",re.I)

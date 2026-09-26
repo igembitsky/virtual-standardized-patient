@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Start on Linux
+Comment=Open the Virtual Standardized Patient Simulator in your browser
+Exec=sh -c 'cd "$(dirname "${0#file://}")/app" || exit 1; command -v python3 >/dev/null && exec python3 server.py; notify-send "Virtual Standardized Patient" "Python 3 was not found. Install python3, then try again."' %k
+Terminal=false
+Icon=applications-science
+Categories=Education;Science;

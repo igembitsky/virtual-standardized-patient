@@ -13,7 +13,7 @@ import argparse, hashlib, json, os, re, subprocess, sys, time, urllib.request
 from datetime import datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.join(os.path.dirname(HERE), "app")
 OLLAMA = "http://127.0.0.1:11434"
 CLAUDE_MIN = ["--no-session-persistence", "--output-format", "json",
               "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
