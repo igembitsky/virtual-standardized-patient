@@ -47,7 +47,7 @@ def add(d):
     secs = [t["sec"] for r in rows for t in r["transcript"] if t.get("role") == "patient" and "sec" in t]
     model = sc["patient_model"]
     rec = {"model": model, "size": model_size(model), "date": date.today().isoformat(),
-           "run": os.path.basename(d.rstrip("/")), "prompt_sha": rows[0].get("prompt_sha"),
+           "run": "+".join(os.path.basename(x.rstrip("/")) for x in d.split("+")), "runs": len(d.split("+")), "prompt_sha": rows[0].get("prompt_sha"),
            "cases": sorted({r["case"] for r in rows}), "machine": machine(),
            "median_reply_seconds": sorted(secs)[len(secs) // 2] if secs else None,
            "scorecard": sc}
@@ -82,8 +82,8 @@ def build():
         L += ["", "```mermaid", "xychart-beta", '  title "Patient replies that follow the rules (%)"',
               "  x-axis [" + ", ".join(f'"{r["model"]}"' for r in rs) + "]", "  y-axis 0 --> 100",
               "  bar [" + ", ".join(str(round(100 * score.rate(r["scorecard"]["overall"]["protocol"]))) for r in rs) + "]", "```"]
-    L += ["", "Reply time is the median time for one patient reply on the test computer. Each result is from",
-          "one run of the test. The test computer, date and prompt version for each result are at the end of this page.", ""]
+    L += ["", "Reply time is the median time for one patient reply on the test computer. The number of",
+          "test runs, the test computer, the date and the prompt version for each result are at the end of this page.", ""]
 
     L += ["## What each measure means", "",
           "| Column | Meaning | Bar for approval |", "|---|---|---|"]
@@ -134,8 +134,9 @@ def build():
           "The examiner's questions are the same for every model. They are in `bench/scripts/`.",
           "The code is in `bench/`. See [`bench/README.md`](../bench/README.md) to run the test yourself.", "",
           "## Limits of this test", "",
-          "- One run is a sample. The patient model uses some randomness, so a second run gives",
-          "  slightly different numbers. A difference of a few percent between two models can be chance.",
+          "- The patient model uses some randomness, so each run gives slightly different numbers. One",
+          "  run changed by up to 2 points between two runs. A difference of a few points between two",
+          "  models can be chance. Results with two or more runs are more reliable.",
           "- The judge is an AI model. It can make mistakes. Every verdict and its reason are kept in",
           "  the results, so a person can check them.",
           "- The word rules count only the words in each case file. A good question in unusual words",
@@ -143,9 +144,9 @@ def build():
           "- Reply time depends on the computer. A computer without a graphics chip is slower.",
           "- Eight cases is a small set. The cases are from MedEdPORTAL and are in English.", ""]
 
-    L += ["## Test details", "", "| Model | Date | Test computer | Prompt version | Cases |", "|---|---|---|---|---|"]
+    L += ["## Test details", "", "| Model | Date | Runs | Test computer | Prompt version | Cases |", "|---|---|---|---|---|---|"]
     for r in recs:
-        L.append(f"| `{r['model']}` | {r['date']} | {r['machine']} | `{r['prompt_sha']}` | {len(r['cases'])} |")
+        L.append(f"| `{r['model']}` | {r['date']} | {r.get('runs', 1)} | {r['machine']} | `{r['prompt_sha']}` | {len(r['cases'])} |")
     L += ["", "[← Back to the README](../README.md)", ""]
     open(DOC, "w").write("\n".join(L))
     print("wrote", DOC)
