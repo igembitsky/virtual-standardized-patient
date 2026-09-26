@@ -76,12 +76,16 @@ history stay. The version you have is at the bottom of the page.
 
 | What you see | What to do |
 |---|---|
+| **Something went wrong** | Press **Email report** to send the error report from your mail app, or **Report on GitHub** if you have a GitHub account |
 | Double-click opens the file in a text editor | Start it from a terminal, as in step 3 |
 | "Python 3 was not found" | Install Python 3 from your package manager. On Ubuntu: `sudo apt install python3` |
 | **Ollama is not running** on the page | Do step 1 again |
 | The download stopped | The page tries again by itself and carries on from where it stopped |
 | The download does not start | In a terminal, run `ollama pull qwen3:4b-instruct`. Wait for `success` |
 | The browser does not open | Open your browser and go to `http://127.0.0.1:8756/` |
+| Nothing happens at all | Email the file `/tmp/virtual-standardized-patient.log` |
+
+In the page, **Report a problem** at the bottom sends an error report at any time.
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 

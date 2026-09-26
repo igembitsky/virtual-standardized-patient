@@ -83,14 +83,20 @@ The message says Apple could not verify the app. This happens once.
 4. Under **Start on Mac**, turn on **Desktop Folder**.
 5. Double-click **Start on Mac** again.
 
-### If nothing happens
+### If something goes wrong
+
+When the simulator cannot start, it says **Something went wrong** and offers two buttons.
+**Email report** opens your mail app with an error report filled in. **Report on GitHub**
+does the same on GitHub, which needs a free account. In the page, **Report a problem** at the
+bottom does the same at any time.
+
+If nothing happens at all:
 
 1. Wait 20 seconds. The first start after a download can be slow.
 2. Open your browser and go to `http://127.0.0.1:8756/`.
-3. If that does not load, open **Terminal**, type `perl ` with a space after it, drag the
-   file `server.pl` from the `app` folder into the window, and press Enter. The window shows
-   what went wrong. Please [open an issue](https://github.com/igembitsky/virtual-standardized-patient/issues)
-   and paste it.
+3. If that does not load, the log is in the file `virtual-standardized-patient.log`. To find
+   it, open **Terminal**, type `open $TMPDIR` and press Enter. Email the file with your
+   report.
 
 ### If the download stops
 

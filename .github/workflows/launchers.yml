@@ -30,11 +30,11 @@ jobs:
       PW_CHANNEL: chrome
       PYTHON: python
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install Playwright
@@ -53,7 +53,7 @@ jobs:
 
       - name: The download holds only what a participant needs
         run: |
-          got=$(ls -1 "$INST" | tr '\n' '|')
+          got=$(ls -1 "$INST" | LC_ALL=C sort | tr '\n' '|')
           echo "$got"
           [ "$got" = "CHANGELOG.md|LICENSE|README.md|Start on Linux.desktop|Start on Mac.app|Start on Windows.bat|app|" ]
 

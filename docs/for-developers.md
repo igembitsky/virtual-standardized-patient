@@ -18,7 +18,7 @@
 | `docs/` | The install pages, and `VERIFICATION.md`, what was measured and how |
 | `bench/` | Plays a Claude doctor against the patient and judges every line |
 
-`.gitattributes` leaves `docs/`, `bench/`, `.github/` and `VERSION` out of GitHub's
+`.gitattributes` leaves `docs/`, `bench/`, `tests/`, `.github/` and `VERSION` out of GitHub's
 **Download ZIP**, so participants get only what they need to run it.
 
 What each server does:
@@ -32,8 +32,16 @@ What each server does:
   at once. On the way out it unloads the patient model from Ollama with `keep_alive: 0`.
 - `GET /update` answers `can`. `POST /update` downloads the ZIP, checks it holds
   `app/index.html` and `app/cases/`, and copies it over the folder.
-- `VSP_ZIP` overrides where the update comes from, for testing. `VSP_OPEN` (Mac) overrides
-  the command that opens the browser.
+- Keeps a log in the temporary folder, `virtual-standardized-patient.log`, and serves its
+  end at `GET /log` for the page's problem report. If it cannot start, it fills in
+  `app/problem.html` with a report, writes it to the temporary folder, and opens it.
+- `VSP_ZIP` overrides where the update comes from, and `VSP_NO_BROWSER=1` stops it opening
+  the browser. Both are for testing.
+
+**Tests.** `tests/e2e.mjs` drives one server in a real browser against `tests/fake_ollama.py`:
+first-run download, stop on tab close, Quit, model unload, refused paths, update, and the
+problem page. `.github/workflows/launchers.yml` runs it on a Mac, Windows, and Linux machine
+at every push, from the same ZIP a participant downloads, then opens each Start file.
 
 To release a new version: change `version:` near the top of the script in `app/index.html`,
 the number in `VERSION`, and `CFBundleShortVersionString` in `Start on Mac.app/Contents/Info.plist`,
