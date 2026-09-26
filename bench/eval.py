@@ -141,8 +141,10 @@ def page_check(path, req):
                          input=json.dumps(req), capture_output=True, text=True, check=True).stdout
     return json.loads(out)
 
-def patient_say(model, messages):
-    # The same request the page sends, except streaming.
+def patient_say(model, messages, note=""):
+    # The same request the page sends, except streaming. The page adds its fact note to the
+    # last question only; the history keeps the plain question.
+    if note: messages = messages[:-1] + [{"role": "user", "content": messages[-1]["content"] + note}]
     body = json.dumps({"model": model, "messages": messages, "stream": False, "think": False, "keep_alive": "20m",
                        "options": {"temperature": 0.6, "num_ctx": 8192, "num_predict": 300}}).encode()
     req = urllib.request.Request(OLLAMA + "/api/chat", data=body, headers={"Content-Type": "application/json"})
@@ -239,7 +241,7 @@ def run_student(c, path, a):
                 msgs += [{"role": "user", "content": q}, {"role": "assistant", "content": line}]
                 turns.append({"role": "patient", "text": line, "jargon": True}); continue
             msgs.append({"role": "user", "content": q})
-            try: reply, sec = patient_say(a.patient_model, msgs)
+            try: reply, sec = patient_say(a.patient_model, msgs, chk.get("note", ""))
             except Exception as e: error = "patient: " + str(e); break
             msgs.append({"role": "assistant", "content": reply})
             turns.append({"role": "patient", "text": reply, "sec": sec})
@@ -306,7 +308,7 @@ def run_examiner(c, path, a):
                 msgs += [{"role": "user", "content": p["question"]}, {"role": "assistant", "content": line}]
                 turns.append({**base, "text": line, "jargon": r["jargon"]}); continue
             msgs.append({"role": "user", "content": p["question"]})
-            try: reply, sec = patient_say(a.patient_model, msgs)
+            try: reply, sec = patient_say(a.patient_model, msgs, r.get("note", ""))
             except Exception as e: error = "patient: " + str(e); break
             msgs.append({"role": "assistant", "content": reply})
             turns.append({**base, "text": reply, "sec": sec})

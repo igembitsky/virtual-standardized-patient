@@ -29,9 +29,10 @@ function between(start, end) {
 // The page keeps its state in `app` and redraws the dots. Stand-ins for both.
 var app = { current: null, covered: new Set(), exams: [], examMiss: null };
 function drawDots() {}
-eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("plainWords"), grab("jargonWord"), grab("markCovered"), grab("hasAny"),
+eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("plainWords"), grab("jargonWord"), grab("noteStem"), grab("noteToks"), grab("factNote"), grab("markCovered"), grab("hasAny"),
       grab("examSetup"), grab("examFind"), grab("firstNamed"),
       src.match(/const JARGON = \/[\s\S]*?\/i;\n/)[0].replace("const JARGON", "var JARGON"),
+      between("const NOTE_STOP = ", "function noteStem(").replace(/\bconst (NOTE_STOP|NOTE_WORDS)\b/g, "var $1"),
       between("const EXAMS = [", "function examSetup(").replace(/\bconst (EXAMS|EXAM_ITEMS)\b/g, "var $1")
      ].join("\n"));
 
@@ -52,7 +53,7 @@ const out = {
     const jw = jargonWord(c, q);
     app.covered = new Set();
     if (!jw) markCovered(q);
-    return { jargon: jw,
+    return { jargon: jw, note: jw ? "" : factNote(c, q),
              credits: c.questions.filter(x => app.covered.has(x.id)).map(x => x.label) };
   }),
   // The same line the page shows after "examine <part>".

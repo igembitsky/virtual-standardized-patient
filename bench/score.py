@@ -3,6 +3,7 @@
 
   python3 bench/score.py bench/results/eval-A                  the scorecard and the gates
   python3 bench/score.py bench/results/eval-A bench/results/eval-B    before and after
+  python3 bench/score.py eval-A+eval-B eval-C+eval-D                  pooled runs, before and after
 
 Measures are counts (passed, out of). The gates in gates.json are the bar a case, a model or a
 prompt change must meet before it is approved. Standard library only.
@@ -32,8 +33,12 @@ MEASURES = [
 ]
 
 def load_rows(d):
-    return [json.load(open(f)) for f in sorted(glob.glob(os.path.join(d, "*-*.json")))
-            if not f.endswith("scorecard.json")]
+    """One results folder, or several joined with + to pool runs: A+B."""
+    rows = []
+    for one in d.split("+"):
+        rows += [json.load(open(f)) for f in sorted(glob.glob(os.path.join(one, "*-*.json")))
+                 if not f.endswith("scorecard.json")]
+    return rows
 
 def _measures(rows):
     m = {k: [0, 0] for k, _, _ in MEASURES}

@@ -40,7 +40,7 @@ You started not to feel right three days ago. At first just a bit under the weat
 You took some vitamin C and went to bed early and tried to sleep it off. You were no better in the morning.
 Your head hurt even more, and you felt a lot of pressure in your facial sinuses and in your ears, especially on the right side. Say "It almost feels like I am underwater."
 Your right ear hurts inside, like a pressure.
-You took some decongestant, but yesterday your temperature popped up to 102.
+First you took some decongestant. Then yesterday your temperature still popped up to 102.
 When you blow your nose all this thick yellow to greenish stuff comes out. A moderate amount.
 It just feels like a typical sinus infection. You don't want it to go into your lungs, so you want antibiotics before it spreads there.
 It came on gradually. It has been there all the time for three days and it is not getting better. Nothing makes it worse, nothing makes it better.
@@ -65,7 +65,7 @@ If you get your antibiotics you do fine and there is no impact. If you don't get
 (only if asked) You have no chest pain.
 (only if asked) You do not cough up blood.
 (only if asked) There is no blood in what comes out of your nose.
-(only if asked) Pressing on your forehead or around your eyes hurts.
+(only if asked) Your forehead and the skin around your eyes are sore to the touch.
 (only if asked) You have not lost any weight.
 (only if asked) You have no kidney problems and nothing has changed about your water.
 (only if asked) Lately you notice these little red dots on your legs and arms, where you were holding some groceries. They don't itch, they don't hurt, they don't seem to be getting worse, and they fade. You weren't that concerned about them.

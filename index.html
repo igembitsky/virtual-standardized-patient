@@ -901,7 +901,7 @@ function systemPrompt(c) {
   L.push("5. If the doctor asks to examine, touch, press, feel, or listen to you, say only \"Go ahead, doctor.\"");
   L.push("6. If the doctor uses a word you would not know, ask what it means, in your own words.");
   L.push("7. To an open question such as \"anything else?\", give one more line from WHAT YOU KNOW, or say nothing else comes to mind. Never a line from WHAT YOU DO NOT VOLUNTEER.");
-  L.push("8. If the doctor asks about something that is nowhere in your story, in neither list above, the answer is no. Add no details.");
+  L.push("8. If the doctor asks about something that is nowhere in your story, in neither list above, the answer is no. Add no details. If it IS in a list, never start with no. Give that fact.");
   L.push("9. Answer each part of a two-part question, in order.");
   return L.join("\n");
 }
@@ -1334,7 +1334,9 @@ async function handleTurn(text) {
   const node = say("pt", c.name, "");
   node.parentElement.classList.add("typing");
   try {
-    const full = await askModel(app.messages, t => { node.textContent = t; $("#log").scrollTop = $("#log").scrollHeight; });
+    // the note goes with this one question only; the history keeps the plain question
+    const send = app.messages.slice(0, -1).concat({ role: "user", content: text + factNote(c, text) });
+    const full = await askModel(send, t => { node.textContent = t; $("#log").scrollTop = $("#log").scrollHeight; });
     app.messages.push({ role: "assistant", content: full });
     app.visible.push({ role: "patient", text: full });
     markCovered(text);          // only once the patient actually answered
@@ -1507,6 +1509,48 @@ function jargonWord(c, text) {
   const own = [c.opening, ...c.story, ...c.hidden].join(" ");
   const again = own.match(new RegExp(JARGON.source, "gi")) || [];
   return again.some(w => w.toLowerCase() === m[0].toLowerCase()) ? null : m[0];
+}
+/* A small model answers a question that lists many things with "No X, no Y, no Z", and
+   skips facts that are in its own story. So each question goes to the model with a short
+   note of the story lines that share words with it. Only the model sees the note, and only
+   with that one question. A hidden line joins the note only when the question clearly asks
+   about it: two shared words, or a word from the list below. */
+const NOTE_STOP = new Set(("a an the and or but if of to in on at for with from by is are was were be been being do does did " +
+  "have has had you your yours i me my we our he she it they them this that these those any some anything something ever never " +
+  "not no yes how what when where why who which there here about like as so just very more most much many few get got go going " +
+  "come came feel feeling felt lately recently since before after over into out up down time times day days tell know").split(" "));
+const NOTE_WORDS = {
+  surgery: "operation cesarean caesarean section removed", operation: "surgery cesarean caesarean section",
+  sti: "trichomonas chlamydia gonorrhea herpes sexually", std: "trichomonas chlamydia gonorrhea herpes sexually",
+  diarrhea: "watery loose stools", diarrhoea: "watery loose stools", alcohol: "drink beer wine glass",
+  urine: "water pee", pee: "water urine", stool: "bowel poo", cough: "phlegm coughing", chill: "shaking shiver",
+  medication: "medicine tablet pill take", medicine: "medication tablet pill take", smoke: "smoking cigarette pack"
+};
+function noteStem(w) {
+  return w.endsWith("ies") ? w.slice(0, -3) + "y" : w.replace(/(es|s|ing|ed)$/, "");
+}
+function noteToks(text) {
+  return new Set((text.toLowerCase().match(/[a-z]+/g) || [])
+    .filter(w => w.length >= 3 && !NOTE_STOP.has(w)).map(noteStem));
+}
+function factNote(c, text) {
+  const q = noteToks(text);
+  const extra = [];
+  for (const [k, v] of Object.entries(NOTE_WORDS)) if (q.has(noteStem(k))) extra.push(...v.split(" ").map(noteStem));
+  const score = line => {
+    const t = noteToks(line), low = line.toLowerCase();
+    let shared = 0; q.forEach(w => { if (t.has(w)) shared++; });
+    const syn = extra.some(e => low.includes(e));
+    return { shared, syn };
+  };
+  const hits = [];
+  c.story.forEach(l => { const s = score(l); if (s.shared || s.syn) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
+  c.hidden.forEach(l => { const s = score(l); if (s.shared >= 2 || s.syn) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
+  const top = hits.sort((a, b) => b[0] - a[0]).slice(0, 4).map(h => h[1]);
+  if (!top.length) return "";
+  return "\n\n[Only you see this note. Facts from your story that may answer this question:\n" +
+    top.map(l => "- " + l).join("\n") +
+    "\nAnswer every part of the question. Use only the facts that answer what was asked. Say no only to the parts these facts do not cover.]";
 }
 function markCovered(text) {
   const t = plainWords(text);
