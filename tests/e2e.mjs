@@ -106,7 +106,7 @@ try {
   await p2.goto(URL); await sleep(1000);
   await p2.click("#stopApp");
   check(await exited(srv, 8000), "Quit stops it", srv.out);
-  check(/has stopped/.test(await p2.textContent("h1")), "the page says it has stopped");
+  check(await waitFor(async () => /has stopped/.test(await p2.textContent("h1")), 5000), "the page says it has stopped");
   await p2.close();
 
   console.log("8. Port taken by another program");
