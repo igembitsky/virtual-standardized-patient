@@ -10,7 +10,8 @@ Uses only the Python that nearly every Linux has. Installs nothing.
   4. Stops by itself when the last browser tab closes, or when Quit is pressed in the page.
      On the way out it unloads the patient model, so Ollama gives back the memory.
 
-It keeps a log in the temporary folder, virtual-standardized-patient.log. If it cannot start,
+It keeps a log, log.txt, in the downloaded folder beside the Start files, or in the temporary
+folder as virtual-standardized-patient.log if the folder cannot be written. If it cannot start,
 it opens a page in the browser with an error report to email or post on GitHub.
 """
 import http.server, json, os, platform, re, shutil, signal, subprocess, sys, tempfile, threading, time
@@ -32,7 +33,13 @@ LAST_TAB   = 10    # after the last tab closes, so a reload does not stop it
 QUIET_TAB  = 240   # a tab that has not been heard from, e.g. the browser was killed
 
 tabs, lock, state = {}, threading.Lock(), {"seen": False, "quit": False}
-LOG = os.path.join(tempfile.gettempdir(), "virtual-standardized-patient.log")
+# The log goes beside the Start files, where anyone can find it and send it. If the folder
+# cannot be written, the temporary folder instead.
+LOG = os.path.join(TOP, "log.txt")
+try:
+    open(LOG, "a").close()
+except OSError:
+    LOG = os.path.join(tempfile.gettempdir(), "virtual-standardized-patient.log")
 
 
 def log(msg):

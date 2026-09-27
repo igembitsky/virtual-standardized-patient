@@ -8,7 +8,8 @@
 #   4. Stops by itself when the last browser tab closes, or when Quit is pressed in the page.
 #      On the way out it unloads the patient model, so Ollama gives back the memory.
 #
-# It keeps a log in the temporary folder, virtual-standardized-patient.log. If it cannot
+# It keeps a log, log.txt, in the downloaded folder beside the Start files, or in the temporary
+# folder as virtual-standardized-patient.log if the folder cannot be written. If it cannot
 # start, it opens a page in the browser with an error report to email or post on GitHub.
 # To see its messages as it runs, right-click this file and choose Run with PowerShell.
 
@@ -25,7 +26,10 @@ $known  = '^(qwen3:4b-instruct|qwen3:4b|llama3\.1:8b|granite4\.1:3b)(:|$)'
 $firstTab = 120   # for the browser to open the first tab
 $lastTab  = 10    # after the last tab closes, so a reload does not stop it
 $quietTab = 240   # a tab that has not been heard from, e.g. the browser was killed
-$log    = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient.log'
+# The log goes beside the Start files, where anyone can find it and send it. If the folder
+# cannot be written, the temporary folder instead.
+$log    = Join-Path $top 'log.txt'
+try { [System.IO.File]::AppendAllText($log, '') } catch { $log = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient.log' }
 $types  = @{
   '.html'='text/html; charset=utf-8'; '.js'='application/javascript';
   '.css'='text/css'; '.json'='application/json'; '.txt'='text/plain; charset=utf-8';

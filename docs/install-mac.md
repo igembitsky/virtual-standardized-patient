@@ -21,16 +21,20 @@ Ollama is the free program that runs the AI model on your computer.
 3. Press **Download ZIP**.
 4. Open your **Downloads** folder and double-click the ZIP file. If Safari already unzipped
    it, you see a folder named `virtual-standardized-patient-main` instead.
-5. Drag that folder to your **Desktop**.
+5. Drag that folder into **Applications**. In Finder, **Applications** is in the sidebar on the
+   left. If Finder asks you to authenticate, type your Mac password.
+
+The simulator must be in Applications. macOS protects the Desktop, Documents and Downloads
+folders, and the simulator does not ask for permission to use them.
 
 ## 3. Start the simulator
 
-1. Open the folder on your Desktop.
+1. Open **Applications**, then the folder `virtual-standardized-patient-main`.
 2. Double-click **Start on Mac**.
    The first time, macOS says it could not verify the app. Follow [If macOS blocks the app](#if-macos-blocks-the-app).
-3. If macOS asks to let Start on Mac access files in your Desktop folder, press **Allow**.
-4. Your browser opens the simulator. No other window opens.
-5. The first time, the page downloads the patient model and shows the progress. Keep the
+   This is the only question macOS asks.
+3. Your browser opens the simulator. No other window opens.
+4. The first time, the page downloads the patient model and shows the progress. Keep the
    page open until it says **ready**.
 
 ## 4. Check it works
@@ -43,7 +47,8 @@ You can now turn off Wi-Fi and use the simulator offline.
 
 ## Every time after this
 
-1. Open the folder. Double-click **Start on Mac**.
+1. Open **Applications**, then the folder. Double-click **Start on Mac**. To make this faster,
+   drag **Start on Mac** to the Dock.
 2. To stop, close the browser tab, or press **Quit** at the top of the page. The simulator
    stops within a few seconds and gives the memory back.
 
@@ -77,13 +82,13 @@ The message says Apple could not verify the app. This happens once.
 2. Choose **Open**.
 3. Press **Open** again.
 
-### If you pressed Don't Allow by mistake
+### If it asks you to move the folder into Applications
 
-1. Open **System Settings**.
-2. Press **Privacy & Security**.
-3. Press **Files and Folders**.
-4. Under **Start on Mac**, turn on **Desktop Folder**.
-5. Double-click **Start on Mac** again.
+The folder is still on the Desktop, or in Documents or Downloads. A Finder window opens with
+the folder selected.
+
+1. Drag the folder onto **Applications** in the sidebar on the left.
+2. Open **Applications**, then the folder, and double-click **Start on Mac** again.
 
 ### If something goes wrong
 
@@ -96,9 +101,10 @@ If nothing happens at all:
 
 1. Wait 20 seconds. The first start after a download can be slow.
 2. Open your browser and go to `http://127.0.0.1:8756/`.
-3. If that does not load, the log is in the file `virtual-standardized-patient.log`. To find
-   it, open **Terminal**, type `open $TMPDIR` and press Enter. Email the file with your
-   report.
+3. If that does not load, send the log with your report. It is the file `log.txt` in the
+   simulator folder, next to **Start on Mac**. If it is not there, it is
+   `virtual-standardized-patient.log` in your Logs folder: in Finder, choose **Go**, then
+   **Go to Folder**, type `~/Library/Logs` and press Enter.
 
 ### If the download stops
 
@@ -108,7 +114,7 @@ start, open Terminal and type `ollama pull qwen3:4b-instruct`. Press Enter. Wait
 ### Add a shortcut
 
 Drag **Start on Mac** to the Dock. Or right-click it, choose **Make Alias**, and drag the
-alias to the Desktop.
+alias to the Desktop. Keep the folder itself in Applications.
 
 Other problems are listed on [If something goes wrong](troubleshooting.md).
 

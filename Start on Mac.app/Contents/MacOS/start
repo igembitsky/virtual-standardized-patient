@@ -4,9 +4,12 @@
 #   1. Opens Ollama in the background if it is not running.
 #   2. Starts app/server.pl with the Perl that macOS ships, which opens the browser.
 # The simulator stops by itself when you close its browser tab, or press Quit in the page.
-# Everything it says goes to a log in the temporary folder, virtual-standardized-patient.log.
-LOG="${TMPDIR:-/tmp}/virtual-standardized-patient.log"
+# Everything it says goes to a log: first in ~/Library/Logs, which is always allowed, and from
+# the moment the folder is usable, in log.txt beside the Start files, where anyone can find it.
+LOG="$HOME/Library/Logs/virtual-standardized-patient.log"
+/bin/mkdir -p "$HOME/Library/Logs" 2>/dev/null || LOG="${TMPDIR:-/tmp}/virtual-standardized-patient.log"
 exec >>"$LOG" 2>&1
+first=$(($(/usr/bin/wc -l < "$LOG") + 1))    # this run's first line, to copy into log.txt later
 echo "$(date '+%Y-%m-%d %H:%M:%S') Start on Mac: $0"
 
 # Something went wrong before the server could start. Say so, and offer to send a report.
@@ -17,12 +20,15 @@ When: $(date)
 Computer: macOS $(sw_vers -productVersion 2>/dev/null), $(uname -m)
 App: $0
 What happened: $1
+Log file: $LOG
 
 --- launcher log, last lines ---
 $(tail -n 40 "$LOG")"
   choice=$(/usr/bin/osascript -e "button returned of (display dialog \"Something went wrong.
 
-$1\" with title \"Virtual Standardized Patient\" buttons {\"Close\", \"Report on GitHub\", \"Email report\"} default button 3 with icon caution)")
+$1
+
+The log is in $LOG\" with title \"Virtual Standardized Patient\" buttons {\"Close\", \"Report on GitHub\", \"Email report\"} default button 3 with icon caution)")
   enc() { /usr/bin/perl -pe 's/([^A-Za-z0-9_.~-])/sprintf("%%%02X", ord $1)/ge'; }
   title=$(printf 'Problem report: %s' "$1" | head -c 80 | enc)
   case "$choice" in
@@ -35,8 +41,7 @@ $1\" with title \"Virtual Standardized Patient\" buttons {\"Close\", \"Report on
 bundle="$(cd "$(dirname "$0")/../.." && pwd -P)"
 
 # macOS runs an app it has just downloaded from a read-only copy in a hidden folder
-# ("App Translocation"), which cannot see the files beside it. Find the real app, clear the
-# download flag on its folder so this does not happen again, and run from the real folder.
+# ("App Translocation"), which cannot see the files beside it. Find the real app.
 home="$(dirname "$bundle")"
 case "$bundle" in
   */AppTranslocation/*)
@@ -60,73 +65,37 @@ case "$bundle" in
       }')
     # 2. Spotlight, if the mount table did not say, and only if exactly one copy exists:
     #    with two copies (Downloads and Desktop) a guess could start the wrong one.
-    if [ -z "$real" ] || [ ! -f "$(dirname "$real")/app/server.pl" ]; then
-      found=$(/usr/bin/mdfind -name "Start on Mac.app" 2>/dev/null | while IFS= read -r p; do
-        [ "${p#*/AppTranslocation/}" != "$p" ] && continue
-        [ -f "$(dirname "$p")/app/server.pl" ] && echo "$p"
-      done)
-      [ "$(printf '%s\n' "$found" | /usr/bin/grep -c .)" = "1" ] && real="$found" || real=""
+    if [ -z "$real" ]; then
+      found=$(/usr/bin/mdfind -name "Start on Mac.app" 2>/dev/null | /usr/bin/grep -v /AppTranslocation/)
+      [ "$(printf '%s\n' "$found" | /usr/bin/grep -c .)" = "1" ] && real="$found"
     fi
-    if [ -n "$real" ] && [ -f "$(dirname "$real")/app/server.pl" ]; then
-      echo "The real app is $real"
-      home="$(dirname "$real")"
-      /usr/bin/xattr -dr com.apple.quarantine "$home" 2>/dev/null
-    else
-      problem "macOS opened a protected copy of the app. In Finder, drag Start on Mac out of its folder onto the Desktop, then back into the folder, and open it again."
-    fi ;;
+    [ -n "$real" ] || problem "macOS opened a hidden copy of Start on Mac and did not say where the real one is. Move the simulator folder into your Applications folder, then open Start on Mac from there."
+    echo "The real app is $real"
+    home="$(dirname "$real")" ;;
 esac
 
-# The hidden copy often may not read the Desktop, Documents or Downloads folder, because macOS
-# privacy protection sees a new app each time. Then do what the person would do by hand: ask
-# Finder to move Start on Mac out of its folder and back, which tells macOS the app was moved
-# on purpose, and open it again from its real place. macOS asks once to let it control Finder.
-# If that does not work, or the reopened app is still a hidden copy, show the one step to do.
-manual_step() {
-  /usr/bin/open -R "$home/Start on Mac.app"
-  problem "macOS needs one step, the first time only. In the Finder window that just opened, drag Start on Mac onto the Desktop, then drag it back into its folder. Then double-click it again."
-}
-case "$bundle" in
-  */AppTranslocation/*)
-    if ! /bin/cat "$home/app/server.pl" >/dev/null 2>&1; then
-      guard="${TMPDIR:-/tmp}/virtual-standardized-patient.moved"
-      # One automatic try only: a second hidden copy within two minutes means it did not help.
-      if [ -f "$guard" ] && [ $(( $(/bin/date +%s) - $(/usr/bin/stat -f %m "$guard") )) -lt 120 ]; then
-        echo "Still a hidden copy after the Finder move"
-        manual_step
-      fi
-      /usr/bin/touch "$guard"
-      # Move it one folder up and back, as a person would drag it to the Desktop and back. The
-      # folder above stays in the same place (iCloud or not), which Finder needs.
-      up="$(dirname "$home")"
-      [ -e "$up/Start on Mac.app" ] && { echo "Another Start on Mac is in $up"; manual_step; }
-      echo "Asking Finder to move $home/Start on Mac.app to $up and back"
-      if /usr/bin/osascript - "$home/Start on Mac.app" "$home" "$up" <<'APPLESCRIPT'
-on run argv
-  set theApp to (POSIX file (item 1 of argv)) as alias
-  set theHome to (POSIX file (item 2 of argv)) as alias
-  set theUp to (POSIX file (item 3 of argv)) as alias
-  tell application "Finder"
-    set moved to move theApp to theUp
-    try
-      move moved to theHome
-    on error e
-      -- never leave the app outside its folder
-      move moved to theHome with replacing
-    end try
-  end tell
-end run
-APPLESCRIPT
-      then
-        echo "Reopening from $home"
-        exec /usr/bin/open -n "$home/Start on Mac.app"
-      fi
-      echo "The Finder move did not work"
-      manual_step
-    fi ;;
+# macOS protects the Desktop, Documents, Downloads and iCloud Drive folders: a program must ask
+# for permission to read them. The simulator never asks. It runs from Applications, or any other
+# folder, and in a protected folder it touches nothing and shows where to move it.
+case "$home/" in
+  "$HOME/Desktop/"*|"$HOME/Documents/"*|"$HOME/Downloads/"*|"$HOME/Library/Mobile Documents/"*)
+    echo "In a protected folder: $home"
+    /usr/bin/open -R "$home"
+    problem "Please move the simulator folder into your Applications folder. macOS protects the Desktop, Documents and Downloads folders, and the simulator does not ask to use them. In the Finder window that just opened, drag the folder $(basename "$home") onto Applications in the sidebar. Then open it there and double-click Start on Mac." ;;
 esac
+
+# Clear the download mark on the folder, so macOS runs the real app from now on.
+/usr/bin/xattr -dr com.apple.quarantine "$home" 2>/dev/null
 
 cd "$home/app" 2>/dev/null && /bin/cat server.pl >/dev/null 2>&1 || \
-  problem "The app folder could not be opened. Keep Start on Mac next to the app folder. If macOS asked to access your Desktop or Downloads folder and you pressed Don't Allow, turn it on in System Settings, Privacy and Security, Files and Folders."
+  problem "The app folder could not be opened. Keep Start on Mac next to the app folder, and keep them both in the simulator folder."
+
+# From here on, the log is log.txt in the folder, if the folder can be written.
+if ( : >> "$home/log.txt" ) 2>/dev/null; then
+  /usr/bin/tail -n +"$first" "$LOG" >> "$home/log.txt"
+  LOG="$home/log.txt"
+  exec >>"$LOG" 2>&1
+fi
 
 # Ollama: open it in the background if it is not running. The page reports anything else.
 /usr/bin/curl -s -m 2 http://127.0.0.1:11434/api/tags >/dev/null || /usr/bin/open -g -a Ollama

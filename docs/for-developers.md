@@ -32,7 +32,8 @@ What each server does:
   at once. On the way out it unloads the patient model from Ollama with `keep_alive: 0`.
 - `GET /update` answers `can`. `POST /update` downloads the ZIP, checks it holds
   `app/index.html` and `app/cases/`, and copies it over the folder.
-- Keeps a log in the temporary folder, `virtual-standardized-patient.log`, and serves its
+- Keeps a log, `log.txt`, beside the Start files (or `virtual-standardized-patient.log` in the
+  temporary folder, or `~/Library/Logs` on a Mac, if the folder cannot be written), and serves its
   end at `GET /log` for the page's problem report. If it cannot start, it fills in
   `app/problem.html` with a report, writes it to the temporary folder, and opens it.
 - `VSP_ZIP` overrides where the update comes from, and `VSP_NO_BROWSER=1` stops it opening

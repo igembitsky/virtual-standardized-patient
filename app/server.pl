@@ -7,7 +7,8 @@
 #   3. Stops by itself when the last browser tab closes, or when Quit is pressed in the page.
 #      On the way out it unloads the patient model, so Ollama gives back the memory.
 #
-# It keeps a log in the temporary folder, virtual-standardized-patient.log. If it cannot
+# It keeps a log, log.txt, in the downloaded folder beside the Start files, or in the temporary
+# folder as virtual-standardized-patient.log if the folder cannot be written. If it cannot
 # start, it opens a page in the browser with an error report to email or post on GitHub.
 use strict; use warnings;
 use IO::Socket::INET; use IO::Select; use Cwd 'abs_path'; use File::Basename 'dirname';
@@ -31,7 +32,10 @@ my %T = (html=>'text/html; charset=utf-8', js=>'application/javascript',
          ico=>'image/x-icon', md=>'text/plain; charset=utf-8');
 my $root = dirname(abs_path($0));    # the app folder, served
 my $top  = dirname($root);           # the folder that was downloaded
-my $LOG  = ($ENV{TMPDIR} || '/tmp') . '/virtual-standardized-patient.log';
+# The log goes beside the Start files, where anyone can find it and send it. If the folder
+# cannot be written, the temporary folder instead.
+my $LOG  = "$top/log.txt";
+unless (open my $t, '>>', $LOG) { $LOG = ($ENV{TMPDIR} || '/tmp') . '/virtual-standardized-patient.log' }
 $LOG =~ s{//+}{/}g;
 my $srv;
 

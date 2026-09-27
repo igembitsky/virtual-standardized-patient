@@ -6,3 +6,4 @@ bench/results/
 .playwright-cli/
 __pycache__/
 tests/node_modules/
+log.txt

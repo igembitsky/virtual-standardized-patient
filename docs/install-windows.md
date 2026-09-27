@@ -73,7 +73,7 @@ To add a shortcut: right-click **Start on Windows**, choose **Show more options*
 |---|---|
 | A blue **Windows protected your PC** box | Press **More info**. Press **Run anyway** |
 | **Something went wrong** | Press **Email report** to send the error report from your mail app, or **Report on GitHub** if you have a GitHub account |
-| Nothing happens after 20 seconds | Open your browser and go to `http://127.0.0.1:8756/`. If that does not load, press the Start button, type `%TEMP%`, press Enter, and email the file `virtual-standardized-patient.log` |
+| Nothing happens after 20 seconds | Open your browser and go to `http://127.0.0.1:8756/`. If that does not load, email the file `log.txt` from the simulator folder. If it is not there, press the Start button, type `%TEMP%`, press Enter, and email the file `virtual-standardized-patient.log` |
 | **Ollama is not running** on the page | Open Ollama from the Start menu. The page notices by itself |
 | The download stopped | The page tries again by itself and carries on from where it stopped |
 | The download does not start | Press the Start button, type `PowerShell`, and open it. Type `ollama pull qwen3:4b-instruct`. Press Enter. Wait for `success` |
