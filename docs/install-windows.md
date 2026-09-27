@@ -28,6 +28,9 @@ Ollama is the free program that runs the AI model on your computer.
 
 4. Open your **Downloads** folder. Right-click the ZIP file and choose **Extract All**. Press
    **Extract**. A folder named `virtual-standardized-patient-main` appears.
+
+   <img src="screenshots/windows-extract-all.svg" width="520" alt="In File Explorer, the ZIP file is right-clicked and Extract All is chosen">
+
 5. Drag that folder to your **Desktop**.
 
 ## 3. Start the simulator
@@ -35,18 +38,16 @@ Ollama is the free program that runs the AI model on your computer.
 1. Open the folder on your Desktop. If it holds only another folder with the same name, open
    that one.
 2. Double-click **Start on Windows**.
-3. The first time, Windows may show a warning. See [If Windows shows a warning](#if-windows-shows-a-warning).
+3. The first time, Windows may say **Windows protected your PC**. Press **More info**, then
+   press **Run anyway**. This happens once.
+
+   <img src="screenshots/windows-run-anyway.svg" width="620" alt="Windows protected your PC: first press More info, then press Run anyway">
+
+   If the box says **Open File - Security Warning** instead, press **Run**.
 4. A window flashes for a moment and closes. That is normal.
 5. Your browser opens the simulator at `http://127.0.0.1:8756/`.
 6. The first time, the page downloads the patient model and shows the progress. Keep the
    page open until it says **ready**.
-
-### If Windows shows a warning
-
-Windows checks every file downloaded from the internet. This happens once.
-
-- If the box says **Windows protected your PC**: press **More info**. Press **Run anyway**.
-- If the box says **Open File - Security Warning**: press **Run**.
 
 ## 4. Check it works
 

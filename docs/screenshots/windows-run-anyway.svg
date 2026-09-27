@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="860" height="380" role="img" aria-label="The Windows protected your PC box. First press More info. Then press Run anyway.">
+  <style>
+    text { font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; fill: #ffffff; }
+    .h { font-size: 22px; font-weight: 300; }
+    .p { font-size: 13px; }
+    .l { font-size: 13px; text-decoration: underline; }
+    .btn { font-size: 13px; }
+    .num { font-size: 20px; font-weight: 700; fill: #ffffff; }
+  </style>
+
+  <!-- panel 1 -->
+  <rect x="10" y="20" width="400" height="330" fill="#0f6cbd"/>
+  <text x="385" y="44" class="p" text-anchor="end">✕</text>
+  <text x="34" y="80" class="h">Windows protected your PC</text>
+  <text x="34" y="116" class="p">Microsoft Defender SmartScreen prevented an</text>
+  <text x="34" y="134" class="p">unrecognized app from starting. Running this app</text>
+  <text x="34" y="152" class="p">might put your PC at risk.</text>
+  <text x="34" y="182" class="l">More info</text>
+  <rect x="26" y="164" width="84" height="28" rx="6" fill="none" stroke="#e53935" stroke-width="3.5"/>
+  <rect x="10" y="294" width="400" height="56" fill="#0b5aa0"/>
+  <rect x="290" y="306" width="104" height="32" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.6"/>
+  <text x="342" y="327" class="btn" text-anchor="middle">Don't run</text>
+  <circle cx="150" cy="178" r="16" fill="#e53935"/>
+  <text x="150" y="185" class="num" text-anchor="middle">1</text>
+
+  <!-- arrow between -->
+  <path d="M420 185 H440" stroke="#e53935" stroke-width="4" stroke-linecap="round"/>
+  <path d="M448 185 L436 177 L436 193 z" fill="#e53935"/>
+
+  <!-- panel 2 -->
+  <rect x="455" y="20" width="400" height="330" fill="#0f6cbd"/>
+  <text x="830" y="44" class="p" text-anchor="end">✕</text>
+  <text x="479" y="80" class="h">Windows protected your PC</text>
+  <text x="479" y="116" class="p">Microsoft Defender SmartScreen prevented an</text>
+  <text x="479" y="134" class="p">unrecognized app from starting. Running this app</text>
+  <text x="479" y="152" class="p">might put your PC at risk.</text>
+  <text x="479" y="190" class="p">App:          Start on Windows.bat</text>
+  <text x="479" y="212" class="p">Publisher:   Unknown publisher</text>
+  <rect x="455" y="294" width="400" height="56" fill="#0b5aa0"/>
+  <rect x="619" y="306" width="104" height="32" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.6"/>
+  <text x="671" y="327" class="btn" text-anchor="middle">Run anyway</text>
+  <rect x="613" y="300" width="116" height="44" rx="6" fill="none" stroke="#e53935" stroke-width="3.5"/>
+  <rect x="735" y="306" width="104" height="32" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.6"/>
+  <text x="787" y="327" class="btn" text-anchor="middle">Don't run</text>
+  <circle cx="596" cy="322" r="16" fill="#e53935"/>
+  <text x="596" y="329" class="num" text-anchor="middle">2</text>
+</svg>

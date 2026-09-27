@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Windows File Explorer, Downloads folder. The ZIP file is right-clicked and Extract All is chosen in the menu.">
+  <defs>
+    <filter id="sh" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <style>
+    text { font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; }
+    .t { font-size: 14px; fill: #1f1f1f; }
+    .s { font-size: 13px; fill: #1f1f1f; }
+    .m { font-size: 12px; fill: #6b6b6b; }
+    .b { font-size: 14px; fill: #1f1f1f; font-weight: 600; }
+  </style>
+
+  <!-- File Explorer window -->
+  <rect x="16" y="16" width="668" height="348" rx="8" fill="#ffffff" stroke="#d1d1d1" filter="url(#sh)"/>
+  <path d="M16 24 a8 8 0 0 1 8 -8 H676 a8 8 0 0 1 8 8 V56 H16 z" fill="#f3f3f3"/>
+  <text x="36" y="42" class="t">Downloads</text>
+  <text x="600" y="42" class="t" fill="#444">—   ▢   ✕</text>
+  <!-- navigation pane -->
+  <rect x="16" y="56" width="150" height="308" fill="#f9f9f9"/>
+  <text x="32" y="86" class="s">Home</text>
+  <text x="32" y="114" class="s">Desktop</text>
+  <rect x="24" y="126" width="134" height="26" rx="4" fill="#e5eefa"/>
+  <text x="32" y="144" class="s" font-weight="600">Downloads</text>
+  <text x="32" y="172" class="s">Documents</text>
+
+  <!-- the ZIP file, selected -->
+  <rect x="186" y="80" width="250" height="30" rx="4" fill="#cce4f7"/>
+  <g transform="translate(196 86)">
+    <rect x="0" y="0" width="16" height="18" rx="2" fill="#f4c542"/>
+    <rect x="6" y="0" width="4" height="12" fill="#8a6d1d"/>
+  </g>
+  <text x="222" y="100" class="s">virtual-standardized-patient-main</text>
+  <text x="444" y="100" class="m">Compressed (zipped) Folder</text>
+
+  <!-- the right-click menu -->
+  <rect x="300" y="122" width="250" height="222" rx="8" fill="#ffffff" stroke="#d6d6d6" filter="url(#sh)"/>
+  <text x="330" y="156" class="s">Open</text>
+  <text x="330" y="186" class="s">Open with</text>
+  <!-- Extract All, marked -->
+  <rect x="310" y="198" width="230" height="30" rx="5" fill="#f0f0f0"/>
+  <rect x="306" y="194" width="238" height="38" rx="8" fill="none" stroke="#e53935" stroke-width="3.5"/>
+  <text x="330" y="218" class="b">Extract All…</text>
+  <text x="330" y="252" class="s">Pin to Start</text>
+  <text x="330" y="282" class="s">Copy as path</text>
+  <text x="330" y="312" class="s">Properties</text>
+  <text x="330" y="336" class="m">Show more options</text>
+
+  <!-- the note -->
+  <text x="572" y="218" font-size="14" font-weight="700" fill="#e53935">Then press</text>
+  <text x="572" y="236" font-size="14" font-weight="700" fill="#e53935">Extract</text>
+  <path d="M566 214 H552" stroke="#e53935" stroke-width="3" stroke-linecap="round"/>
+  <path d="M546 214 L556 208 L556 220 z" fill="#e53935"/>
+</svg>
