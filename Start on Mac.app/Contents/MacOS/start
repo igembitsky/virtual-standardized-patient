@@ -76,7 +76,17 @@ case "$bundle" in
     fi ;;
 esac
 
-cd "$home/app" 2>/dev/null && [ -f server.pl ] || \
+# The hidden copy often may not read the Desktop, Documents or Downloads folder, because macOS
+# privacy protection sees a new app each time. Test a real read, never fail silently, and show
+# the folder so the person can do the one step that stops macOS using a hidden copy.
+case "$bundle" in
+  */AppTranslocation/*)
+    /bin/cat "$home/app/server.pl" >/dev/null 2>&1 || {
+      /usr/bin/open -R "$home/Start on Mac.app"
+      problem "macOS needs one step, the first time only. In the Finder window that just opened, drag Start on Mac onto the Desktop, then drag it back into its folder. Then double-click it again." ; } ;;
+esac
+
+cd "$home/app" 2>/dev/null && /bin/cat server.pl >/dev/null 2>&1 || \
   problem "The app folder could not be opened. Keep Start on Mac next to the app folder. If macOS asked to access your Desktop or Downloads folder and you pressed Don't Allow, turn it on in System Settings, Privacy and Security, Files and Folders."
 
 # Ollama: open it in the background if it is not running. The page reports anything else.
