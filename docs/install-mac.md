@@ -26,9 +26,6 @@ Ollama is the free program that runs the AI model on your computer.
 
    <img src="screenshots/mac-drag-to-applications.svg" width="560" alt="In Finder, the folder virtual-standardized-patient-main is dragged from Downloads onto Applications in the sidebar">
 
-The simulator must be in Applications. macOS protects the Desktop, Documents and Downloads
-folders, and the simulator does not ask for permission to use them.
-
 ## 3. Start the simulator
 
 1. Open **Applications**, then the folder `virtual-standardized-patient-main`.
