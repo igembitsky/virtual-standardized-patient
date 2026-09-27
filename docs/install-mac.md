@@ -21,8 +21,10 @@ Ollama is the free program that runs the AI model on your computer.
 3. Press **Download ZIP**.
 4. Open your **Downloads** folder and double-click the ZIP file. If Safari already unzipped
    it, you see a folder named `virtual-standardized-patient-main` instead.
-5. Drag that folder into **Applications**. In Finder, **Applications** is in the sidebar on the
-   left. If Finder asks you to authenticate, type your Mac password.
+5. Drag that folder onto **Applications** in the Finder sidebar. If Finder asks you to
+   authenticate, type your Mac password.
+
+   <img src="screenshots/mac-drag-to-applications.svg" width="560" alt="In Finder, the folder virtual-standardized-patient-main is dragged from Downloads onto Applications in the sidebar">
 
 The simulator must be in Applications. macOS protects the Desktop, Documents and Downloads
 folders, and the simulator does not ask for permission to use them.
@@ -30,11 +32,19 @@ folders, and the simulator does not ask for permission to use them.
 ## 3. Start the simulator
 
 1. Open **Applications**, then the folder `virtual-standardized-patient-main`.
-2. Double-click **Start on Mac**.
-   The first time, macOS says it could not verify the app. Follow [If macOS blocks the app](#if-macos-blocks-the-app).
-   This is the only question macOS asks.
-3. Your browser opens the simulator. No other window opens.
-4. The first time, the page downloads the patient model and shows the progress. Keep the
+2. Double-click **Start on Mac**. macOS says it could not verify the app. Press **Done**.
+   This happens once, because the app does not come from the App Store.
+3. Open **System Settings**, then **Privacy & Security**. Scroll down to **Security**. Next to
+   "Start on Mac.app" was blocked, press **Open Anyway**.
+
+   <img src="screenshots/mac-open-anyway-settings.png" width="520" alt="System Settings, Privacy and Security: Start on Mac.app was blocked, with the Open Anyway button">
+
+4. macOS asks again. Press **Open Anyway**, then type your Mac password or use Touch ID.
+
+   <img src="screenshots/mac-open-anyway-dialog.png" width="260" alt="The dialog Open Start on Mac.app, with the buttons Move to Trash, Open Anyway and Done">
+
+5. Your browser opens the simulator.
+6. The first time, the page downloads the patient model and shows the progress. Keep the
    page open until it says **ready**.
 
 ## 4. Check it works
@@ -64,19 +74,9 @@ history stay. The version you have is at the bottom of the page.
 
 You only need this part if a step above did not work.
 
-### If macOS blocks the app
+### A faster way on macOS 14 Sonoma
 
-The message says Apple could not verify the app. This happens once.
-
-**macOS 15 or newer**
-
-1. Press **Done**.
-2. Open **System Settings**.
-3. Press **Privacy & Security**.
-4. Scroll down to the **Security** section. Press **Open Anyway**.
-5. Press **Open**.
-
-**macOS 14 or older**
+The steps above work on every version. On macOS 14 there is also a faster way:
 
 1. Right-click **Start on Mac**. On a trackpad, click with two fingers.
 2. Choose **Open**.
