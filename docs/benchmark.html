@@ -25,7 +25,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg);
   font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
-main { max-width: 900px; margin: 0 auto; padding: 32px 16px 64px; }
+main { max-width: 1060px; margin: 0 auto; padding: 32px 16px 64px; }
 h1 { font-size: 28px; margin: 0 0 6px; }
 h2 { font-size: 19px; margin: 40px 0 8px; }
 p { margin: 0 0 10px; }
@@ -34,14 +34,22 @@ p { margin: 0 0 10px; }
 a { color: var(--accent); }
 .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 14px 0 6px; font-size: 13px; }
 .chip.few, td.few { background: var(--head); color: var(--muted); }
-.reasons { font-size: 12px; font-weight: 400; display: block; margin-top: 4px; }
+.reasons { font-size: 12px; font-weight: 400; display: block; margin-top: 4px; white-space: normal; }
 .chip { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px;
   margin-right: 6px; border: 1px solid var(--line); }
 .chip.pass { background: var(--pass-bg); } .chip.fail { background: var(--fail-bg); }
-.wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
-table { border-collapse: collapse; width: 100%; font-size: 14px; }
-th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-tr:last-child td { border-bottom: 0; }
+/* No scroll inside a table. A wide table makes the page wider, and the page scrolls. */
+table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 14px;
+  border: 1px solid var(--line); border-radius: 8px; }
+th, td { padding: 10px 14px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+  text-align: left; vertical-align: middle; }
+th:last-child, td:last-child, tr.group td { border-right: 0; }
+tbody tr:last-child td { border-bottom: 0; }
+thead tr:first-child th:first-child { border-top-left-radius: 7px; }
+thead tr:first-child th:last-child { border-top-right-radius: 7px; }
+tbody tr:last-child td:first-child { border-bottom-left-radius: 7px; }
+tbody tr:last-child td:last-child { border-bottom-right-radius: 7px; }
+th.sel { box-shadow: inset 0 -3px 0 var(--fg); }
 thead th { background: var(--head); font-weight: 600; white-space: nowrap; }
 td.num, th.num { text-align: center; white-space: nowrap; }
 td.pass { background: var(--pass-bg); color: var(--pass-fg); }
@@ -50,7 +58,11 @@ tr.group td { background: var(--head); font-weight: 600; font-size: 13px; color:
 .label { font-weight: 500; }
 .hint { display: block; color: var(--muted); font-size: 12.5px; }
 code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; }
-.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 12px; }
+.picker { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0;
+  margin: 18px 0 0; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap;
+  align-items: center; gap: 8px; }
+.picker > span { font-size: 13px; color: var(--muted); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .tabs button { font: inherit; font-size: 13px; padding: 5px 12px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
 .tabs button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
@@ -64,6 +76,7 @@ summary { cursor: pointer; color: var(--muted); font-size: 13px; }
   <p class="small"><a href="https://github.com/igembitsky/virtual-standardized-patient#readme">Back to the program</a></p>
   <h1>Benchmark</h1>
   <p>How well each model plays a patient. Each model gets the same 8 cases and the same questions.</p>
+  <p class="small muted" id="lastrun"></p>
   <div class="legend">
     <span><span class="chip pass"></span>Meets the bar</span>
     <span><span class="chip fail"></span>Does not meet the bar</span>
@@ -71,8 +84,10 @@ summary { cursor: pointer; color: var(--muted); font-size: 13px; }
     <span><span class="chip few"></span>Too few replies to judge</span>
   </div>
 
+  <div class="picker"><span>Model:</span><div class="tabs" id="tabs" role="group" aria-label="Model"></div></div>
+
   <h2>Results by model</h2>
-  <div class="wrap"><table id="models"></table></div>
+  <table id="models"></table>
   <p class="small muted" style="margin-top:8px">Reply time is the middle value on the test computer.
     A computer with no graphics chip is slower. Memory in use does not include the system and the
     browser. Add about 4 GB for them.</p>
@@ -81,17 +96,17 @@ summary { cursor: pointer; color: var(--muted); font-size: 13px; }
   <p>A model is approved when all three of these are true:</p>
   <ol id="rules"></ol>
   <p>Each bar protects the learner from one kind of mistake:</p>
-  <div class="wrap"><table id="bars"></table></div>
+  <table id="bars"></table>
   <p class="small muted" style="margin-top:8px">Some measures have no bar. "Adds a fact", "Gives a hidden
     fact" and "Holds back a fact" are all part of "Follows the patient rules", so that bar covers them.
     We show them so that you can see which mistakes a model makes.</p>
 
   <h2>Results by case</h2>
-  <p>Choose a model. The table shows its results for each patient. A patient measure with fewer
+  <p>The results for each patient, for the model you choose at the top. A patient measure with fewer
     than <span id="minrep"></span> replies is grey: with 3 open questions, one mistake is 33%, which
     says nothing about the model.</p>
-  <div class="tabs" id="tabs" role="group" aria-label="Model"></div>
-  <div class="wrap"><table id="cases"></table></div>
+  <h3 id="casemodel" style="font-size:15px;margin:14px 0 8px"></h3>
+  <table id="cases"></table>
 
   <h2>How the test works</h2>
   <ul>
@@ -113,7 +128,7 @@ summary { cursor: pointer; color: var(--muted); font-size: 13px; }
   <p class="small"><a href="../bench/README.md">Run the test yourself</a></p>
 
   <details><summary>Test details</summary>
-    <div class="wrap" style="margin-top:8px"><table id="details"></table></div>
+    <table id="details" style="margin-top:8px"></table>
   </details>
 </main>
 <script>
@@ -171,10 +186,10 @@ const barText = k => !(k in G) ? "" : G[k] >= 1 ? "100%" : (LOWER.has(k) ? "at m
 function modelsTable() {
   const M = DATA.models;
   let h = `<thead><tr><th>Measure</th><th class="num">Bar</th>` +
-    M.map(m => `<th class="num"><code>${esc(m.model)}</code></th>`).join("") + `</tr></thead><tbody>`;
+    M.map((m, i) => `<th class="num" data-m="${i}"><code>${esc(m.model)}</code></th>`).join("") + `</tr></thead><tbody>`;
   h += `<tr><td class="label">Result</td><td class="num"></td>` + M.map(m =>
     `<td class="num ${m.approved ? "pass" : "fail"}"><strong>${m.approved ? "Approved" : "Not approved"}</strong>` +
-    (m.approved ? "" : `<span class="reasons">${m.reasons.map(esc).join("<br>")}</span>`) + `</td>`).join("") + `</tr>`;
+    (m.approved ? "" : `<span class="reasons" title="${esc(m.reasons.join("\n"))}">${m.reasons.length} ${m.reasons.length === 1 ? "problem" : "problems"}, in red below</span>`) + `</td>`).join("") + `</tr>`;
   h += `<tr><td><span class="label">Test runs pooled</span><span class="hint">The standard questions.</span></td>` +
     `<td class="num">at least ${DATA.rules.model_min_runs}</td>` +
     M.map(m => `<td class="num ${m.runs >= DATA.rules.model_min_runs ? "pass" : "fail"}">${m.runs}</td>`).join("") + `</tr>`;
@@ -199,9 +214,11 @@ function casesTable(i) {
   const m = DATA.models[i];
   let h = `<thead><tr><th>Patient</th>` + CASE_COLS.map(k => `<th class="num">${SHORT[k]}<span class="hint" style="font-weight:400">${barText(k)}</span></th>`).join("") + `</tr></thead><tbody>`;
   for (const [c, v] of Object.entries(m.cases))
-    h += `<tr><td class="label">${esc(m.names[c] || c)}</td>` + CASE_COLS.map(k => cell(k, v[k], DATA.rules.case_min_replies)).join("") + `</tr>`;
+    h += `<tr><td class="label" style="white-space:nowrap">${esc(m.names[c] || c)}</td>` + CASE_COLS.map(k => cell(k, v[k], DATA.rules.case_min_replies)).join("") + `</tr>`;
   document.getElementById("cases").innerHTML = h + "</tbody>";
+  document.getElementById("casemodel").innerHTML = `<code>${esc(m.model)}</code>`;
   document.querySelectorAll("#tabs button").forEach((b, j) => b.setAttribute("aria-pressed", j === i));
+  document.querySelectorAll("#models thead th[data-m]").forEach(th => th.classList.toggle("sel", +th.dataset.m === i));
 }
 
 function tabs() {
@@ -222,13 +239,20 @@ function approval() {
     order.map(k => `<tr><td class="label">${esc(LABEL[k] || k)}</td><td class="num">${barText(k)}</td><td>${esc(DATA.why[k] || "")}</td></tr>`).join("") + `</tbody>`;
 }
 
+function lastRun() {
+  const d = DATA.models.map(m => m.date).filter(Boolean).sort().pop();
+  if (!d) return;
+  const t = new Date(d + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  document.getElementById("lastrun").textContent = "Last test: " + t + ".";
+}
+
 function details() {
   document.getElementById("details").innerHTML =
     `<thead><tr><th>Model</th><th>Date</th><th class="num">Runs</th><th>Test computer</th><th>Prompt version</th></tr></thead><tbody>` +
     DATA.models.map(m => `<tr><td><code>${esc(m.model)}</code></td><td>${esc(m.date)}</td><td class="num">${m.runs}</td><td>${esc(m.machine)}</td><td><code>${esc(m.prompt_sha || "")}</code></td></tr>`).join("") + `</tbody>`;
 }
 
-modelsTable(); approval(); tabs(); casesTable(0); details();
+modelsTable(); approval(); tabs(); casesTable(0); details(); lastRun();
 </script>
 </body>
 </html>
