@@ -34,26 +34,49 @@ $1\" with title \"Virtual Standardized Patient\" buttons {\"Close\", \"Report on
 
 bundle="$(cd "$(dirname "$0")/../.." && pwd -P)"
 
-# macOS runs an app it has just downloaded from a read-only copy in a hidden folder, which
-# cannot see the files beside it. Find the real one, clear the download flag on its
-# folder, and open it again from there. This happens once.
+# macOS runs an app it has just downloaded from a read-only copy in a hidden folder
+# ("App Translocation"), which cannot see the files beside it. Find the real app, clear the
+# download flag on its folder so this does not happen again, and run from the real folder.
+home="$(dirname "$bundle")"
 case "$bundle" in
   */AppTranslocation/*)
     echo "Running from a translocated copy: $bundle"
-    real=$(/sbin/mount | /usr/bin/awk -v m="$bundle" '{ i = index($0, " on " m " ("); if (i) { print substr($0, 1, i - 1); exit } }')
-    if [ -z "$real" ]; then
-      parent=$(/sbin/mount | /usr/bin/awk -v m="$(dirname "$bundle")" '{ i = index($0, " on " m " ("); if (i) { print substr($0, 1, i - 1); exit } }')
-      [ -n "$parent" ] && real="$parent/$(basename "$bundle")"
+    # 1. The mount table. macOS mounts the real app, or its folder, on a folder above the copy:
+    #    "/Users/x/Desktop/folder/Start on Mac.app on /private/var/.../AppTranslocation/<id> (nullfs, ...)"
+    #    The mount point can be the copy itself, its folder, or the <id> folder above that.
+    real=$(/sbin/mount | /usr/bin/awk -v b="$bundle" '
+      / \(nullfs,/ {
+        # The app name itself contains " on ", so split at the first " on /" that is followed by
+        # the translocation folder.
+        j = index($0, " (nullfs,"); head = substr($0, 1, j - 1); i = 0
+        for (k = 1; k <= length(head) - 4; k++)
+          if (substr(head, k, 5) == " on /" && index(substr(head, k + 4), "/AppTranslocation/")) { i = k; break }
+        if (!i) next
+        src = substr(head, 1, i - 1); mp = substr(head, i + 4)
+        nx = substr(b, length(mp) + 1, 1)
+        if (mp ~ /AppTranslocation/ && index(b, mp) == 1 && (nx == "/" || nx == "")) {
+          print (src ~ /\.app$/ ? src : src "/Start on Mac.app"); exit
+        }
+      }')
+    # 2. Spotlight, if the mount table did not say, and only if exactly one copy exists:
+    #    with two copies (Downloads and Desktop) a guess could start the wrong one.
+    if [ -z "$real" ] || [ ! -f "$(dirname "$real")/app/server.pl" ]; then
+      found=$(/usr/bin/mdfind -name "Start on Mac.app" 2>/dev/null | while IFS= read -r p; do
+        [ "${p#*/AppTranslocation/}" != "$p" ] && continue
+        [ -f "$(dirname "$p")/app/server.pl" ] && echo "$p"
+      done)
+      [ "$(printf '%s\n' "$found" | /usr/bin/grep -c .)" = "1" ] && real="$found" || real=""
     fi
-    if [ -n "$real" ] && [ -d "$real" ]; then
-      echo "Reopening from $real"
-      /usr/bin/xattr -dr com.apple.quarantine "$(dirname "$real")"
-      exec /usr/bin/open -n "$real"
-    fi
-    problem "macOS opened a protected copy of the app. In Finder, drag Start on Mac out of its folder onto the Desktop, then back into the folder, and open it again." ;;
+    if [ -n "$real" ] && [ -f "$(dirname "$real")/app/server.pl" ]; then
+      echo "The real app is $real"
+      home="$(dirname "$real")"
+      /usr/bin/xattr -dr com.apple.quarantine "$home" 2>/dev/null
+    else
+      problem "macOS opened a protected copy of the app. In Finder, drag Start on Mac out of its folder onto the Desktop, then back into the folder, and open it again."
+    fi ;;
 esac
 
-cd "$(dirname "$bundle")/app" 2>/dev/null && [ -f server.pl ] || \
+cd "$home/app" 2>/dev/null && [ -f server.pl ] || \
   problem "The app folder could not be opened. Keep Start on Mac next to the app folder. If macOS asked to access your Desktop or Downloads folder and you pressed Don't Allow, turn it on in System Settings, Privacy and Security, Files and Folders."
 
 # Ollama: open it in the background if it is not running. The page reports anything else.

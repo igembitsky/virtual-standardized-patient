@@ -40,6 +40,9 @@ Easier to start and to stop, lighter on your computer, and easy to report a prob
   Unclear lines in Bellevue, Davis, Lewis, Samuels and Springfield were also rewritten.
 - **A public benchmark.** [The benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html)
   shows how well each model plays a patient, and the bar a model must meet to be approved.
+- **Fixed on 27 September:** on macOS 26 and 27, the first open of Start on Mac after a
+  download could say "drag Start on Mac out of its folder and back". It now finds its own
+  folder and starts, and macOS does not ask again.
 - Copies from before 1.2 cannot update themselves to 1.2, because the folder changed. Download
   the new ZIP once, and replace the old folder. Your saved encounters are kept by the browser.
 
