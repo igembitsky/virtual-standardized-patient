@@ -138,7 +138,8 @@ sub fail {
     local $/; my $page = <$in>; close $in;
     my $data = '{"what":' . json_str($what) . ',"report":' . json_str($report) . '}';
     $page =~ s{/\*REPORT\*/null/\*END\*/}{$data};
-    my $out = dirname($LOG) . '/virtual-standardized-patient-problem.html';
+    my $out = ($ENV{TMPDIR} || '/tmp') . '/virtual-standardized-patient-problem.html';
+    $out =~ s{//+}{/}g;
     if (open my $o, '>', $out) { print $o $page; close $o; open_browser("file://$out") }
   }
   exit 3;

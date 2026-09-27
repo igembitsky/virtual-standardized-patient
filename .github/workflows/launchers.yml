@@ -91,7 +91,7 @@ jobs:
       - name: The launcher log
         if: always()
         run: |
-          find "${RUNNER_TEMP:-/tmp}" "$HOME/Library/Logs" -maxdepth 4 \( -name log.txt -o -name virtual-standardized-patient.log \) -exec sh -c 'echo "== $1"; cat "$1"' _ {} \; 2>/dev/null
+          find "${RUNNER_TEMP:-/tmp}" "$HOME/Library/Logs" -maxdepth 4 \( -name log.txt -o -name virtual-standardized-patient.log \) -exec sh -c 'echo "== $1"; cat "$1"' _ {} \; 2>/dev/null || true
           for d in "${TMPDIR:-}" "${TEMP:-}" /tmp; do
             [ -n "$d" ] && [ -f "$d/virtual-standardized-patient.log" ] && cat "$d/virtual-standardized-patient.log" && break
           done; true
