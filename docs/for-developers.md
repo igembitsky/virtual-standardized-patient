@@ -68,7 +68,7 @@ worth trying:
 | 8 GB | `qwen3.5:4b`, `granite4.2:3b` | `ollama pull qwen3.5:4b` |
 | 16 GB or more | `gemma4:e4b-it-qat`, `granite4.2:8b`, `qwen3.5:9b` | `ollama pull gemma4:e4b-it-qat` |
 
-Only `qwen3:4b-instruct` has been tested with this program. `llama3.1:8b` was tested and did
+Three models have full results on the [benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html). Only `qwen3:4b-instruct` meets every bar; `qwen3:1.7b` and `qwen3.5:2b` do not. `llama3.1:8b` was tested and did
 worse: it added stage directions and invented findings. Test a new model with
 `python3 bench/eval.py --patient-model <name>` before you use it with learners.
 
