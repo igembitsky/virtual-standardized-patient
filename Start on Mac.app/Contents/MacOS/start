@@ -77,13 +77,52 @@ case "$bundle" in
 esac
 
 # The hidden copy often may not read the Desktop, Documents or Downloads folder, because macOS
-# privacy protection sees a new app each time. Test a real read, never fail silently, and show
-# the folder so the person can do the one step that stops macOS using a hidden copy.
+# privacy protection sees a new app each time. Then do what the person would do by hand: ask
+# Finder to move Start on Mac out of its folder and back, which tells macOS the app was moved
+# on purpose, and open it again from its real place. macOS asks once to let it control Finder.
+# If that does not work, or the reopened app is still a hidden copy, show the one step to do.
+manual_step() {
+  /usr/bin/open -R "$home/Start on Mac.app"
+  problem "macOS needs one step, the first time only. In the Finder window that just opened, drag Start on Mac onto the Desktop, then drag it back into its folder. Then double-click it again."
+}
 case "$bundle" in
   */AppTranslocation/*)
-    /bin/cat "$home/app/server.pl" >/dev/null 2>&1 || {
-      /usr/bin/open -R "$home/Start on Mac.app"
-      problem "macOS needs one step, the first time only. In the Finder window that just opened, drag Start on Mac onto the Desktop, then drag it back into its folder. Then double-click it again." ; } ;;
+    if ! /bin/cat "$home/app/server.pl" >/dev/null 2>&1; then
+      guard="${TMPDIR:-/tmp}/virtual-standardized-patient.moved"
+      # One automatic try only: a second hidden copy within two minutes means it did not help.
+      if [ -f "$guard" ] && [ $(( $(/bin/date +%s) - $(/usr/bin/stat -f %m "$guard") )) -lt 120 ]; then
+        echo "Still a hidden copy after the Finder move"
+        manual_step
+      fi
+      /usr/bin/touch "$guard"
+      # Move it one folder up and back, as a person would drag it to the Desktop and back. The
+      # folder above stays in the same place (iCloud or not), which Finder needs.
+      up="$(dirname "$home")"
+      [ -e "$up/Start on Mac.app" ] && { echo "Another Start on Mac is in $up"; manual_step; }
+      echo "Asking Finder to move $home/Start on Mac.app to $up and back"
+      if /usr/bin/osascript - "$home/Start on Mac.app" "$home" "$up" <<'APPLESCRIPT'
+on run argv
+  set theApp to (POSIX file (item 1 of argv)) as alias
+  set theHome to (POSIX file (item 2 of argv)) as alias
+  set theUp to (POSIX file (item 3 of argv)) as alias
+  tell application "Finder"
+    set moved to move theApp to theUp
+    try
+      move moved to theHome
+    on error e
+      -- never leave the app outside its folder
+      move moved to theHome with replacing
+    end try
+  end tell
+end run
+APPLESCRIPT
+      then
+        echo "Reopening from $home"
+        exec /usr/bin/open -n "$home/Start on Mac.app"
+      fi
+      echo "The Finder move did not work"
+      manual_step
+    fi ;;
 esac
 
 cd "$home/app" 2>/dev/null && /bin/cat server.pl >/dev/null 2>&1 || \
