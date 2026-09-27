@@ -25,6 +25,7 @@ Ollama is the free program that runs the AI model on your computer.
 3. Press **Download ZIP**.
 
    <img src="screenshots/github-download-zip.png" width="420" alt="On GitHub, 1: the green Code button, 2: Download ZIP in the menu that opens">
+
 4. Open your **Downloads** folder. Right-click the ZIP file and choose **Extract All**. Press
    **Extract**. A folder named `virtual-standardized-patient-main` appears.
 5. Drag that folder to your **Desktop**.
