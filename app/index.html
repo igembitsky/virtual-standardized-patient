@@ -1762,7 +1762,10 @@ function factNote(c, text, said) {
     return { shared, syn };
   };
   const hits = [];
-  c.story.forEach(l => { const s = score(l); if (s.shared || s.syn) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
+  // A conditional line ("If the doctor asks why ..., say ...") is a scripted answer to one
+  // question. Like a hidden line, it joins only when the question clearly asks about it.
+  const scripted = l => /^(if|when)\b|\bif (the doctor )?asks?\b|\bif asked\b/i.test(l);
+  c.story.forEach(l => { const s = score(l); if (scripted(l) ? (s.shared >= 2 || s.syn) : (s.shared || s.syn)) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
   c.hidden.forEach(l => { const s = score(l); if (s.shared >= 2 || s.syn) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
   const top = hits.sort((a, b) => b[0] - a[0]).slice(0, 4).map(h => h[1]);
   if (!top.length) return "";
