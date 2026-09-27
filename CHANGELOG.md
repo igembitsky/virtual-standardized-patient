@@ -20,9 +20,11 @@ Easier to start and to stop, lighter on your computer, and easy to report a prob
   the bottom of the page.
 - **A tidier folder.** The download holds only the three Start files, this list, the README,
   the licence, and an `app` folder with everything else.
-- **A more accurate patient.** The patient now contradicts its case in about 3 replies in 100,
-  down from 5. When a question asks about many things at once, the patient no longer answers
-  "no" to all of them and skips facts from its own story.
+- **A more accurate patient.** When a question asks about many things at once, the patient no
+  longer answers "no" to all of them and skips facts from its own story. To "anything else?",
+  it now says one new thing, not a list, and it keeps its hidden facts: in the test, 97 open
+  questions in 100 gave nothing away, up from about 85. It contradicts its case in about 4
+  replies in 100.
 - **Fairer marking.** A good question in normal words now gets credit much more often: 99% of
   the test questions, up from 67%. More examination names work, such as "PR exam" and
   "auscultation". A test written as "chest X-ray" now counts. A patient can use a medical word

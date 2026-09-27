@@ -1,68 +1,72 @@
 {
  "model": "qwen3:4b-instruct",
  "size": "2.5 GB",
- "date": "2026-09-26",
- "run": "eval-2026-09-26-1509+eval-2026-09-26-1528",
- "runs": 2,
- "prompt_sha": "ab77aade97f9",
- "cases": [
-  "bellevue",
-  "davis",
-  "graham",
-  "lewis",
-  "morris",
-  "samuels",
-  "springfield",
-  "travis"
- ],
+ "ram": "3.8 GB",
+ "reply": "1.0 s",
+ "date": "2026-09-27",
  "machine": "Apple M3 Pro, 18 GB, macOS 27.0",
- "median_reply_seconds": 1.0,
+ "run": "eval-2026-09-26-2348+eval-2026-09-27-0009",
+ "runs": 2,
+ "unseen_run": "eval-2026-09-27-0029",
+ "prompt_sha": "ab77aade97f9",
+ "names": {
+  "bellevue": "June Bellevue",
+  "davis": "Joanne Davis",
+  "graham": "Jerry Graham",
+  "lewis": "Lou Lewis",
+  "morris": "Marsha Morris",
+  "samuels": "Robin Samuels",
+  "springfield": "Lynette Springfield",
+  "travis": "Terri Travis"
+ },
+ "approved": true,
+ "reasons": [],
  "scorecard": {
   "patient_model": "qwen3:4b-instruct",
   "overall": {
    "protocol": [
-    552,
-    656
+    644,
+    768
    ],
    "facts_given": [
-    381,
-    430
+    470,
+    530
    ],
    "denials": [
     64,
     64
    ],
    "open_no_leak": [
-    34,
-    40
+    37,
+    38
    ],
    "inaccurate": [
-    19,
-    656
+    28,
+    768
    ],
    "invented": [
-    22,
-    656
+    12,
+    768
    ],
    "leaked": [
-    39,
-    656
+    36,
+    768
    ],
    "withheld": [
-    15,
-    656
+    33,
+    768
    ],
    "checklist": [
-    250,
-    252
+    264,
+    278
    ],
    "checklist_reach": [
-    204,
-    204
+    216,
+    216
    ],
    "exams": [
-    90,
-    96
+    74,
+    80
    ],
    "correct_notes": [
     48,
@@ -77,22 +81,22 @@
     80
    ],
    "test_words": [
-    68,
+    72,
     174
    ],
    "student_pass": [
-    14,
+    15,
     16
    ]
   },
   "cases": {
    "bellevue": {
     "protocol": [
-     98,
-     114
+     97,
+     113
     ],
     "facts_given": [
-     77,
+     76,
      82
     ],
     "denials": [
@@ -105,19 +109,19 @@
     ],
     "inaccurate": [
      7,
-     114
+     113
     ],
     "invented": [
      5,
-     114
+     113
     ],
     "leaked": [
      3,
-     114
+     113
     ],
     "withheld": [
      1,
-     114
+     113
     ],
     "checklist": [
      72,
@@ -148,17 +152,17 @@
      24
     ],
     "student_pass": [
-     1,
+     2,
      2
     ]
    },
    "davis": {
     "protocol": [
-     64,
+     72,
      77
     ],
     "facts_given": [
-     47,
+     50,
      50
     ],
     "denials": [
@@ -166,23 +170,23 @@
      8
     ],
     "open_no_leak": [
-     2,
+     4,
      4
     ],
     "inaccurate": [
-     0,
+     2,
      77
     ],
     "invented": [
-     3,
+     0,
      77
     ],
     "leaked": [
-     1,
+     0,
      77
     ],
     "withheld": [
-     0,
+     2,
      77
     ],
     "checklist": [
@@ -220,12 +224,12 @@
    },
    "graham": {
     "protocol": [
-     45,
-     52
+     48,
+     68
     ],
     "facts_given": [
-     27,
-     30
+     33,
+     42
     ],
     "denials": [
      8,
@@ -236,32 +240,32 @@
      4
     ],
     "inaccurate": [
-     3,
-     52
+     2,
+     68
     ],
     "invented": [
      0,
-     52
+     68
     ],
     "leaked": [
-     0,
-     52
+     3,
+     68
     ],
     "withheld": [
-     4,
-     52
+     6,
+     68
     ],
     "checklist": [
-     18,
-     18
+     24,
+     26
     ],
     "checklist_reach": [
-     18,
-     18
+     24,
+     24
     ],
     "exams": [
-     16,
-     16
+     8,
+     8
     ],
     "correct_notes": [
      6,
@@ -276,7 +280,7 @@
      10
     ],
     "test_words": [
-     10,
+     18,
      26
     ],
     "student_pass": [
@@ -286,8 +290,8 @@
    },
    "lewis": {
     "protocol": [
-     47,
-     53
+     51,
+     56
     ],
     "facts_given": [
      22,
@@ -302,20 +306,20 @@
      6
     ],
     "inaccurate": [
-     1,
-     53
+     0,
+     56
     ],
     "invented": [
      1,
-     53
+     56
     ],
     "leaked": [
      1,
-     53
+     56
     ],
     "withheld": [
      3,
-     53
+     56
     ],
     "checklist": [
      12,
@@ -352,12 +356,12 @@
    },
    "morris": {
     "protocol": [
-     51,
-     52
+     86,
+     96
     ],
     "facts_given": [
-     26,
-     26
+     62,
+     68
     ],
     "denials": [
      8,
@@ -368,32 +372,32 @@
      4
     ],
     "inaccurate": [
-     0,
-     52
+     4,
+     96
     ],
     "invented": [
-     1,
-     52
+     0,
+     96
     ],
     "leaked": [
-     0,
-     52
+     3,
+     96
     ],
     "withheld": [
-     0,
-     52
+     2,
+     96
     ],
     "checklist": [
-     22,
-     22
+     24,
+     30
     ],
     "checklist_reach": [
-     18,
-     18
+     20,
+     20
     ],
     "exams": [
-     14,
-     14
+     8,
+     10
     ],
     "correct_notes": [
      6,
@@ -418,11 +422,11 @@
    },
    "samuels": {
     "protocol": [
-     82,
-     99
+     76,
+     100
     ],
     "facts_given": [
-     62,
+     58,
      72
     ],
     "denials": [
@@ -430,24 +434,24 @@
      8
     ],
     "open_no_leak": [
-     5,
+     6,
      6
     ],
     "inaccurate": [
-     4,
-     99
+     9,
+     100
     ],
     "invented": [
-     3,
-     99
+     2,
+     100
     ],
     "leaked": [
      8,
-     99
+     100
     ],
     "withheld": [
-     2,
-     99
+     5,
+     100
     ],
     "checklist": [
      24,
@@ -484,11 +488,11 @@
    },
    "springfield": {
     "protocol": [
-     113,
+     131,
      152
     ],
     "facts_given": [
-     92,
+     107,
      116
     ],
     "denials": [
@@ -496,23 +500,23 @@
      8
     ],
     "open_no_leak": [
-     1,
+     3,
      4
     ],
     "inaccurate": [
-     2,
+     3,
      152
     ],
     "invented": [
-     9,
+     3,
      152
     ],
     "leaked": [
-     24,
+     7,
      152
     ],
     "withheld": [
-     4,
+     8,
      152
     ],
     "checklist": [
@@ -540,7 +544,7 @@
      10
     ],
     "test_words": [
-     14,
+     10,
      24
     ],
     "student_pass": [
@@ -550,48 +554,48 @@
    },
    "travis": {
     "protocol": [
-     52,
-     57
+     83,
+     106
     ],
     "facts_given": [
-     28,
-     30
+     62,
+     76
     ],
     "denials": [
      8,
      8
     ],
     "open_no_leak": [
-     8,
-     8
+     6,
+     6
     ],
     "inaccurate": [
-     2,
-     57
+     1,
+     106
     ],
     "invented": [
-     0,
-     57
+     1,
+     106
     ],
     "leaked": [
-     2,
-     57
+     11,
+     106
     ],
     "withheld": [
-     1,
-     57
+     6,
+     106
     ],
     "checklist": [
-     18,
-     18
+     24,
+     28
     ],
     "checklist_reach": [
-     18,
-     18
+     22,
+     22
     ],
     "exams": [
-     12,
-     14
+     10,
+     10
     ],
     "correct_notes": [
      6,
@@ -612,6 +616,605 @@
     "student_pass": [
      2,
      2
+    ]
+   }
+  }
+ },
+ "unseen": {
+  "patient_model": "qwen3:4b-instruct",
+  "overall": {
+   "protocol": [
+    315,
+    384
+   ],
+   "facts_given": [
+    229,
+    264
+   ],
+   "denials": [
+    31,
+    31
+   ],
+   "open_no_leak": [
+    20,
+    22
+   ],
+   "inaccurate": [
+    16,
+    384
+   ],
+   "invented": [
+    12,
+    384
+   ],
+   "leaked": [
+    22,
+    384
+   ],
+   "withheld": [
+    15,
+    384
+   ],
+   "checklist": [
+    111,
+    130
+   ],
+   "checklist_reach": [
+    101,
+    108
+   ],
+   "exams": [
+    32,
+    39
+   ],
+   "correct_notes": [
+    24,
+    24
+   ],
+   "wrong_notes": [
+    16,
+    16
+   ],
+   "dx_words": [
+    39,
+    40
+   ],
+   "test_words": [
+    37,
+    86
+   ],
+   "student_pass": [
+    7,
+    8
+   ]
+  },
+  "cases": {
+   "bellevue": {
+    "protocol": [
+     50,
+     57
+    ],
+    "facts_given": [
+     35,
+     38
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     4,
+     4
+    ],
+    "inaccurate": [
+     1,
+     57
+    ],
+    "invented": [
+     2,
+     57
+    ],
+    "leaked": [
+     3,
+     57
+    ],
+    "withheld": [
+     1,
+     57
+    ],
+    "checklist": [
+     38,
+     40
+    ],
+    "checklist_reach": [
+     32,
+     33
+    ],
+    "exams": [
+     2,
+     3
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     10,
+     12
+    ],
+    "student_pass": [
+     0,
+     1
+    ]
+   },
+   "davis": {
+    "protocol": [
+     27,
+     32
+    ],
+    "facts_given": [
+     18,
+     20
+    ],
+    "denials": [
+     3,
+     3
+    ],
+    "open_no_leak": [
+     2,
+     2
+    ],
+    "inaccurate": [
+     2,
+     32
+    ],
+    "invented": [
+     2,
+     32
+    ],
+    "leaked": [
+     0,
+     32
+    ],
+    "withheld": [
+     1,
+     32
+    ],
+    "checklist": [
+     13,
+     15
+    ],
+    "checklist_reach": [
+     13,
+     15
+    ],
+    "exams": [
+     4,
+     4
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     2,
+     14
+    ],
+    "student_pass": [
+     1,
+     1
+    ]
+   },
+   "graham": {
+    "protocol": [
+     29,
+     37
+    ],
+    "facts_given": [
+     21,
+     24
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     3,
+     3
+    ],
+    "inaccurate": [
+     3,
+     37
+    ],
+    "invented": [
+     0,
+     37
+    ],
+    "leaked": [
+     1,
+     37
+    ],
+    "withheld": [
+     1,
+     37
+    ],
+    "checklist": [
+     13,
+     14
+    ],
+    "checklist_reach": [
+     12,
+     12
+    ],
+    "exams": [
+     3,
+     4
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     8,
+     13
+    ],
+    "student_pass": [
+     1,
+     1
+    ]
+   },
+   "lewis": {
+    "protocol": [
+     28,
+     31
+    ],
+    "facts_given": [
+     13,
+     14
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     3,
+     3
+    ],
+    "inaccurate": [
+     0,
+     31
+    ],
+    "invented": [
+     1,
+     31
+    ],
+    "leaked": [
+     0,
+     31
+    ],
+    "withheld": [
+     2,
+     31
+    ],
+    "checklist": [
+     7,
+     8
+    ],
+    "checklist_reach": [
+     6,
+     6
+    ],
+    "exams": [
+     5,
+     6
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     2,
+     8
+    ],
+    "student_pass": [
+     1,
+     1
+    ]
+   },
+   "morris": {
+    "protocol": [
+     40,
+     50
+    ],
+    "facts_given": [
+     31,
+     35
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     2,
+     3
+    ],
+    "inaccurate": [
+     4,
+     50
+    ],
+    "invented": [
+     1,
+     50
+    ],
+    "leaked": [
+     3,
+     50
+    ],
+    "withheld": [
+     1,
+     50
+    ],
+    "checklist": [
+     10,
+     13
+    ],
+    "checklist_reach": [
+     9,
+     10
+    ],
+    "exams": [
+     5,
+     5
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     4,
+     5
+    ],
+    "test_words": [
+     2,
+     8
+    ],
+    "student_pass": [
+     1,
+     1
+    ]
+   },
+   "samuels": {
+    "protocol": [
+     41,
+     52
+    ],
+    "facts_given": [
+     31,
+     39
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     2,
+     2
+    ],
+    "inaccurate": [
+     3,
+     52
+    ],
+    "invented": [
+     1,
+     52
+    ],
+    "leaked": [
+     5,
+     52
+    ],
+    "withheld": [
+     2,
+     52
+    ],
+    "checklist": [
+     9,
+     11
+    ],
+    "checklist_reach": [
+     7,
+     7
+    ],
+    "exams": [
+     6,
+     9
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     4,
+     10
+    ],
+    "student_pass": [
+     1,
+     1
+    ]
+   },
+   "springfield": {
+    "protocol": [
+     56,
+     72
+    ],
+    "facts_given": [
+     47,
+     54
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     1,
+     2
+    ],
+    "inaccurate": [
+     1,
+     72
+    ],
+    "invented": [
+     5,
+     72
+    ],
+    "leaked": [
+     5,
+     72
+    ],
+    "withheld": [
+     5,
+     72
+    ],
+    "checklist": [
+     12,
+     15
+    ],
+    "checklist_reach": [
+     12,
+     14
+    ],
+    "exams": [
+     2,
+     3
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     5,
+     11
+    ],
+    "student_pass": [
+     1,
+     1
+    ]
+   },
+   "travis": {
+    "protocol": [
+     44,
+     53
+    ],
+    "facts_given": [
+     33,
+     40
+    ],
+    "denials": [
+     4,
+     4
+    ],
+    "open_no_leak": [
+     3,
+     3
+    ],
+    "inaccurate": [
+     2,
+     53
+    ],
+    "invented": [
+     0,
+     53
+    ],
+    "leaked": [
+     5,
+     53
+    ],
+    "withheld": [
+     2,
+     53
+    ],
+    "checklist": [
+     9,
+     14
+    ],
+    "checklist_reach": [
+     10,
+     11
+    ],
+    "exams": [
+     5,
+     5
+    ],
+    "correct_notes": [
+     3,
+     3
+    ],
+    "wrong_notes": [
+     2,
+     2
+    ],
+    "dx_words": [
+     5,
+     5
+    ],
+    "test_words": [
+     4,
+     10
+    ],
+    "student_pass": [
+     1,
+     1
     ]
    }
   }
