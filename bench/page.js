@@ -3,7 +3,8 @@
 //
 //   node bench/page.js app/index.html app/cases/graham.txt            prints the parsed case as JSON
 //   node bench/page.js app/index.html app/cases/graham.txt --check    reads a request on stdin:
-//     {"ask": ["question", ...], "examine": ["part", ...], "notes": [{"dx": [...], "tx": [...]}]}
+//     {"ask": ["question", ...], "said": [patient replies so far], "examine": ["part", ...],
+//      "notes": [{"dx": [...], "tx": [...]}]}
 //   and prints, in the same order:
 //     {"ask": [{"jargon": word|null, "credits": [labels]}], "examine": [{"name", "finding"}],
 //      "notes": [{"dxHit", "txHit", "pass"}]}
@@ -33,6 +34,7 @@ eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("plainWords
       grab("examSetup"), grab("examFind"), grab("firstNamed"),
       src.match(/const JARGON = \/[\s\S]*?\/i;\n/)[0].replace("const JARGON", "var JARGON"),
       between("const NOTE_STOP = ", "function noteStem(").replace(/\bconst (NOTE_STOP|NOTE_WORDS)\b/g, "var $1"),
+      between("const OPEN_Q = ", "function factNote(").replace(/\bconst (OPEN_Q|RECAP_Q)\b/g, "var $1"),
       between("const EXAMS = [", "function examSetup(").replace(/\bconst (EXAMS|EXAM_ITEMS)\b/g, "var $1")
      ].join("\n"));
 
@@ -53,7 +55,7 @@ const out = {
     const jw = jargonWord(c, q);
     app.covered = new Set();
     if (!jw) markCovered(q);
-    return { jargon: jw, note: jw ? "" : factNote(c, q),
+    return { jargon: jw, note: jw ? "" : factNote(c, q, req.said || []),
              credits: c.questions.filter(x => app.covered.has(x.id)).map(x => x.label) };
   }),
   // The same line the page shows after "examine <part>".

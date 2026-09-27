@@ -1527,7 +1527,8 @@ async function handleTurn(text) {
   node.parentElement.classList.add("typing");
   try {
     // the note goes with this one question only; the history keeps the plain question
-    const send = app.messages.slice(0, -1).concat({ role: "user", content: text + factNote(c, text) });
+    const said = app.messages.filter(m => m.role === "assistant").map(m => m.content);
+    const send = app.messages.slice(0, -1).concat({ role: "user", content: text + factNote(c, text, said) });
     const full = await askModel(send, t => { node.textContent = t; $("#log").scrollTop = $("#log").scrollHeight; });
     app.messages.push({ role: "assistant", content: full });
     app.visible.push({ role: "patient", text: full });
@@ -1723,7 +1724,7 @@ const NOTE_WORDS = {
   surgery: "operation cesarean caesarean section removed", operation: "surgery cesarean caesarean section",
   sti: "trichomonas chlamydia gonorrhea herpes sexually", std: "trichomonas chlamydia gonorrhea herpes sexually",
   diarrhea: "watery loose stools", diarrhoea: "watery loose stools", alcohol: "drink beer wine glass",
-  urine: "water pee", pee: "water urine", stool: "bowel poo", cough: "phlegm coughing", chill: "shaking shiver",
+  urine: "water pee", pee: "water urine", wee: "water urine pee", stool: "bowel poo", cough: "phlegm coughing", chill: "shaking shiver",
   medication: "medicine tablet pill take", medicine: "medication tablet pill take", smoke: "smoking cigarette pack"
 };
 function noteStem(w) {
@@ -1733,7 +1734,24 @@ function noteToks(text) {
   return new Set((text.toLowerCase().match(/[a-z]+/g) || [])
     .filter(w => w.length >= 3 && !NOTE_STOP.has(w)).map(noteStem));
 }
-function factNote(c, text) {
+/* An open question or a summary check gets its own short note instead of facts: a small model
+   answers "anything else?" with a list of everything it knows. */
+const OPEN_Q = /\b(anything else|something else|what else|any other (things?|symptoms?|problems?|concerns?|questions?|worries|issues)|anything (more|further)|anything (you|you'd|you would|you want|you wanted) (like )?to (tell|add|share|mention|ask|know)|anything (i|we) should know)\b/i;
+const RECAP_Q = /\b(recap|summari[sz]e|to sum up|got that right|have i got|did i miss|let me check i)\b/i;
+function factNote(c, text, said) {
+  if (RECAP_Q.test(text)) return "\n\n[Only you see this note. The doctor is checking a summary. Say yes, or correct it, in one short sentence. Add no new facts.]";
+  if (OPEN_Q.test(text)) {
+    // The page picks the line: two free story lines the patient has not said yet. Never a hidden one.
+    const before = noteToks((said || []).join(" "));
+    const fresh = c.story.filter(l => {
+      if (/^(when|if)\b/i.test(l)) return false;   // an instruction, not a fact
+      const t = [...noteToks(l)];
+      return t.length && t.filter(w => before.has(w)).length / t.length < 0.5;
+    }).slice(0, 2);
+    if (!fresh.length) return "\n\n[Only you see this note. This is an open question. Say that nothing else comes to mind.]";
+    return "\n\n[Only you see this note. This is an open question. Say ONE of these in your own words, in one sentence, or say that nothing else comes to mind:\n" +
+      fresh.map(l => "- " + l).join("\n") + "\nSay nothing else.]";
+  }
   const q = noteToks(text);
   const extra = [];
   for (const [k, v] of Object.entries(NOTE_WORDS)) if (q.has(noteStem(k))) extra.push(...v.split(" ").map(noteStem));

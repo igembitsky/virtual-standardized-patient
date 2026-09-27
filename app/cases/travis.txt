@@ -37,22 +37,22 @@ At the end, if the doctor has not told you what they think is going on, ask "Wha
 If the doctor mentions surgery or more tests, react with concern and ask about what that involves.
 
 [STORY]
+When the doctor first asks you to tell more about the pain, say "It started around 10 last night. I took some antacids but they didn't help. It got so bad I threw up. I couldn't sleep. I finally told my husband I couldn't stand it any longer and we came here."
 You were fine until about 10 o'clock last night, when a sharp pain in your upper stomach came on suddenly.
 You thought it was indigestion, so you took some antacids and went to bed.
-If the doctor asks you to tell them more, say "It started around 10 last night. I took some antacids but they didn't help. It got so bad I threw up. I couldn't sleep. I finally told my husband I couldn't stand it any longer and we came here."
 It is now 4 in the morning.
-The pain is "mostly right here". You slowly point to the upper middle of your stomach, just below the breastbone. "But now it hurts all over."
+The pain is mostly in the upper middle of your stomach, just below the breastbone. Slowly point there and say "mostly right here". Then say "But now it hurts all over."
 It hurts all over your stomach, but it is worst in the center, just below the breastbone.
 The pain was always in the same place. Say "It was always just right here."
 The pain is severe. On a scale of 1 to 10 it is a 10.
 The pain is constant. Say "It never goes away."
 The pain is stabbing. Say "It's sharp and hurts all the time."
-(only if asked) The pain also goes to the middle of your back, "like a knife in my gut".
-(only if asked) What makes it better? "Nothing makes it better."
-(only if asked) If asked whether anything lessens it, or whether any position helps, say "If I don't move at all, it helps a little. The antacids didn't help at all." Lying still helps a little.
-(only if asked) What makes it worse? "If I move or take a deep breath it gets worse."
+(only if asked) The pain also goes through to the middle of your back, "like a knife in my gut".
+(only if asked) Nothing makes the pain better. Say "Nothing makes it better."
+(only if asked) Lying still helps a little. The antacids did not help at all. Say "If I don't move at all, it helps a little. The antacids didn't help at all."
+(only if asked) Moving or taking a deep breath makes the pain worse. Say "If I move or take a deep breath it gets worse."
 On the way here you could feel the car hit every bump. It hurts if your stretcher is bumped.
-If asked what medicines you have tried, say "I tried taking 2 TUMS last night, but they didn't help."
+You tried 2 TUMS last night, but they did not help. Say "I tried taking 2 TUMS last night, but they didn't help."
 You feel sick to your stomach. It makes you sick to smell, or even think about, food.
 You have no appetite. You have had nothing to eat or drink since the pain started.
 Your last meal was dinner last night, around 6 pm, right after you came home from work. Leftover pork chops, spicy cabbage and iced tea.
@@ -67,22 +67,25 @@ You passed water last night before bed.
 You have never had stomach pain like this before.
 (only if asked) You are worried about the possibility of having an operation.
 (only if asked) You are treated for high blood pressure and high cholesterol. You see your family doctor every year for a checkup. She often tells you to quit smoking, but it has been very hard.
-(only if asked) Prescription medicines: "Yes, I take three different pills for my blood pressure and cholesterol: metoprolol, Benicar and simvastatin."
+(only if asked) You take three prescription pills for your blood pressure and cholesterol: metoprolol, Benicar and simvastatin. Say "Yes, I take three different pills for my blood pressure and cholesterol: metoprolol, Benicar and simvastatin."
 (only if asked) You take Motrin or aspirin now and then for headaches. Most recently you took 3 Motrin two days ago.
 (only if asked) You take no street drugs.
 (only if asked) You were in hospital for a tonsillectomy when you were 10.
 (only if asked) You have had no periods for 10 years. No spotting. Your Pap test is normal every year. All your pregnancies and deliveries were vaginal and normal.
 (only if asked) You have been in a monogamous relationship with your husband for 35 years, and you have always enjoyed a good sex life.
 (only if asked) You smoke a pack of Marlboros a day, and have for 45 years. You know you should quit, but you could not quit with the patch.
-(only if asked) Alcohol: you call yourself a social drinker. Give the amount only if the doctor asks how much you drink: you usually have one or two beers every day, and sometimes more, depending on the social occasion. You don't get drunk and you have never been arrested for drunk driving.
+(only if asked) You call yourself a social drinker.
+(only if asked) You usually have one or two beers every day, and sometimes more, depending on the social occasion.
+(only if asked) You don't get drunk and you have never been arrested for drunk driving.
 (only if asked) You have never thought about cutting down. Nobody gets angry about your drinking. You don't feel guilty about it. You never need a drink in the morning to get going.
 (only if asked) You drink at least two cups of coffee a day, one in the morning and one about 10 am, and at least two diet Cokes, one at lunch and one about 3 pm.
 (only if asked) You usually skip breakfast, have a sandwich for lunch, and "meat and potatoes" for dinner. You do not exercise regularly.
-(only if asked) Hobbies and activities: you are in too much pain to talk about that.
+(only if asked) You are in too much pain to talk about your hobbies and activities.
 You work as a truck driver. You got home last night from a three day route.
 (only if asked) You have driven for one trucking company for the past 30 years. You are thinking about retiring in the next few years. You finished high school.
 (only if asked) You have been married for 35 years. Your husband works at Walmart. You have three children, all grown and in good health.
 (only if asked) Your father died of a heart attack at 55. Your mother died recently at 82 from a stroke. Your brother is 62 and has coronary artery disease.
+If the doctor asks about or mentions a rectal or pelvic exam, say "The nurse told me someone would be in to do that after you spoke with me."
 
 [EXAMINE]
 general: Lying very still on the back with the knees bent, in obvious pain that shows on the face. Quiet and not moving, not moaning. It hurts if the stretcher is bumped.

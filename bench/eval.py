@@ -190,7 +190,10 @@ def judge(c, turns, model):
                 extra = f"  [examiner expected: {t['expect']}; target: {t['target']}]"
             lines.append(f"Patient turn {k}: {t['text']}{extra}")
         elif t["role"] == "doctor": lines.append(f"Doctor: {t['text']}")
-        elif t["role"] == "session": lines.append("--- a new encounter starts; the patient opens with the opening line ---")
+        elif t["role"] == "session":
+            lines.append("--- a new encounter starts. The program itself showed this exchange first:")
+            lines.append("Doctor: Good day. I am the doctor. Why are you here today?")
+            lines.append(f"Patient (fixed opening line, not judged): {c['opening']}")
         else: lines.append(f"Examination (from the file, not the model): {t['text']}")
     prompt = ("CASE FILE\n" + c["raw"] + "\n\nSYSTEM PROMPT THE PATIENT RAN UNDER\n" + c["system"] +
               "\n\nTRANSCRIPT\n" + "\n".join(lines) + f"\n\nThere are {k} patient turns. Judge each one.")
@@ -235,7 +238,8 @@ def run_student(c, path, a):
         kind = act.get("action")
         if kind == "ask" and act.get("question"):
             q = act["question"].strip()
-            chk = page_check(path, {"ask": [q]})["ask"][0]
+            said = [m["content"] for m in msgs if m["role"] == "assistant"]
+            chk = page_check(path, {"ask": [q], "said": said})["ask"][0]
             turns.append({"role": "doctor", "text": q})
             asked.append(q)
             if chk["jargon"]:
@@ -310,7 +314,9 @@ def run_examiner(c, path, a):
                 msgs += [{"role": "user", "content": p["question"]}, {"role": "assistant", "content": line}]
                 turns.append({**base, "text": line, "jargon": r["jargon"]}); continue
             msgs.append({"role": "user", "content": p["question"]})
-            try: reply, sec = patient_say(a.patient_model, msgs, r.get("note", ""))
+            said = [m["content"] for m in msgs if m["role"] == "assistant"]
+            note = page_check(path, {"ask": [p["question"]], "said": said})["ask"][0]["note"]
+            try: reply, sec = patient_say(a.patient_model, msgs, note)
             except Exception as e: error = "patient: " + str(e); break
             msgs.append({"role": "assistant", "content": reply})
             turns.append({**base, "text": reply, "sec": sec})
