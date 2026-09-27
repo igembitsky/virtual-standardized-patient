@@ -256,7 +256,6 @@ tr:last-child td{border-bottom:0}
   align-self:flex-start;margin-top:6px}
 .cc .badge.done{background:var(--green-soft);color:var(--green-ink)}
 .cc .badge.new{background:var(--sunk);color:var(--muted)}
-.cc.add{border-style:dashed;box-shadow:none;background:transparent}
 
 /* ---------- case card ---------- */
 .vitals{display:grid;grid-template-columns:auto 1fr;gap:8px 22px;font-size:1rem;margin:0}
@@ -438,7 +437,7 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
         <div class="tech-card hue-a">
           <div class="tech-band"><span class="tech-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span><b>The case files</b></div>
           <p class="tech-role">Plain text, one per patient</p>
-          <p class="tech-what">The patient&rsquo;s story, the vital signs, what the examination finds, and the answer key. Write your own and drop it in.</p>
+          <p class="tech-what">The patient&rsquo;s story, the vital signs, what the examination finds, and the answer key.</p>
         </div>
         <div class="tech-gap" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 3l6 6-6 6"/></svg></div>
         <div class="tech-card hue-c">
@@ -529,36 +528,6 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
   <div class="cases" id="caseList"></div>
 </main>
 
-<!-- ============ WRITE YOUR OWN ============ -->
-<main class="wrap narrow hide" id="s-author">
-  <button class="back" data-go="library">&lsaquo; Back</button>
-  <h1>Write your own patient</h1>
-  <p>Give the instructions below to any AI assistant, with your source case. It writes the file
-    for you.</p>
-
-  <h3>1. Copy this</h3>
-  <div class="pre" id="authorPrompt"></div>
-  <div class="row" style="margin-top:10px">
-    <button class="btn small" id="copyPrompt">Copy the instructions</button>
-  </div>
-
-  <h3>2. Paste your source under it, and send</h3>
-  <p>A published case, a teaching case from your school, or a patient you know well. If the patient
-    is real, change the details so nobody can be recognised.</p>
-
-  <h3>3. Save the answer</h3>
-  <p>Save it as a text file in the <code>cases</code> folder, next to the ones that came with the
-    program. Reload this page and it appears in the library.</p>
-
-  <h3>4. Try it, then fix it</h3>
-  <p>If a fact comes out that should have stayed hidden, add <code>(only if asked)</code> to that
-    line. If a question is not counted, add another matching word. The file is plain English.</p>
-
-  <div class="warn">
-    <p style="margin:0">Keep the authors and licence of any published source in the
-      <code>[CREDIT]</code> section.</p>
-  </div>
-</main>
 
 <!-- ============ CASE CARD ============ -->
 <main class="wrap narrow hide" id="s-card">
@@ -1250,7 +1219,7 @@ function clean(s) {
 /* ============================================================
    4. ROUTER
    ============================================================ */
-const SCREENS = ["welcome","library","author","card","consult","note","result","history","terms"];
+const SCREENS = ["welcome","library","card","consult","note","result","history","terms"];
 function go(name) {
   if (app.phase === "consult" && name !== "consult") { stopClock(); app.phase = "idle"; }
   if (app.phase === "note" && name !== "note") { stopClock(); app.phase = "idle"; }
@@ -1266,7 +1235,6 @@ function go(name) {
   if (name === "library") drawLibrary();
   if (name === "history") drawHistory();
   drawUpdate();
-  if (name === "author") $("#authorPrompt").textContent = AUTHOR_PROMPT;
   location.hash = name;
 }
 document.addEventListener("click", e => {
@@ -1372,13 +1340,6 @@ function drawLibrary() {
     }
     box.appendChild(b);
   });
-  const add = document.createElement("button");
-  add.className = "cc add";
-  add.innerHTML = `<span class="cn">Your own</span><h3>Write your own patient</h3>
-    <p class="desc">Turn any published case into a case file.</p>
-    <p class="meta">Takes about ten minutes</p>`;
-  add.onclick = () => go("author");
-  box.appendChild(add);
 }
 
 /* ============================================================
@@ -2142,92 +2103,6 @@ function download(filename, text) {
 }
 
 /* ============================================================
-   13. THE PROMPT FOR WRITING YOUR OWN CASE
-   ============================================================ */
-const AUTHOR_PROMPT = `Turn the clinical teaching case I paste below into a case file for an
-offline standardized patient simulator. Produce ONE plain text file in exactly
-this shape, and nothing else.
-
-[CASE]
-id: one-word-name
-name:
-age:
-occupation:
-setting:
-complaint:
-opening: the first line the patient says, word for word
-
-[VITALS]
-Pulse:
-Blood pressure:
-Breathing:
-Temperature: the number, then F or C
-abnormal: comma separated list of the readings above that are abnormal
-
-[TIMING]
-consultation: minutes with the patient
-note: minutes to write the note
-
-[TASK]
-one sentence telling the learner what to do
-
-[PERSONA]
-How the patient behaves, in a few lines. Their mood, and how long their answers are.
-The program already tells every patient how to handle medical jargon, requests to
-examine them, and open questions such as "anything else?". Do not repeat that here.
-
-[STORY]
-One line per fact, written as the patient would say it.
-Put (only if asked) at the front of any fact the patient must not volunteer.
-
-[EXAMINE]
-bodypart: the finding, in one line
-Use plain names: general, eyes, ears, nose, mouth, neck, chest, heart, abdomen, back, rectal, pelvic, arms, legs, skin, nails, neuro, gait, affect.
-otherwise: (optional) one line for any examination not listed above, for example on a video call
-Only include findings the source states. Invent nothing.
-
-[QUESTIONS]
-Short label of the question | four or five words that would appear in it
-One line per question the source says the learner should ask.
-A word matches the whole word only. End a word with * to match any ending,
-so aggravat* catches aggravated and aggravating.
-
-[ANSWER]
-most likely:
-also accepted: comma separated
-tests: comma separated
-pass diagnosis words: comma separated words that mean the learner got the right kind of diagnosis
-pass test words: comma separated words that mean they asked for the right kind of test
-teaching point: two or three sentences
-miss note: one sentence on the finding most people miss
-
-[CREDIT]
-authors:
-title:
-journal:
-year:
-id:
-url:
-licence:
-copyright:
-changes: what you changed when converting it
-
-Rules:
-Use only what is in the source. Invent no clinical detail.
-Keep the patient's own words wherever the source gives them.
-Plain English. Short lines. No markdown, no bold, no bullets.`;
-
-$("#copyPrompt").onclick = async e => {
-  try {
-    await navigator.clipboard.writeText(AUTHOR_PROMPT);
-    e.target.textContent = "Copied";
-    setTimeout(() => { e.target.textContent = "Copy the instructions"; }, 1600);
-  } catch {
-    e.target.textContent = "Select the text above and copy it";
-  }
-};
-
-/* ============================================================
    14. START
    ============================================================ */
 window.addEventListener("beforeunload", e => {
@@ -2260,7 +2135,7 @@ window.addEventListener("beforeunload", e => {
   const ok = await checkConnection();
   checkForUpdate();
   // card and result need state that a reload has thrown away, so never restore them
-  const RESTORABLE = ["welcome", "library", "author", "history", "terms"];
+  const RESTORABLE = ["welcome", "library", "history", "terms"];
   const first = location.hash.replace("#", "");
   go(RESTORABLE.includes(first) ? first : "welcome");
   // keep checking, whether or not the first check worked, so a stopped Ollama is noticed

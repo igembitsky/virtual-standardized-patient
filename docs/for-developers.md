@@ -101,9 +101,8 @@ sets how the patient talks, what it holds back, and how it answers an open quest
 testing, every problem with the patient was fixed in the prompt or the case file, not by
 changing the model.
 
-**Your own patients.** Press **Write your own patient** inside the program. It gives you
-instructions to paste into any AI assistant with your source case. The assistant writes the
-case file. Put the file in the `app/cases` folder and reload the page. The format is documented in
+**Your own patients.** Put a case file in the `app/cases` folder and reload the page. It appears
+in the list of patients. The format is documented in
 `app/cases/graham.txt`. Cases in other languages work.
 
 **Other tools.** The same three parts, a text file for the content, a prompt for the model, and
