@@ -96,6 +96,9 @@ What happens, step by step:
 The model has one job: it speaks as the patient. The examination findings, the question count,
 and the marking come from the case file.
 
+An automated test checks that the patient keeps to its case. The results are on
+[the benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html).
+
 ## Is it safe?
 
 **Automated security checks run on every change. [View the results](https://github.com/igembitsky/virtual-standardized-patient/actions).**
@@ -116,45 +119,20 @@ These checks find known kinds of problems. They cannot prove that a program has 
 Each claim below can be checked in the files in this folder.
 
 - **Nothing leaves your computer.** Your questions go only to Ollama, on your own computer at
-  `127.0.0.1:11434`. The page also reads the `cases` folder from the launcher, and asks GitHub
-  for one small file, `VERSION`, to see whether a new version exists. Nothing is sent with it.
-  Search `app/index.html` for `fetch(` to see every request. The other web addresses in the
-  file are links. They load only if you click them.
+  `127.0.0.1:11434`. Saved encounters stay in your browser. The page asks GitHub for one small
+  file, `VERSION`, to see whether a new version exists. Nothing is sent with it. Search
+  `app/index.html` for `fetch(` to see every request.
 - **No account, no sign-in, no cookies, no analytics.**
 - **The launcher installs nothing.** It uses a program your system already has: Perl on a
   Mac, PowerShell on Windows, Python on Linux. It stops by itself a few seconds after you
   close the browser tab, and tells Ollama to unload the model.
 - **The launcher serves this folder to this computer only.** It listens on `127.0.0.1`. Other
   computers on your network cannot reach it. Requests for files outside the folder get a
-  404 error. Other web sites open in your browser cannot use it: it answers only its own page.
-  This was tested.
+  404 error. Other web sites open in your browser cannot use it.
 - **It never downloads or installs program files by itself.** When a new version exists, the
   page shows a link to it, and you download it yourself.
-- **Every part is open source.** The program is one file. Anyone can read it.
-- **The model comes from Ollama's own library**, the same source every Ollama user downloads from.
-- **The code was reviewed and tested.** Five reviewers read the code with different briefs.
-  A second reviewer tried to refute each finding. 59 findings were raised, 7 were confirmed,
-  and all 7 were fixed and re-tested. The full session was run in a real browser against the
-  real model. See [`docs/VERIFICATION.md`](docs/VERIFICATION.md).
-- **Saved encounters** are stored by your browser, on your computer.
-- **The patient is tested against every case.** An automated test asks each patient every fact
-  and every checklist question in different words, and checks each reply against the case. The
-  results, and the bar a model must meet, are on [the benchmark page](https://igembitsky.github.io/virtual-standardized-patient/benchmark.html).
-
-- **The launchers are tested on a Mac, Windows, and Linux at every change.** GitHub runs each
-  one from the same ZIP a participant downloads, drives the page in Chrome, and checks the
-  first-run download, stopping when the tab closes, Quit, the model unload, refused paths,
-  that there is no way to update it from the network, and the error report. See `.github/workflows/launchers.yml`.
-
-Not yet tested:
-
-- The first open on a Mac, when macOS asks you to approve the app. Test machines cannot
-  press that button.
-- Whether Windows 11 keeps the launcher's window hidden when Windows Terminal is the default.
-- A real Ollama and model in those tests. They use a stand-in that answers like Ollama.
-- Speed on a computer without a graphics chip.
-
-If something does not work, press **Report a problem** at the bottom of the page.
+- **Every part is open source.** The program is one file. Anyone can read it. The model comes
+  from Ollama's own library.
 
 ## Terms of use
 

@@ -39,7 +39,7 @@ sub open_log {
   my ($p) = @_;
   return 0 if -l $p;
   rename $p, "$p.old" if -f $p && -s $p > 200_000;          # keep the log small
-  sysopen(my $fh, $p, O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW, 0644) or return 0;
+  sysopen(my $fh, $p, O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW, 0600) or return 0;
   select((select($fh), $| = 1)[0]);
   ($LOG, $LOGFH) = ($p, $fh);
   return 1;

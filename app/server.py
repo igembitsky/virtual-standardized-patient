@@ -46,7 +46,7 @@ def open_log(p):
             os.replace(p, p + ".old")
     except OSError:
         pass
-    fd = os.open(p, os.O_WRONLY | os.O_APPEND | os.O_CREAT | NOFOLLOW, 0o644)
+    fd = os.open(p, os.O_WRONLY | os.O_APPEND | os.O_CREAT | NOFOLLOW, 0o600)
     return os.fdopen(fd, "a", encoding="utf-8", buffering=1)
 
 
