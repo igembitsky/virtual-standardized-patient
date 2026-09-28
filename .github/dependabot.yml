@@ -1,7 +1,11 @@
-# Keeps the pinned GitHub Actions in the workflows up to date, one pull request per update.
+# Keeps the pinned GitHub Actions in the workflows up to date. All updates come together in
+# one pull request each month, so the repository does not fill with small pull requests.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
