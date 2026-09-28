@@ -14,7 +14,7 @@ It keeps a log, log.txt, in the downloaded folder beside the Start files, or in 
 folder as virtual-standardized-patient.log if the folder cannot be written. If it cannot start,
 it opens a page in the browser with an error report to email or post on GitHub.
 """
-import http.server, json, os, platform, re, shutil, signal, subprocess, sys, tempfile, threading, time
+import stat, http.server, json, os, platform, re, shutil, signal, subprocess, sys, tempfile, threading, time
 import urllib.parse, urllib.request, webbrowser, zipfile
 
 ROOT   = os.path.dirname(os.path.abspath(__file__))   # the app folder, served
@@ -142,7 +142,7 @@ def do_update():
                 out = z.extract(info, new)               # the safe path zipfile itself made
                 mode = info.external_attr >> 16          # keep the launchers executable
                 if mode & 0o111 and not info.is_dir():
-                    os.chmod(out, 0o755)
+                    os.chmod(out, os.stat(out).st_mode | stat.S_IXUSR)   # the owner may run it
         dirs = [d for d in os.listdir(new) if os.path.isdir(os.path.join(new, d))]
         src = os.path.join(new, dirs[0]) if len(dirs) == 1 else None
         if not src or not all(os.path.isfile(os.path.join(src, n)) for n in NEEDED) \

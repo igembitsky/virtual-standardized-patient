@@ -102,13 +102,14 @@ and the marking come from the case file.
 
 [![Launcher tests](https://github.com/igembitsky/virtual-standardized-patient/actions/workflows/launchers.yml/badge.svg)](https://github.com/igembitsky/virtual-standardized-patient/actions/workflows/launchers.yml)
 [![CodeQL](https://github.com/igembitsky/virtual-standardized-patient/actions/workflows/codeql.yml/badge.svg)](https://github.com/igembitsky/virtual-standardized-patient/actions/workflows/codeql.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/igembitsky/virtual-standardized-patient/badge)](https://scorecard.dev/viewer/?uri=github.com/igembitsky/virtual-standardized-patient)
 
 - **Launcher tests** run each launcher on a real Mac, Windows and Linux machine, from the
   same ZIP you download. They include the attacks that an independent audit tried: other web
   sites, unsafe update files, and more.
 - **CodeQL** is GitHub's scanner for security defects in the page and the Python code.
 - **OpenSSF Scorecard** checks the project's security practices.
+  [See the score](https://scorecard.dev/viewer/?uri=github.com/igembitsky/virtual-standardized-patient).
+- To report a security problem privately, see [SECURITY.md](SECURITY.md).
 
 These checks find known kinds of problems. They cannot prove that a program has none.
 
