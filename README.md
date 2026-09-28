@@ -105,7 +105,7 @@ and the marking come from the case file.
 
 - **Launcher tests** run each launcher on a real Mac, Windows and Linux machine, from the
   same ZIP you download. They include the attacks that an independent audit tried: other web
-  sites, unsafe update files, and more.
+  sites, files outside the folder, and more.
 - **CodeQL** is GitHub's scanner for security defects in the page and the Python code.
 - **OpenSSF Scorecard** checks the project's security practices.
   [See the score](https://scorecard.dev/viewer/?uri=github.com/igembitsky/virtual-standardized-patient).
@@ -128,8 +128,8 @@ Each claim below can be checked in the files in this folder.
   computers on your network cannot reach it. Requests for files outside the folder get a
   404 error. Other web sites open in your browser cannot use it: it answers only its own page.
   This was tested.
-- **Update checks the whole download first.** It refuses unsafe file names, links, and an
-  incomplete download, and it puts the old files back if the copy fails.
+- **It never downloads or installs program files by itself.** When a new version exists, the
+  page shows a link to it, and you download it yourself.
 - **Every part is open source.** The program is one file. Anyone can read it.
 - **The model comes from Ollama's own library**, the same source every Ollama user downloads from.
 - **The code was reviewed and tested.** Five reviewers read the code with different briefs.
@@ -144,7 +144,7 @@ Each claim below can be checked in the files in this folder.
 - **The launchers are tested on a Mac, Windows, and Linux at every change.** GitHub runs each
   one from the same ZIP a participant downloads, drives the page in Chrome, and checks the
   first-run download, stopping when the tab closes, Quit, the model unload, refused paths,
-  the Update button, and the error report. See `.github/workflows/launchers.yml`.
+  that there is no way to update it from the network, and the error report. See `.github/workflows/launchers.yml`.
 
 Not yet tested:
 

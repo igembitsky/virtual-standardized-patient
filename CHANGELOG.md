@@ -2,6 +2,23 @@
 
 The version you have is shown at the bottom of the simulator's page.
 
+## 1.3, 28 September 2026
+
+Safer, after an independent security audit.
+
+- **No more Update button.** The simulator never downloads or installs program files by
+  itself. When a new version exists, the top of the page shows a link to it on GitHub, and you
+  download it yourself. See **New versions** in the install guide.
+- **Other web sites cannot use it.** It answers only its own page, and refuses requests from
+  other sites, including requests the browser marks as coming from another site.
+- **Safer on a Mac.** The error message cannot be tricked by a folder name, and the download
+  mark is removed only from Start on Mac itself.
+- **Safer history.** Saved encounters are checked before they are shown.
+- **Fairer marking.** A negated answer, such as "not cholangitis", no longer passes.
+- **More private reports.** Error reports leave out your user name and list only the patient
+  models.
+- It unloads only a patient model that it loaded itself, not one another program was using.
+
 ## 1.2, 27 September 2026
 
 Easier to start and to stop, lighter on your computer, and easy to report a problem.

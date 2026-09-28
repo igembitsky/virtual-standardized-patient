@@ -1,9 +1,8 @@
 """A stand-in for Ollama, for the launcher tests. No models at first; a pull that streams
-progress; ps, unload, chat; and /latest.zip, the file the Update button downloads.
+progress; ps, unload, chat.
 GET /_calls lists every POST it received, so a test can check the model was unloaded."""
 import http.server, json, os, sys, time
 
-ZIP = os.environ.get("ZIP_FILE", "")
 state = {"models": [], "loaded": set(), "calls": []}
 
 
@@ -27,8 +26,6 @@ class H(http.server.BaseHTTPRequestHandler):
         if self.path == "/api/ps": return self.send({"models": [{"name": m, "model": m} for m in state["loaded"]]})
         if self.path == "/api/version": return self.send({"version": "0.0.0-fake"})
         if self.path == "/_calls": return self.send(state["calls"])
-        if self.path == "/latest.zip" and ZIP:
-            with open(ZIP, "rb") as f: return self.send(f.read(), "application/zip")
         self.send_response(404); self.end_headers()
 
     def do_POST(self):

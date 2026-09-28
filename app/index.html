@@ -61,15 +61,11 @@ h1[tabindex="-1"]:focus,.back[tabindex="-1"]:focus{outline:none}
 .dot.bad{background:#c0392b}
 .top .status{font-size:.85rem;color:var(--muted)}
 .top .grow{flex:1}
-/* the update notice in the header */
+/* the new-version notice in the header */
 .upd{display:inline-flex;align-items:center;padding:5px 6px 5px 12px;border-radius:999px;
   font-size:.82rem;line-height:1.2;white-space:nowrap;border:1px solid transparent}
-.upd.new,.upd.old{background:var(--amber-soft);color:var(--amber);
+.upd.new{background:var(--amber-soft);color:var(--amber);
   border-color:color-mix(in srgb,var(--amber) 30%,transparent)}
-.upd.old{padding-right:12px}
-.upd.busy{background:var(--sunk);color:var(--muted)}
-.upd.done{background:var(--green-soft);color:var(--green-ink)}
-.upd.fail{background:var(--amber-soft);color:#c0392b;padding-right:12px}
 .upd b{font-weight:600}
 .upd a{color:inherit;font-weight:600}
 .upd button{margin-left:10px;font:inherit;font-size:.8rem;font-weight:600;border:0;border-radius:999px;
@@ -723,7 +719,9 @@ textarea#notes{width:100%;min-height:120px;border:1.5px solid var(--muted);borde
     <button type="button" class="btn ghost" id="repClose">Close</button>
   </div>
   <p class="sm">Email opens your mail app with the report filled in. Send it to whoever gave you
-    the simulator. GitHub needs a free account.</p>
+    the simulator. Report on GitHub opens a GitHub page with the report in its address, so GitHub
+    receives the text when the page opens; if you then submit it, everyone can read it. GitHub
+    needs a free account. The report holds no encounters, and your user name is left out.</p>
   <details>
     <summary>See the report</summary>
     <textarea id="reportText" readonly></textarea>
@@ -756,11 +754,12 @@ const CFG = {
   model: "qwen3:4b-instruct",
   fallbackModels: ["qwen3:4b-instruct", "qwen3:4b", "llama3.1:8b", "granite4.1:3b"],
   storeKey: "vsp.encounters.v1",
-  // Updates. The page asks GitHub for VERSION once at start, one small text file, nothing sent.
-  // The launcher does the actual update, from the ZIP, when the Update button is pressed.
-  version: "1.2",
+  // New versions. The page asks GitHub for VERSION once at start, one small text file, nothing
+  // sent. A newer number shows a link to that version's release page. Nothing is downloaded or
+  // installed by the program: the person downloads the new version by hand.
+  version: "1.3",
   versionUrl: "https://raw.githubusercontent.com/igembitsky/virtual-standardized-patient/main/VERSION",
-  zipUrl: "https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip"
+  releaseUrl: "https://github.com/igembitsky/virtual-standardized-patient/releases/tag/v"
 };
 const WANTED = CFG.model;   // downloaded on first run if none of the models above is there
 
@@ -1114,11 +1113,11 @@ async function quitApp() {
        computer. Your saved encounters are kept.</p>
      </div>`;
 }
-/* ---- updates ------------------------------------------------------------
+/* ---- new versions -------------------------------------------------------
    One request to GitHub for VERSION, 3 second limit, nothing sent. A newer number
-   shows a notice in the header. Update asks the launcher, POST /update, to fetch the
-   ZIP and replace the files. A launcher from before this feature answers 404, so the
-   notice shows a download link instead. Offline, nothing shows. */
+   shows a notice in the header with a link to that version's release page, where the
+   person downloads it by hand. The program never downloads or installs anything itself.
+   Offline, nothing shows. */
 function cmpVersion(a, b) {
   const A = a.split(".").map(Number), B = b.split(".").map(Number);
   for (let i = 0; i < Math.max(A.length, B.length); i++) { const d = (A[i] || 0) - (B[i] || 0); if (d) return d; }
@@ -1134,43 +1133,20 @@ async function checkForUpdate() {
     if (r.ok) latest = (await r.text()).trim();
   } catch { return; }
   if (!/^\d+(\.\d+)*$/.test(latest) || cmpVersion(latest, CFG.version) <= 0) return;
-  let can = false;
-  try { const r = await fetch("/update", { cache: "no-store" }); can = r.ok && (await r.text()).trim() === "can"; } catch {}
-  showUpdate(can ? "new" : "old", latest);
+  showUpdate(latest);
 }
-function showUpdate(state, v) {
-  app.upd = state;
-  const el = $("#upd"), V = esc(v), dl = `<a href="${CFG.zipUrl}" target="_blank" rel="noopener">Download it from GitHub</a>`;
-  el.className = "upd " + state;
-  el.innerHTML =
-    state === "new"  ? `<span>New version <b>${V}</b></span><button type="button" id="updGo">Update</button><button type="button" class="x" id="updX" aria-label="Not now">&times;</button>` :
-    state === "old"  ? `<span>New version <b>${V}</b>. ${dl}</span>` :
-    state === "busy" ? `<span class="spin"></span><span>Updating, about 10 seconds</span>` :
-    state === "done" ? `<span>Updated to <b>${V}</b>. Reloading…</span>` :
-                       `<span>Could not update. ${dl}</span>`;
-  if (state === "new") {
-    $("#updGo").onclick = () => runUpdate(v);
-    $("#updX").onclick = () => { app.upd = null; drawUpdate(); };
-  }
+function showUpdate(v) {
+  app.upd = v;
+  const el = $("#upd"), V = esc(v);
+  el.className = "upd new";
+  el.innerHTML = `<span>New version <b>${V}</b> is available. <a href="${esc(CFG.releaseUrl + v)}" target="_blank" rel="noopener">Download it from GitHub</a></span>` +
+    `<button type="button" class="x" id="updX" aria-label="Not now">&times;</button>`;
+  $("#updX").onclick = () => { app.upd = null; drawUpdate(); };
   drawUpdate();
 }
 function drawUpdate() {
   const busy = !$("#s-consult").classList.contains("hide") || !$("#s-note").classList.contains("hide");
   $("#upd").classList.toggle("hide", !app.upd || busy);
-}
-async function runUpdate(v) {
-  showUpdate("busy", v);
-  try {
-    const r = await fetch("/update", { method: "POST" });
-    const j = await r.json();
-    if (!r.ok || !j.ok) throw new Error(j.error || "update failed");
-    showUpdate("done", j.version || v);
-    setTimeout(() => location.reload(), 2000);
-  } catch (e) {
-    console.warn("update:", e);
-    noteProblem("update failed: " + e.message);
-    showUpdate("fail", v);
-  }
 }
 
 function setStatus(kind, text) {

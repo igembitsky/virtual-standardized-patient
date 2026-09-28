@@ -100,7 +100,8 @@ cd "$home/app" 2>/dev/null && /bin/cat server.pl >/dev/null 2>&1 && [ -f index.h
 /usr/bin/xattr -dr com.apple.quarantine "$home/Start on Mac.app" 2>/dev/null
 
 # From here on, the log is log.txt in the folder, if the folder can be written.
-if ( : >> "$home/log.txt" ) 2>/dev/null; then
+# A log.txt that is a link is not followed: it could point anywhere.
+if [ ! -L "$home/log.txt" ] && ( : >> "$home/log.txt" ) 2>/dev/null; then
   /usr/bin/tail -n +"$first" "$LOG" >> "$home/log.txt"
   LOG="$home/log.txt"
   exec >>"$LOG" 2>&1

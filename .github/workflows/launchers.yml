@@ -63,8 +63,6 @@ jobs:
           [ "$got" = "CHANGELOG.md|LICENSE|README.md|Start on Linux.desktop|Start on Mac.app|Start on Windows.bat|app|" ]
 
       - name: End-to-end test of the server
-        env:
-          ZIP_FILE: ${{ runner.temp }}/latest.zip
         run: node tests/e2e.mjs "$INST" ${{ matrix.server }}
 
       - name: Start on Mac.app, opened as Finder would

@@ -14,16 +14,14 @@ It keeps a log, log.txt, in the downloaded folder beside the Start files, or in 
 folder as virtual-standardized-patient.log if the folder cannot be written. If it cannot start,
 it opens a page in the browser with an error report to email or post on GitHub.
 """
-import stat, http.server, json, os, platform, re, shutil, signal, subprocess, sys, tempfile, threading, time
-import urllib.parse, urllib.request, webbrowser, zipfile
+import http.server, json, os, platform, re, shutil, signal, subprocess, sys, tempfile, threading, time
+import urllib.parse, urllib.request, webbrowser
 
 ROOT   = os.path.dirname(os.path.abspath(__file__))   # the app folder, served
 TOP    = os.path.dirname(ROOT)                        # the folder that was downloaded
 PORT   = 8756
 URL    = f"http://127.0.0.1:{PORT}/"
 OLLAMA = "http://127.0.0.1:11434"
-# Where "Update" in the page gets the new files. VSP_ZIP overrides it for testing.
-ZIP    = os.environ.get("VSP_ZIP") or "https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip"
 # The patient models. Only these are unloaded on the way out.
 KNOWN  = re.compile(r"^(qwen3:4b-instruct|qwen3:4b|llama3\.1:8b|granite4\.1:3b)(:|$)")
 
@@ -35,11 +33,16 @@ QUIET_TAB  = 240   # a tab that has not been heard from, e.g. the browser was ki
 tabs, lock, state = {}, threading.Lock(), {"seen": False, "quit": False}
 # The log goes beside the Start files, where anyone can find it and send it. If the folder
 # cannot be written, the temporary folder instead.
+# A log.txt that is a link is not followed: it could point anywhere.
 LOG = os.path.join(TOP, "log.txt")
 try:
+    if os.path.islink(LOG):
+        raise OSError("log.txt is a link")
     open(LOG, "a").close()
 except OSError:
     LOG = os.path.join(tempfile.gettempdir(), "virtual-standardized-patient.log")
+    if os.path.islink(LOG):
+        os.unlink(LOG)
 
 
 def log(msg):
@@ -89,7 +92,13 @@ def fail(what):
             page = f.read()
         data = json.dumps({"what": what, "report": report}).replace("</", "<\\/")
         out = os.path.join(tempfile.gettempdir(), "virtual-standardized-patient-problem.html")
-        with open(out, "w", encoding="utf-8") as f:
+        # a fresh file each time, never written through an existing file or link
+        try:
+            os.unlink(out)
+        except OSError:
+            pass
+        fd = os.open(out, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
             f.write(page.replace("/*REPORT*/null/*END*/", data))
         open_browser("file://" + out)
     except Exception as e:
@@ -105,75 +114,9 @@ def ollama(path, body=None, timeout=3):
         return json.load(r)
 
 
-# Every file a complete download must hold. An update that lacks one is refused.
-NEEDED = ["app/index.html", "app/server.pl", "app/server.py", "app/server.ps1", "app/problem.html",
-          "Start on Windows.bat", "Start on Linux.desktop", "Start on Mac.app/Contents/MacOS/start"]
-PROGRAM = ["app", "Start on Windows.bat", "Start on Linux.desktop", "Start on Mac.app"]
-
-
-def links_on_the_way(base, rel):
-    """True if any existing part of base/rel is a link: writing there could land outside."""
-    path = base
-    for part in rel.split("/"):
-        path = os.path.join(path, part)
-        if os.path.islink(path):
-            return True
-    return False
-
-
-def do_update():
-    """Download the ZIP, check every entry, unpack it in a temporary folder, check the whole
-    package, back up the program files, then copy the new ones over. If the copy fails, the
-    backup goes back, so the folder is never left half old and half new."""
-    tmp = tempfile.mkdtemp(prefix="vsp-update-")
-    try:
-        zpath = os.path.join(tmp, "latest.zip")
-        with urllib.request.urlopen(ZIP, timeout=60) as r, open(zpath, "wb") as f:
-            shutil.copyfileobj(r, f)
-        new = os.path.join(tmp, "new")
-        with zipfile.ZipFile(zpath) as z:
-            infos = z.infolist()
-            for info in infos:                           # check every name before anything is written
-                name = info.filename
-                if name.startswith(("/", "\\")) or "\\" in name or re.match(r"^[A-Za-z]:", name) \
-                        or ".." in name.split("/") or (info.external_attr >> 16) & 0o170000 == 0o120000:
-                    return {"ok": False, "error": "the download holds an unsafe file name"}
-            for info in infos:
-                out = z.extract(info, new)               # the safe path zipfile itself made
-                mode = info.external_attr >> 16          # keep the launchers executable
-                if mode & 0o111 and not info.is_dir():
-                    os.chmod(out, os.stat(out).st_mode | stat.S_IXUSR)   # the owner may run it
-        dirs = [d for d in os.listdir(new) if os.path.isdir(os.path.join(new, d))]
-        src = os.path.join(new, dirs[0]) if len(dirs) == 1 else None
-        if not src or not all(os.path.isfile(os.path.join(src, n)) for n in NEEDED) \
-                or not any(f.endswith(".txt") for f in os.listdir(os.path.join(src, "app", "cases"))):
-            return {"ok": False, "error": "the download was incomplete"}
-        for d, _, files in os.walk(src):
-            for f in files:
-                rel = os.path.relpath(os.path.join(d, f), src).replace(os.sep, "/")
-                if links_on_the_way(TOP, rel):
-                    return {"ok": False, "error": "a link in the folder is in the way"}
-        backup = os.path.join(tmp, "backup")
-        os.makedirs(backup)
-        for n in PROGRAM:
-            p = os.path.join(TOP, n)
-            if os.path.isdir(p):
-                shutil.copytree(p, os.path.join(backup, n), symlinks=True)
-            elif os.path.isfile(p):
-                shutil.copy2(p, os.path.join(backup, n))
-        try:
-            shutil.copytree(src, TOP, dirs_exist_ok=True)
-        except Exception:
-            shutil.copytree(backup, TOP, dirs_exist_ok=True, symlinks=True)
-            raise
-        return {"ok": True}
-    except Exception as e:
-        return {"ok": False, "error": re.sub(r'["\\]', "", str(e))}
-    finally:
-        shutil.rmtree(tmp, ignore_errors=True)
-
-
 class H(http.server.SimpleHTTPRequestHandler):
+    timeout = 15                                     # a connection that sends nothing is dropped
+
     def __init__(self, *a, **k):
         super().__init__(*a, directory=ROOT, **k)
 
@@ -203,10 +146,12 @@ class H(http.server.SimpleHTTPRequestHandler):
     def route(self, method):
         path = urllib.parse.urlparse(self.path).path
         # Only this computer's own page may use the simulator. Another web site open in the
-        # browser must not quit or update it (Origin), or read its files through a changed name (Host).
+        # browser must not quit it (Origin), or read its files through a changed name (Host).
         mine = (f"127.0.0.1:{PORT}", f"localhost:{PORT}")
         host, origin = self.headers.get("Host"), self.headers.get("Origin")
-        if (host and host.lower() not in mine) or (origin and origin.lower() not in tuple("http://" + m for m in mine)):
+        site = self.headers.get("Sec-Fetch-Site")   # the browser says where a request comes from
+        if (host and host.lower() not in mine) or (origin and origin.lower() not in tuple("http://" + m for m in mine)) \
+                or (site and site.lower() not in ("same-origin", "none")):
             log(f"Refused {method} {path} from {origin or host}")
             self.send_response(403); self.send_header("Content-Length", "10"); self.end_headers()
             self.wfile.write(b"Forbidden\n")
@@ -225,12 +170,8 @@ class H(http.server.SimpleHTTPRequestHandler):
             done = self.reply("ok")
             state["quit"] = True
             return done
-        if path == "/update":                       # GET says it can; POST does it
-            if method == "POST":
-                r = do_update()
-                log("Update: " + json.dumps(r))
-                return self.reply(json.dumps(r), "application/json")
-            return self.reply("can")
+        if path == "/ping":                         # "this is the simulator", for a second start
+            return self.reply("virtual-standardized-patient")
         if path == "/log":                          # for the problem report in the page
             return self.reply(log_tail())
         if path in ("/cases", "/cases/"):           # a list of the case files, so new ones just appear
@@ -275,7 +216,15 @@ class Server(http.server.ThreadingHTTPServer):
         self.server_name, self.server_port = "127.0.0.1", PORT
 
 
+BEFORE = set()                                      # patient models loaded before we started
+
+
 def main():
+    global BEFORE
+    try:                                                    # those belong to someone else
+        BEFORE = {m.get("name", "") for m in ollama("/api/ps").get("models", [])}
+    except Exception:
+        pass
     try:                                                    # keep the log small
         if os.path.getsize(LOG) > 200_000:
             os.replace(LOG, LOG + ".old")
@@ -286,8 +235,8 @@ def main():
         httpd = Server(("127.0.0.1", PORT), H)
     except OSError as e:
         try:                                                # is it this simulator, already running?
-            with urllib.request.urlopen(URL + "update", timeout=3) as r:
-                mine = r.read() == b"can"
+            with urllib.request.urlopen(URL + "ping", timeout=3) as r:
+                mine = r.read() == b"virtual-standardized-patient"
         except Exception:
             mine = False
         if mine:
@@ -346,7 +295,7 @@ def main():
     # Give back the memory the patient model holds. Ollama itself is left as it was found.
     try:
         for m in {m.get("name", "") for m in ollama("/api/ps").get("models", [])}:
-            if KNOWN.match(m):
+            if KNOWN.match(m) and m not in BEFORE:  # not ours if it was loaded before we started
                 ollama("/api/generate", {"model": m, "keep_alive": 0}, timeout=10)
                 log("Unloaded " + m)
     except Exception:

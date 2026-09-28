@@ -18,8 +18,6 @@ $top    = Split-Path $root -Parent         # the folder that was downloaded
 $port   = 8756
 $url    = "http://127.0.0.1:$port/"
 $ollama = 'http://127.0.0.1:11434'
-# Where "Update" in the page gets the new files. VSP_ZIP overrides it for testing.
-$zipUrl = if ($env:VSP_ZIP) { $env:VSP_ZIP } else { 'https://github.com/igembitsky/virtual-standardized-patient/archive/refs/heads/main.zip' }
 # The patient models. Only these are unloaded on the way out.
 $known  = '^(qwen3:4b-instruct|qwen3:4b|llama3\.1:8b|granite4\.1:3b)(:|$)'
 # How long to wait before stopping, in seconds.
@@ -28,19 +26,19 @@ $lastTab  = 10    # after the last tab closes, so a reload does not stop it
 $quietTab = 240   # a tab that has not been heard from, e.g. the browser was killed
 # The log goes beside the Start files, where anyone can find it and send it. If the folder
 # cannot be written, the temporary folder instead.
+# A log.txt that is a link is not followed: it could point anywhere.
 $log    = Join-Path $top 'log.txt'
-try { [System.IO.File]::AppendAllText($log, '') } catch { $log = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient.log' }
+try {
+  $it = Get-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
+  if ($it -and ($it.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) { throw 'log.txt is a link' }
+  [System.IO.File]::AppendAllText($log, '')
+} catch { $log = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient.log' }
 $types  = @{
   '.html'='text/html; charset=utf-8'; '.js'='application/javascript';
   '.css'='text/css'; '.json'='application/json'; '.txt'='text/plain; charset=utf-8';
   '.png'='image/png'; '.jpg'='image/jpeg'; '.jpeg'='image/jpeg'; '.svg'='image/svg+xml';
   '.ico'='image/x-icon'; '.md'='text/plain; charset=utf-8'
 }
-
-# Every file a complete download must hold. An update that lacks one is refused.
-$needed  = @('app\index.html', 'app\server.pl', 'app\server.py', 'app\server.ps1', 'app\problem.html',
-             'Start on Windows.bat', 'Start on Linux.desktop', 'Start on Mac.app\Contents\MacOS\start')
-$program = @('app', 'Start on Windows.bat', 'Start on Linux.desktop', 'Start on Mac.app')
 
 # True if any existing part of the path from $base down to $rel is a link or junction.
 function Test-LinkOnTheWay($base, $rel) {
@@ -54,64 +52,16 @@ function Test-LinkOnTheWay($base, $rel) {
   return $false
 }
 
-# Download the ZIP, check every entry, unpack it in a temporary folder, check the whole package,
-# back up the program files, then copy the new ones over. If the copy fails, the backup goes
-# back, so the folder is never left half old and half new.
-function Invoke-Update {
-  $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ('vsp-update-' + [guid]::NewGuid())
-  try {
-    New-Item -ItemType Directory -Path $tmp | Out-Null
-    $zip = Join-Path $tmp 'latest.zip'
-    Invoke-WebRequest -Uri $zipUrl -OutFile $zip -TimeoutSec 60 -UseBasicParsing -ErrorAction Stop
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
-    try {
-      foreach ($e in $z.Entries) {                 # check every name before anything is written
-        $n = $e.FullName
-        if ($n.StartsWith('/') -or $n.StartsWith('\') -or $n -match '^[A-Za-z]:' -or
-            ($n -split '[\\/]') -contains '..') { return '{"ok":false,"error":"the download holds an unsafe file name"}' }
-      }
-    } finally { $z.Dispose() }
-    $new = Join-Path $tmp 'new'
-    Expand-Archive -Path $zip -DestinationPath $new -Force -ErrorAction Stop
-    $dirs = @(Get-ChildItem -LiteralPath $new -Directory)
-    if ($dirs.Count -ne 1) { return '{"ok":false,"error":"the download was incomplete"}' }
-    $src = $dirs[0].FullName
-    foreach ($n in $needed) {
-      if (-not (Test-Path -LiteralPath (Join-Path $src $n) -PathType Leaf)) { return '{"ok":false,"error":"the download was incomplete"}' }
-    }
-    if (-not (Get-ChildItem -LiteralPath (Join-Path $src 'app\cases') -Filter '*.txt' -ErrorAction SilentlyContinue)) {
-      return '{"ok":false,"error":"the download was incomplete"}'
-    }
-    foreach ($f in (Get-ChildItem -LiteralPath $src -Recurse -File)) {   # never write through a link
-      if (Test-LinkOnTheWay $top $f.FullName.Substring($src.Length + 1)) { return '{"ok":false,"error":"a link in the folder is in the way"}' }
-    }
-    $backup = Join-Path $tmp 'backup'
-    New-Item -ItemType Directory -Path $backup | Out-Null
-    foreach ($n in $program) {
-      $p = Join-Path $top $n
-      if (Test-Path -LiteralPath $p) { Copy-Item -LiteralPath $p -Destination $backup -Recurse -Force }
-    }
-    try {
-      Copy-Item -Path (Join-Path $src '*') -Destination $top -Recurse -Force -ErrorAction Stop
-    } catch {
-      Copy-Item -Path (Join-Path $backup '*') -Destination $top -Recurse -Force -ErrorAction SilentlyContinue
-      return '{"ok":false,"error":"could not copy the new files, so the old ones were put back"}'
-    }
-    return '{"ok":true}'
-  } catch {
-    return '{"ok":false,"error":"' + ($_.Exception.Message -replace '["\\\r\n]', '') + '"}'
-  } finally {
-    Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue   # leave no temporary folder behind
-  }
-}
+# Patient models that were already loaded when the simulator started belong to someone else.
+$before = New-Object System.Collections.Generic.HashSet[string]
+try { foreach ($m in @((Invoke-RestMethod -Uri "$ollama/api/ps" -TimeoutSec 3 -ErrorAction Stop).models)) { [void]$before.Add($m.name) } } catch {}
 
 # Give back the memory the patient model holds. Ollama itself is left as it was found.
 function Stop-Patient {
   try {
     $ps = Invoke-RestMethod -Uri "$ollama/api/ps" -TimeoutSec 3 -ErrorAction Stop
     foreach ($name in (@($ps.models) | ForEach-Object { $_.name } | Select-Object -Unique)) {
-      if ($name -match $known) {
+      if ($name -match $known -and -not $before.Contains($name)) {   # not ours if it was loaded before we started
         Invoke-RestMethod -Uri "$ollama/api/generate" -Method Post -ContentType 'application/json' `
           -Body "{`"model`":`"$name`",`"keep_alive`":0}" -TimeoutSec 10 -ErrorAction Stop | Out-Null
         Log "Unloaded $name"
@@ -152,7 +102,10 @@ function Fail($what) {
     $data = (ConvertTo-Json -Compress -InputObject @{ what = $what; report = $report }).Replace('</', '<\/')
     $page = (Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $root 'problem.html')).Replace('/*REPORT*/null/*END*/', $data)
     $out = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient-problem.html'
-    [System.IO.File]::WriteAllText($out, $page, (New-Object System.Text.UTF8Encoding $false))
+    # a fresh file each time, never written through an existing file or link
+    Remove-Item -LiteralPath $out -Force -ErrorAction SilentlyContinue
+    $fs = [System.IO.File]::Open($out, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write)
+    try { $bytes = (New-Object System.Text.UTF8Encoding $false).GetBytes($page); $fs.Write($bytes, 0, $bytes.Length) } finally { $fs.Close() }
     Open-Browser $out
   } catch { Log "Could not open the problem page: $($_.Exception.Message)" }
   exit 3
@@ -174,13 +127,16 @@ function Serve-Client($client) {
   $line = $reader.ReadLine()
   if (-not $line) { return }
   # read the rest of the request before answering, so Windows does not reset the connection
-  $len = 0; $hostName = $null; $origin = $null
+  $len = 0; $hostName = $null; $origin = $null; $site = $null; $lines = 0
   while ($true) {
     $h = $reader.ReadLine()
     if ($h -eq $null -or $h -eq '') { break }
+    $lines++
+    if ($h.Length -gt 8192 -or $lines -gt 100) { return }   # far larger than a browser sends
     if ($h -match '^Content-Length:\s*(\d+)') { $len = [int]$matches[1] }
     if ($h -match '^Host:\s*(\S+)') { $hostName = $matches[1] }
     if ($h -match '^Origin:\s*(\S+)') { $origin = $matches[1] }
+    if ($h -match '^Sec-Fetch-Site:\s*(\S+)') { $site = $matches[1] }   # where the browser says it comes from
   }
   if ($len -gt 0 -and $len -lt 65536) {
     $buf = New-Object char[] $len; $got = 0
@@ -194,9 +150,10 @@ function Serve-Client($client) {
   $tab = if ($query -match '(?:^|&)tab=([\w-]{1,40})') { $matches[1] } else { $null }
 
   # Only this computer's own page may use the simulator. Another web site open in the browser
-  # must not quit or update it (Origin), or read its files through a changed name (Host).
+  # must not quit it (Origin), or read its files through a changed name (Host).
   if (($hostName -and $hostName -notmatch "^(127\.0\.0\.1|localhost):$port$") -or
-      ($origin -and $origin -notmatch "^http://(127\.0\.0\.1|localhost):$port$")) {
+      ($origin -and $origin -notmatch "^http://(127\.0\.0\.1|localhost):$port$") -or
+      ($site -and $site -notmatch '^(same-origin|none)$')) {
     Log "Refused $method $path from $(if ($origin) { $origin } else { $hostName })"
     return Send $stream '403 Forbidden' 'text/plain' (Text "Forbidden`n")
   }
@@ -218,9 +175,8 @@ function Serve-Client($client) {
       if ($method -eq 'POST') { $script:quit = $true }
       return Send $stream '200 OK' 'text/plain' (Text 'ok')
     }
-    '/update' {                            # GET says it can; POST does it
-      if ($method -eq 'POST') { $r = Invoke-Update; Log "Update: $r"; return Send $stream '200 OK' 'application/json' (Text $r) }
-      return Send $stream '200 OK' 'text/plain' (Text 'can')
+    '/ping' {                              # "this is the simulator", for a second start
+      return Send $stream '200 OK' 'text/plain' (Text 'virtual-standardized-patient')
     }
     { $_ -eq '/cases' -or $_ -eq '/cases/' } {   # a list of the case files, so new ones just appear
       $names = @(Get-ChildItem -LiteralPath (Join-Path $root 'cases') -Filter *.txt -File -ErrorAction SilentlyContinue |
@@ -254,7 +210,7 @@ try {
   $listener.Start()
 } catch {
   $why = $_.Exception.Message
-  $mine = try { (Invoke-WebRequest -Uri "${url}update" -UseBasicParsing -TimeoutSec 3).Content -eq 'can' } catch { $false }
+  $mine = try { (Invoke-WebRequest -Uri "${url}ping" -UseBasicParsing -TimeoutSec 3).Content -eq 'virtual-standardized-patient' } catch { $false }
   if ($mine) { Log 'It is already running. Opening it.'; Open-Browser $url; exit 0 }
   Fail "Another program is using port $port, so the simulator cannot start. ($why)"
 }

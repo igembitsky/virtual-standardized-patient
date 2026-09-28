@@ -14,7 +14,7 @@
 | `app/cases/` | Eight case files |
 | `app/server.pl`, `app/server.ps1`, `app/server.py` | The same small web server three times, in the language each system already has: Perl on a Mac, PowerShell on Windows, Python on Linux |
 | `CHANGELOG.md` | The versions, and what changed in each |
-| `VERSION` | The latest version number. The page reads it from GitHub to offer an update |
+| `VERSION` | The latest version number. The page reads it from GitHub and links to that release |
 | `docs/` | The install pages, and `VERIFICATION.md`, what was measured and how |
 | `bench/` | The evaluation harness: a Claude student and examiner against the real patient, with a judge. See [`docs/benchmark.html`](benchmark.html) for results |
 
@@ -30,23 +30,26 @@ What each server does:
   tab closes. The server stops 10 seconds after the last tab closes, 4 minutes after it last
   heard from a tab, or 2 minutes after starting if no tab ever opened. `POST /quit` stops it
   at once. On the way out it unloads the patient model from Ollama with `keep_alive: 0`.
-- `GET /update` answers `can`. `POST /update` downloads the ZIP, checks it holds
-  `app/index.html` and `app/cases/`, and copies it over the folder.
+- `GET /ping` answers `virtual-standardized-patient`, so a second start can find the running one.
+  There is no update address: the program never downloads or replaces its own files.
+- It answers only its own page: requests from another origin, another host name, or that the
+  browser marks as cross-site (`Sec-Fetch-Site`) get 403.
 - Keeps a log, `log.txt`, beside the Start files (or `virtual-standardized-patient.log` in the
   temporary folder, or `~/Library/Logs` on a Mac, if the folder cannot be written), and serves its
   end at `GET /log` for the page's problem report. If it cannot start, it fills in
   `app/problem.html` with a report, writes it to the temporary folder, and opens it.
-- `VSP_ZIP` overrides where the update comes from, and `VSP_NO_BROWSER=1` stops it opening
-  the browser. Both are for testing.
+- `VSP_NO_BROWSER=1` stops it opening the browser, for testing.
 
 **Tests.** `tests/e2e.mjs` drives one server in a real browser against `tests/fake_ollama.py`:
-first-run download, stop on tab close, Quit, model unload, refused paths, update, and the
-problem page. `.github/workflows/launchers.yml` runs it on a Mac, Windows, and Linux machine
+first-run download, stop on tab close, Quit, model unload, refused paths and origins, that no
+update address exists, and the problem page. `.github/workflows/launchers.yml` runs it on a Mac, Windows, and Linux machine
 at every push, from the same ZIP a participant downloads, then opens each Start file.
 
 To release a new version: change `version:` near the top of the script in `app/index.html`,
-the number in `VERSION`, and `CFBundleShortVersionString` in `Start on Mac.app/Contents/Info.plist`,
-and add an entry to `CHANGELOG.md`.
+the number in `VERSION`, and `CFBundleShortVersionString` and `CFBundleVersion` in
+`Start on Mac.app/Contents/Info.plist`, and add an entry to `CHANGELOG.md`. Push, wait for the
+tests, then create a GitHub release named `v` and the number (for example `v1.3`) from that
+commit. The page's new-version notice links to that release.
 
 - The page talks to Ollama at `127.0.0.1:11434` through `/api/tags`, `/api/chat`, and, on
   the first run, `/api/pull`.

@@ -69,11 +69,17 @@ Then:
 2. To stop, close the browser tab, or press **Quit** at the top of the page. The simulator
    stops within a few seconds and gives the memory back.
 
-## Updates
+## New versions
 
-When a new version exists, the top of the page shows **New version** and an **Update** button.
-Press **Update**. The page reloads by itself after about 10 seconds. Your notes and your
-history stay. The version you have is at the bottom of the page.
+The simulator never downloads or installs anything by itself. When a new version exists, the
+top of the page shows **New version** and a link.
+
+1. Press the link. GitHub opens the page of that version.
+2. Under **Assets**, press **Source code (zip)**, and unzip it as in step 2.
+3. Delete the old simulator folder, and put the new one in its place.
+
+Your saved encounters stay, because your browser keeps them. The version you have is at the
+bottom of the page.
 
 ## If something goes wrong
 
