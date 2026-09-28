@@ -26,6 +26,26 @@ function check(ok, what, extra = "") {
   if (!ok) failed++;
 }
 
+// A plain ZIP (stored, no compression) from [name, text] pairs, for the update tests.
+function makeZip(entries) {
+  const crcTable = Array.from({ length: 256 }, (_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
+  const crc = b => { let c = 0xffffffff; for (const x of b) c = crcTable[(c ^ x) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; };
+  const parts = [], dirs = []; let off = 0;
+  for (const [name, text] of entries) {
+    const n = Buffer.from(name), d = Buffer.from(text), c = crc(d);
+    const h = Buffer.alloc(30); h.writeUInt32LE(0x04034b50, 0); h.writeUInt16LE(20, 4); h.writeUInt32LE(c, 14);
+    h.writeUInt32LE(d.length, 18); h.writeUInt32LE(d.length, 22); h.writeUInt16LE(n.length, 26);
+    const e = Buffer.alloc(46); e.writeUInt32LE(0x02014b50, 0); e.writeUInt16LE(20, 4); e.writeUInt16LE(20, 6);
+    e.writeUInt32LE(c, 16); e.writeUInt32LE(d.length, 20); e.writeUInt32LE(d.length, 24); e.writeUInt16LE(n.length, 28);
+    e.writeUInt32LE(off, 42);
+    parts.push(h, n, d); dirs.push(e, n); off += 30 + n.length + d.length;
+  }
+  const cd = Buffer.concat(dirs), end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0); end.writeUInt16LE(entries.length, 8); end.writeUInt16LE(entries.length, 10);
+  end.writeUInt32LE(cd.length, 12); end.writeUInt32LE(off, 16);
+  return Buffer.concat([...parts, cd, end]);
+}
+
 function startServer() {
   const p = spawn(cmd[0], cmd.slice(1), { cwd: dir, env, stdio: ["ignore", "pipe", "pipe"] });
   p.out = "";
@@ -108,6 +128,23 @@ try {
   check(await exited(second, 15000) && second.code === 0, "a second copy just opens the page and exits", second.out);
 
   console.log("6. Update");
+  // An unsafe or incomplete download must be refused, and nothing written outside the folder.
+  // The fake Ollama reads ZIP_FILE on every request, so swap in a crafted ZIP for a moment.
+  if (process.env.ZIP_FILE) {
+    const real = readFileSync(process.env.ZIP_FILE);
+    const base = ["app/index.html", "app/server.pl", "app/server.py", "app/server.ps1", "app/problem.html",
+      "Start on Windows.bat", "Start on Linux.desktop", "Start on Mac.app/Contents/MacOS/start", "app/cases/a.txt"]
+      .map(n => ["v/" + n, "x"]);
+    const outside = join(dirname(dir), "vsp-escape.txt");
+    rmSync(outside, { force: true });
+    writeFileSync(process.env.ZIP_FILE, makeZip([...base, ["v/../../vsp-escape.txt", "escaped"]]));
+    const bad = JSON.parse((await get("update", { method: "POST" })).text);
+    check(bad.ok === false && !existsSync(outside), "refuses a download with a ../ path", JSON.stringify(bad));
+    writeFileSync(process.env.ZIP_FILE, makeZip(base.filter(([n]) => !n.endsWith("server.ps1"))));
+    const part = JSON.parse((await get("update", { method: "POST" })).text);
+    check(part.ok === false, "refuses a download that lacks a program file", JSON.stringify(part));
+    writeFileSync(process.env.ZIP_FILE, real);
+  }
   const graham = join(dir, "app", "cases", "graham.txt"), original = readFileSync(graham, "utf8");
   writeFileSync(graham, "changed\n");
   const u = JSON.parse((await get("update", { method: "POST" })).text);

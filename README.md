@@ -113,6 +113,8 @@ Each claim below can be checked in the files in this folder.
   computers on your network cannot reach it. Requests for files outside the folder get a
   404 error. Other web sites open in your browser cannot use it: it answers only its own page.
   This was tested.
+- **Update checks the whole download first.** It refuses unsafe file names, links, and an
+  incomplete download, and it puts the old files back if the copy fails.
 - **Every part is open source.** The program is one file. Anyone can read it.
 - **The model comes from Ollama's own library**, the same source every Ollama user downloads from.
 - **The code was reviewed and tested.** Five reviewers read the code with different briefs.

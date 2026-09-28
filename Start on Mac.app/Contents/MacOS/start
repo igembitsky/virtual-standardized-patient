@@ -15,7 +15,8 @@ echo "$(date '+%Y-%m-%d %H:%M:%S') Start on Mac: $0"
 # Something went wrong before the server could start. Say so, and offer to send a report.
 problem() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') PROBLEM: $1"
-  report="Virtual Standardized Patient Simulator: problem report
+  # The report says ~ for the home folder, so it does not carry the account name.
+  report=$(printf '%s' "Virtual Standardized Patient Simulator: problem report
 When: $(date)
 Computer: macOS $(sw_vers -productVersion 2>/dev/null), $(uname -m)
 App: $0
@@ -23,12 +24,19 @@ What happened: $1
 Log file: $LOG
 
 --- launcher log, last lines ---
-$(tail -n 40 "$LOG")"
-  choice=$(/usr/bin/osascript -e "button returned of (display dialog \"Something went wrong.
+$(tail -n 40 "$LOG")" | H="$HOME" /usr/bin/perl -pe 's/\Q$ENV{H}\E/~/g')
+  # The message goes to AppleScript as data (argv), never as part of the script, so a folder
+  # name cannot become AppleScript code.
+  choice=$(/usr/bin/osascript - "Something went wrong.
 
 $1
 
-The log is in $LOG\" with title \"Virtual Standardized Patient\" buttons {\"Close\", \"Report on GitHub\", \"Email report\"} default button 3 with icon caution)")
+The log is in $LOG" <<'APPLESCRIPT'
+on run argv
+  button returned of (display dialog (item 1 of argv) with title "Virtual Standardized Patient" buttons {"Close", "Report on GitHub", "Email report"} default button 3 with icon caution)
+end run
+APPLESCRIPT
+)
   enc() { /usr/bin/perl -pe 's/([^A-Za-z0-9_.~-])/sprintf("%%%02X", ord $1)/ge'; }
   title=$(printf 'Problem report: %s' "$1" | head -c 80 | enc)
   case "$choice" in
@@ -84,11 +92,12 @@ case "$home/" in
     problem "Please move the simulator folder into your Applications folder. macOS protects the Desktop, Documents and Downloads folders, and the simulator does not ask to use them. In the Finder window that just opened, drag the folder $(basename "$home") onto Applications in the sidebar. Then open it there and double-click Start on Mac." ;;
 esac
 
-# Clear the download mark on the folder, so macOS runs the real app from now on.
-/usr/bin/xattr -dr com.apple.quarantine "$home" 2>/dev/null
-
-cd "$home/app" 2>/dev/null && /bin/cat server.pl >/dev/null 2>&1 || \
+cd "$home/app" 2>/dev/null && /bin/cat server.pl >/dev/null 2>&1 && [ -f index.html ] && [ -d cases ] || \
   problem "The app folder could not be opened. Keep Start on Mac next to the app folder, and keep them both in the simulator folder."
+
+# Clear the download mark on this app only, and only now that it is known to sit in a complete
+# simulator folder, so macOS runs the real app from now on and never a hidden copy.
+/usr/bin/xattr -dr com.apple.quarantine "$home/Start on Mac.app" 2>/dev/null
 
 # From here on, the log is log.txt in the folder, if the folder can be written.
 if ( : >> "$home/log.txt" ) 2>/dev/null; then

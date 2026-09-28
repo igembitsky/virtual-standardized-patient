@@ -66,8 +66,8 @@ const out = {
   }),
   // The page's mark(): a pass needs one pass word among the diagnoses and one among the tests.
   notes: (req.notes || []).map(n => {
-    const dxHit = hasAny((n.dx || []).join(" "), c.answer.dxWords);
-    const txHit = hasAny((n.tx || []).join(" "), c.answer.txWords);
+    const dxHit = hasAny((n.dx || []).join("\n"), c.answer.dxWords);
+    const txHit = hasAny((n.tx || []).join("\n"), c.answer.txWords);
     return { dxHit, txHit, pass: dxHit && txHit };
   })
 };

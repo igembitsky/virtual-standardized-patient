@@ -1041,7 +1041,15 @@ async function buildReport(what) {
   const [ver, tags, log] = await Promise.all([getText(CFG.ollama + "/api/version"),
     getText(CFG.ollama + "/api/tags"), getText("/log")]);
   let models = tags;
-  try { models = JSON.parse(tags).models.map(m => m.name).join(", ") || "none"; } catch {}
+  try {
+    const all = JSON.parse(tags).models.map(m => m.name);
+    const ours = all.filter(n => [CFG.model, ...CFG.fallbackModels].some(k => n === k || n.startsWith(k + ":")));
+    models = (ours.join(", ") || "no patient model") + (all.length > ours.length ? `, and ${all.length - ours.length} other` : "");
+  } catch {}
+  // the account name is in every home folder path; the report does not need it
+  const anon = x => String(x)
+    .replace(/([A-Za-z]:\\Users\\)[^\\\r\n]+/g, "$1you")          // Windows names may hold spaces
+    .replace(/(\/Users\/|\/home\/)[^\/\r\n]+/g, "$1you");
   return ["Virtual Standardized Patient Simulator: problem report",
     "Version: " + CFG.version,
     "When: " + new Date().toString(),
@@ -1052,7 +1060,7 @@ async function buildReport(what) {
     "Ollama: " + ver,
     "Models in Ollama: " + models,
     "", "--- what went wrong in the page ---", PROBLEMS.join("\n") || "nothing noted",
-    "", "--- launcher log, last lines ---", log.trimEnd()].join("\n");
+    "", "--- launcher log, last lines ---", anon(log.trimEnd())].map(anon).join("\n");
 }
 async function openReport(what) {
   const d = $("#report");
@@ -1828,8 +1836,8 @@ function mark() {
   const c = app.current;
   const dx = [1,2,3].map(i => ($("#dx" + i) || {}).value || "").map(s => s.trim()).filter(Boolean);
   const tx = [1,2,3].map(i => ($("#tx" + i) || {}).value || "").map(s => s.trim()).filter(Boolean);
-  const dxHit = hasAny(dx.join(" "), c.answer.dxWords);
-  const txHit = hasAny(tx.join(" "), c.answer.txWords);
+  const dxHit = hasAny(dx.join("\n"), c.answer.dxWords);
+  const txHit = hasAny(tx.join("\n"), c.answer.txWords);
   const pass = dxHit && txHit;
 
   const enc = {
@@ -1845,10 +1853,26 @@ function mark() {
   showResult(enc, c, false);
 }
 
+/* A pass word counts only when it is not negated: "not cholangitis" or "do not order an
+   ultrasound" must not pass. Each diagnosis or test is its own clause, so a "no" in one line
+   never cancels a word in the next. */
 function hasAny(text, words) {
   if (!words || !words.length) return false;
-  const t = plainWords(text);
-  return words.some(w => wordHit(t, w));
+  const NEG = /(^| )(not|no|never|without|don t|do not|dont|isn t|isnt)( [a-z0-9]+){0,2} $/;
+  return String(text).split(/[\n;,.|]+/).some(clause => {
+    const t = plainWords(clause);
+    return words.some(w => {
+      if (!wordHit(t, w)) return false;
+      const x = w.toLowerCase().replace(/[^a-z0-9*]+/g, " ").trim().replace(/\*$/, "");
+      // look at the words before each place the pass word appears
+      let i = t.indexOf(" " + x);
+      while (i >= 0) {
+        if (!NEG.test(t.slice(0, i + 1))) return true;
+        i = t.indexOf(" " + x, i + 1);
+      }
+      return false;
+    });
+  });
 }
 
 /* ============================================================
@@ -1939,7 +1963,13 @@ $("#againBtn").onclick = () => { if (app.viewing) { app.current = app.viewing.c;
 function history_all() {
   try {
     const v = JSON.parse(localStorage.getItem(CFG.storeKey) || "[]");
-    if (Array.isArray(v)) return v;
+    // stored data is never trusted as page code: counts become whole numbers
+    const num = x => Math.max(0, Math.min(999, parseInt(x, 10) || 0));
+    if (Array.isArray(v)) return v.filter(e => e && typeof e === "object")
+      .map(e => ({ ...e, covered: num(e.covered), total: num(e.total),
+        coveredIds: Array.isArray(e.coveredIds) ? e.coveredIds.map(String) : [],
+        dx: Array.isArray(e.dx) ? e.dx.map(String) : [], tx: Array.isArray(e.tx) ? e.tx.map(String) : [],
+        transcript: Array.isArray(e.transcript) ? e.transcript : [] }));
     app.storeCorrupt = true; return [];
   } catch { app.storeCorrupt = true; return []; }
 }

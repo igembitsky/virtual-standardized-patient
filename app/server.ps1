@@ -37,19 +37,67 @@ $types  = @{
   '.ico'='image/x-icon'; '.md'='text/plain; charset=utf-8'
 }
 
-# Download the ZIP, unpack it in a temporary folder, check it is complete, then copy it over
-# this folder. The old files stay until the whole ZIP has arrived and been checked.
+# Every file a complete download must hold. An update that lacks one is refused.
+$needed  = @('app\index.html', 'app\server.pl', 'app\server.py', 'app\server.ps1', 'app\problem.html',
+             'Start on Windows.bat', 'Start on Linux.desktop', 'Start on Mac.app\Contents\MacOS\start')
+$program = @('app', 'Start on Windows.bat', 'Start on Linux.desktop', 'Start on Mac.app')
+
+# True if any existing part of the path from $base down to $rel is a link or junction.
+function Test-LinkOnTheWay($base, $rel) {
+  $p = $base
+  foreach ($part in ($rel -split '[\\/]')) {
+    if (-not $part) { continue }
+    $p = Join-Path $p $part
+    $it = Get-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue
+    if ($it -and ($it.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) { return $true }
+  }
+  return $false
+}
+
+# Download the ZIP, check every entry, unpack it in a temporary folder, check the whole package,
+# back up the program files, then copy the new ones over. If the copy fails, the backup goes
+# back, so the folder is never left half old and half new.
 function Invoke-Update {
   $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ('vsp-update-' + [guid]::NewGuid())
   try {
     New-Item -ItemType Directory -Path $tmp | Out-Null
     $zip = Join-Path $tmp 'latest.zip'
     Invoke-WebRequest -Uri $zipUrl -OutFile $zip -TimeoutSec 60 -UseBasicParsing -ErrorAction Stop
-    Expand-Archive -Path $zip -DestinationPath $tmp -Force -ErrorAction Stop
-    $src = Get-ChildItem -Path $tmp -Directory | Select-Object -First 1
-    if (-not $src -or -not (Test-Path (Join-Path (Join-Path $src.FullName 'app') 'index.html')) -or
-        -not (Test-Path (Join-Path (Join-Path $src.FullName 'app') 'cases'))) { return '{"ok":false,"error":"the download was incomplete"}' }
-    Copy-Item -Path (Join-Path $src.FullName '*') -Destination $top -Recurse -Force -ErrorAction Stop
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $z = [System.IO.Compression.ZipFile]::OpenRead($zip)
+    try {
+      foreach ($e in $z.Entries) {                 # check every name before anything is written
+        $n = $e.FullName
+        if ($n.StartsWith('/') -or $n.StartsWith('\') -or $n -match '^[A-Za-z]:' -or
+            ($n -split '[\\/]') -contains '..') { return '{"ok":false,"error":"the download holds an unsafe file name"}' }
+      }
+    } finally { $z.Dispose() }
+    $new = Join-Path $tmp 'new'
+    Expand-Archive -Path $zip -DestinationPath $new -Force -ErrorAction Stop
+    $dirs = @(Get-ChildItem -LiteralPath $new -Directory)
+    if ($dirs.Count -ne 1) { return '{"ok":false,"error":"the download was incomplete"}' }
+    $src = $dirs[0].FullName
+    foreach ($n in $needed) {
+      if (-not (Test-Path -LiteralPath (Join-Path $src $n) -PathType Leaf)) { return '{"ok":false,"error":"the download was incomplete"}' }
+    }
+    if (-not (Get-ChildItem -LiteralPath (Join-Path $src 'app\cases') -Filter '*.txt' -ErrorAction SilentlyContinue)) {
+      return '{"ok":false,"error":"the download was incomplete"}'
+    }
+    foreach ($f in (Get-ChildItem -LiteralPath $src -Recurse -File)) {   # never write through a link
+      if (Test-LinkOnTheWay $top $f.FullName.Substring($src.Length + 1)) { return '{"ok":false,"error":"a link in the folder is in the way"}' }
+    }
+    $backup = Join-Path $tmp 'backup'
+    New-Item -ItemType Directory -Path $backup | Out-Null
+    foreach ($n in $program) {
+      $p = Join-Path $top $n
+      if (Test-Path -LiteralPath $p) { Copy-Item -LiteralPath $p -Destination $backup -Recurse -Force }
+    }
+    try {
+      Copy-Item -Path (Join-Path $src '*') -Destination $top -Recurse -Force -ErrorAction Stop
+    } catch {
+      Copy-Item -Path (Join-Path $backup '*') -Destination $top -Recurse -Force -ErrorAction SilentlyContinue
+      return '{"ok":false,"error":"could not copy the new files, so the old ones were put back"}'
+    }
     return '{"ok":true}'
   } catch {
     return '{"ok":false,"error":"' + ($_.Exception.Message -replace '["\\\r\n]', '') + '"}'
@@ -112,7 +160,7 @@ function Fail($what) {
 
 function Send($stream, $status, $type, [byte[]]$bytes) {
   $head = [System.Text.Encoding]::ASCII.GetBytes(
-    "HTTP/1.0 $status`r`nContent-Type: $type`r`nContent-Length: $($bytes.Length)`r`nCache-Control: no-store`r`nConnection: close`r`n`r`n")
+    "HTTP/1.0 $status`r`nContent-Type: $type`r`nContent-Length: $($bytes.Length)`r`nCache-Control: no-store`r`nX-Frame-Options: DENY`r`nContent-Security-Policy: frame-ancestors 'none'`r`nConnection: close`r`n`r`n")
   $stream.Write($head, 0, $head.Length)
   $stream.Write($bytes, 0, $bytes.Length)
   $stream.Flush()
@@ -183,8 +231,10 @@ function Serve-Client($client) {
 
   $sep  = [System.IO.Path]::DirectorySeparatorChar
   $file = [System.IO.Path]::GetFullPath((Join-Path $root ($path.TrimStart('/').Replace('/', $sep))))
+  # Serve only real files inside the app folder: never through a link or junction.
   if ($file.StartsWith($root + $sep, [System.StringComparison]::OrdinalIgnoreCase) -and
-      (Test-Path -LiteralPath $file -PathType Leaf)) {
+      (Test-Path -LiteralPath $file -PathType Leaf) -and
+      -not (Test-LinkOnTheWay $root $file.Substring($root.Length + 1))) {
     $type = $types[[System.IO.Path]::GetExtension($file).ToLower()]
     if (-not $type) { $type = 'application/octet-stream' }
     Send $stream '200 OK' $type ([System.IO.File]::ReadAllBytes($file))

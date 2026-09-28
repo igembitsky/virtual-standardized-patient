@@ -154,7 +154,8 @@ sub drop {
 sub reply {
   my ($c, $status, $type, $body) = @_;
   print $c "HTTP/1.0 $status\r\nContent-Type: $type\r\nContent-Length: " . length($body)
-         . "\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n", $body;
+         . "\r\nCache-Control: no-store\r\nX-Frame-Options: DENY\r\n"
+         . "Content-Security-Policy: frame-ancestors 'none'\r\nConnection: close\r\n\r\n", $body;
 }
 
 sub handle {
@@ -215,17 +216,51 @@ sub update_files {
   rmtree($tmp);                      # whatever happened, leave no temporary folder behind
   return $err;
 }
+# Run a program without a shell (names from the download never reach a shell), return its lines.
+sub run_lines {
+  open(my $fh, '-|', @_) or return ();
+  my @l = map { chomp; $_ } <$fh>; close $fh;
+  return @l;
+}
+
 sub update_from {
   my ($tmp) = @_;
+  # Every file a complete download must hold (declared here: the main loop above never
+  # reaches file-level lines below it). An update that lacks one is refused.
+  my @NEEDED  = ('app/index.html', 'app/server.pl', 'app/server.py', 'app/server.ps1', 'app/problem.html',
+                 'Start on Windows.bat', 'Start on Linux.desktop', 'Start on Mac.app/Contents/MacOS/start');
+  my @PROGRAM = ('app', 'Start on Windows.bat', 'Start on Linux.desktop', 'Start on Mac.app');
   my $zip = "$tmp/latest.zip";
   system('curl', '-sfL', '-m', '60', '-o', $zip, $ZIP);
   return 'the download did not finish' unless -s $zip;
-  system('tar', '-xf', $zip, '-C', $tmp) == 0 or return 'could not unpack the download';
-  opendir(my $dh, $tmp) or return 'could not read the download';
-  my ($src) = map { "$tmp/$_" } grep { !/^\./ && -d "$tmp/$_" } readdir($dh);
+  # Check every name before anything is written: no absolute path, no "..", no backslash.
+  my @names = run_lines('tar', '-tf', $zip);
+  return 'could not read the download' unless @names;
+  for (@names) { chomp; return 'the download holds an unsafe file name' if m{^/|\\|(^|/)\.\.(/|$)} }
+  my $new = "$tmp/new"; mkdir $new;
+  system('tar', '-xf', $zip, '-C', $new) == 0 or return 'could not unpack the download';
+  return 'the download holds a link' if run_lines('find', $new, '-type', 'l');
+  opendir(my $dh, $new) or return 'could not read the download';
+  my @dirs = grep { !/^\./ && -d "$new/$_" } readdir($dh);
   closedir $dh;
-  ($src && -f "$src/app/index.html" && -d "$src/app/cases") or return 'the download was incomplete';
-  system('cp', '-R', "$src/.", "$top/") == 0 or return 'could not copy the new files';
+  return 'the download was incomplete' unless @dirs == 1;
+  my $src = "$new/$dirs[0]";
+  for (@NEEDED) { return 'the download was incomplete' unless -f "$src/$_" }
+  opendir(my $cd, "$src/app/cases") or return 'the download was incomplete';
+  my @cases = grep { /\.txt$/ } readdir($cd); closedir $cd;
+  return 'the download was incomplete' unless @cases;
+  # Never write through a link: it could lead outside this folder.
+  for my $rel (map { substr($_, length($src) + 1) } run_lines('find', $src, '-type', 'f')) {
+    my $p = $top;
+    for my $part (split m{/}, $rel) { $p .= "/$part"; return 'a link in the folder is in the way' if -l $p }
+  }
+  # Back up the program files; if the copy fails, put them back, so it is never half and half.
+  my $backup = "$tmp/backup"; mkdir $backup;
+  for (@PROGRAM) { system('cp', '-RP', "$top/$_", "$backup/") if -e "$top/$_" }
+  if (system('cp', '-R', "$src/.", "$top/") != 0) {
+    system('cp', '-RP', "$backup/.", "$top/");
+    return 'could not copy the new files, so the old ones were put back';
+  }
   return;
 }
 

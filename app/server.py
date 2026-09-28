@@ -105,26 +105,67 @@ def ollama(path, body=None, timeout=3):
         return json.load(r)
 
 
+# Every file a complete download must hold. An update that lacks one is refused.
+NEEDED = ["app/index.html", "app/server.pl", "app/server.py", "app/server.ps1", "app/problem.html",
+          "Start on Windows.bat", "Start on Linux.desktop", "Start on Mac.app/Contents/MacOS/start"]
+PROGRAM = ["app", "Start on Windows.bat", "Start on Linux.desktop", "Start on Mac.app"]
+
+
+def links_on_the_way(base, rel):
+    """True if any existing part of base/rel is a link: writing there could land outside."""
+    path = base
+    for part in rel.split("/"):
+        path = os.path.join(path, part)
+        if os.path.islink(path):
+            return True
+    return False
+
+
 def do_update():
-    """Download the ZIP, unpack it in a temporary folder, check it is complete, then copy it
-    over this folder. The old files stay until the whole ZIP has arrived and been checked."""
+    """Download the ZIP, check every entry, unpack it in a temporary folder, check the whole
+    package, back up the program files, then copy the new ones over. If the copy fails, the
+    backup goes back, so the folder is never left half old and half new."""
     tmp = tempfile.mkdtemp(prefix="vsp-update-")
     try:
         zpath = os.path.join(tmp, "latest.zip")
         with urllib.request.urlopen(ZIP, timeout=60) as r, open(zpath, "wb") as f:
             shutil.copyfileobj(r, f)
+        new = os.path.join(tmp, "new")
         with zipfile.ZipFile(zpath) as z:
-            for info in z.infolist():
-                z.extract(info, tmp)
+            infos = z.infolist()
+            for info in infos:                           # check every name before anything is written
+                name = info.filename
+                if name.startswith(("/", "\\")) or "\\" in name or re.match(r"^[A-Za-z]:", name) \
+                        or ".." in name.split("/") or (info.external_attr >> 16) & 0o170000 == 0o120000:
+                    return {"ok": False, "error": "the download holds an unsafe file name"}
+            for info in infos:
+                out = z.extract(info, new)               # the safe path zipfile itself made
                 mode = info.external_attr >> 16          # keep the launchers executable
-                if mode & 0o111:
-                    os.chmod(os.path.join(tmp, info.filename), mode & 0o777)
-        dirs = [d for d in os.listdir(tmp) if os.path.isdir(os.path.join(tmp, d))]
-        src = os.path.join(tmp, dirs[0]) if dirs else None
-        if not src or not os.path.isfile(os.path.join(src, "app", "index.html")) \
-                or not os.path.isdir(os.path.join(src, "app", "cases")):
+                if mode & 0o111 and not info.is_dir():
+                    os.chmod(out, 0o755)
+        dirs = [d for d in os.listdir(new) if os.path.isdir(os.path.join(new, d))]
+        src = os.path.join(new, dirs[0]) if len(dirs) == 1 else None
+        if not src or not all(os.path.isfile(os.path.join(src, n)) for n in NEEDED) \
+                or not any(f.endswith(".txt") for f in os.listdir(os.path.join(src, "app", "cases"))):
             return {"ok": False, "error": "the download was incomplete"}
-        shutil.copytree(src, TOP, dirs_exist_ok=True)
+        for d, _, files in os.walk(src):
+            for f in files:
+                rel = os.path.relpath(os.path.join(d, f), src).replace(os.sep, "/")
+                if links_on_the_way(TOP, rel):
+                    return {"ok": False, "error": "a link in the folder is in the way"}
+        backup = os.path.join(tmp, "backup")
+        os.makedirs(backup)
+        for n in PROGRAM:
+            p = os.path.join(TOP, n)
+            if os.path.isdir(p):
+                shutil.copytree(p, os.path.join(backup, n), symlinks=True)
+            elif os.path.isfile(p):
+                shutil.copy2(p, os.path.join(backup, n))
+        try:
+            shutil.copytree(src, TOP, dirs_exist_ok=True)
+        except Exception:
+            shutil.copytree(backup, TOP, dirs_exist_ok=True, symlinks=True)
+            raise
         return {"ok": True}
     except Exception as e:
         return {"ok": False, "error": re.sub(r'["\\]', "", str(e))}
@@ -135,6 +176,15 @@ def do_update():
 class H(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):
         super().__init__(*a, directory=ROOT, **k)
+
+    def translate_path(self, path):
+        # Serve only real files inside the app folder: a link that leads outside is not found.
+        p = super().translate_path(path)
+        real, root = os.path.realpath(p), os.path.realpath(ROOT)
+        return p if real == root or real.startswith(root + os.sep) else os.path.join(root, "not-found")
+
+    def do_HEAD(self):
+        self.send_error(405)                         # the page never uses HEAD
 
     def reply(self, body, kind="text/plain"):
         body = body.encode() if isinstance(body, str) else body
@@ -204,6 +254,8 @@ class H(http.server.SimpleHTTPRequestHandler):
 
     def end_headers(self):
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Frame-Options", "DENY")   # no other site may show it in a frame
+        self.send_header("Content-Security-Policy", "frame-ancestors 'none'")
         super().end_headers()
 
     def log_message(self, fmt, *a):

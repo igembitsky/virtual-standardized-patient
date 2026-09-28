@@ -103,7 +103,7 @@ def build():
                         "unseen": r["unseen"]["overall"] if r.get("unseen") else None}
                        for r in recs]}
     t = open(os.path.join(HERE, "benchmark_template.html")).read()
-    open(DOC, "w").write(t.replace("__DATA__", json.dumps(data)))
+    open(DOC, "w").write(t.replace("__DATA__", json.dumps(data).replace("<", "\\u003c")))
     print("wrote", DOC)
 
 if __name__ == "__main__":
