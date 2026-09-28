@@ -11,3 +11,4 @@ VERSION         export-ignore
 
 # Keep the Windows launcher's line endings as Windows expects.
 *.bat           text eol=crlf
+SECURITY.md export-ignore
