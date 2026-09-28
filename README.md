@@ -111,7 +111,8 @@ Each claim below can be checked in the files in this folder.
   close the browser tab, and tells Ollama to unload the model.
 - **The launcher serves this folder to this computer only.** It listens on `127.0.0.1`. Other
   computers on your network cannot reach it. Requests for files outside the folder get a
-  404 error. This was tested.
+  404 error. Other web sites open in your browser cannot use it: it answers only its own page.
+  This was tested.
 - **Every part is open source.** The program is one file. Anyone can read it.
 - **The model comes from Ollama's own library**, the same source every Ollama user downloads from.
 - **The code was reviewed and tested.** Five reviewers read the code with different briefs.

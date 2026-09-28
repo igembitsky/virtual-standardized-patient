@@ -126,11 +126,13 @@ function Serve-Client($client) {
   $line = $reader.ReadLine()
   if (-not $line) { return }
   # read the rest of the request before answering, so Windows does not reset the connection
-  $len = 0
+  $len = 0; $hostName = $null; $origin = $null
   while ($true) {
     $h = $reader.ReadLine()
     if ($h -eq $null -or $h -eq '') { break }
     if ($h -match '^Content-Length:\s*(\d+)') { $len = [int]$matches[1] }
+    if ($h -match '^Host:\s*(\S+)') { $hostName = $matches[1] }
+    if ($h -match '^Origin:\s*(\S+)') { $origin = $matches[1] }
   }
   if ($len -gt 0 -and $len -lt 65536) {
     $buf = New-Object char[] $len; $got = 0
@@ -142,6 +144,14 @@ function Serve-Client($client) {
   $path = [System.Uri]::UnescapeDataString($path)
   if ($path -eq '/') { $path = '/index.html' }
   $tab = if ($query -match '(?:^|&)tab=([\w-]{1,40})') { $matches[1] } else { $null }
+
+  # Only this computer's own page may use the simulator. Another web site open in the browser
+  # must not quit or update it (Origin), or read its files through a changed name (Host).
+  if (($hostName -and $hostName -notmatch "^(127\.0\.0\.1|localhost):$port$") -or
+      ($origin -and $origin -notmatch "^http://(127\.0\.0\.1|localhost):$port$")) {
+    Log "Refused $method $path from $(if ($origin) { $origin } else { $hostName })"
+    return Send $stream '403 Forbidden' 'text/plain' (Text "Forbidden`n")
+  }
 
   switch ($path) {
     '/alive' {                             # the page says it is still open

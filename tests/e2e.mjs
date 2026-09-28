@@ -9,6 +9,7 @@
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync, existsSync, rmSync } from "node:fs";
 import { createServer, connect } from "node:net";
+import { request as httpRequest } from "node:http";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -78,6 +79,18 @@ try {
   check(Date.now() - t < 2000, "a silent connection does not hold up others", (Date.now() - t) + " ms");
   idle.destroy();
   check(/Starting version/.test((await get("log")).text), "GET /log returns the log");
+  // another web site open in the browser must not control or read the simulator
+  const evil = await fetch(URL + "quit", { method: "POST", headers: { Origin: "https://evil.example" } });
+  check(evil.status === 403 && await up(), "refuses Quit from another web site", "status " + evil.status);
+  const upd = await fetch(URL + "update", { method: "POST", headers: { Origin: "https://evil.example" } });
+  check(upd.status === 403, "refuses Update from another web site", "status " + upd.status);
+  // fetch() ignores a Host header, so send this one with the plain http module
+  const rebind = await new Promise(res => {
+    const r = httpRequest({ host: "127.0.0.1", port: 8756, path: "/log", headers: { Host: "evil.example:8756" } },
+                          x => { x.resume(); res(x.statusCode); });
+    r.on("error", () => res(0)); r.end();
+  });
+  check(rebind === 403, "refuses a request addressed to another name", "status " + rebind);
 
   console.log("4. Reload keeps it running; leaving the page stops it");
   await page.reload(); await sleep(12000);

@@ -152,6 +152,15 @@ class H(http.server.SimpleHTTPRequestHandler):
 
     def route(self, method):
         path = urllib.parse.urlparse(self.path).path
+        # Only this computer's own page may use the simulator. Another web site open in the
+        # browser must not quit or update it (Origin), or read its files through a changed name (Host).
+        mine = (f"127.0.0.1:{PORT}", f"localhost:{PORT}")
+        host, origin = self.headers.get("Host"), self.headers.get("Origin")
+        if (host and host.lower() not in mine) or (origin and origin.lower() not in tuple("http://" + m for m in mine)):
+            log(f"Refused {method} {path} from {origin or host}")
+            self.send_response(403); self.send_header("Content-Length", "10"); self.end_headers()
+            self.wfile.write(b"Forbidden\n")
+            return True
         if path == "/alive":                        # the page says it is still open
             with lock:
                 t = self.tab()

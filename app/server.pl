@@ -165,6 +165,16 @@ sub handle {
   $path =~ s{%([0-9A-Fa-f]{2})}{chr(hex($1))}ge;
   $path = '/index.html' if $path eq '/';
 
+  # Only this computer's own page may use the simulator. Another web site open in the browser
+  # must not quit or update it (Origin), or read its files through a changed name (Host).
+  my ($host)   = $req =~ /^Host:[ \t]*(\S+)/mi;
+  my ($origin) = $req =~ /^Origin:[ \t]*(\S+)/mi;
+  if ((defined $host && $host !~ /^(127\.0\.0\.1|localhost):$PORT$/i) ||
+      (defined $origin && $origin !~ m{^http://(127\.0\.0\.1|localhost):$PORT$}i)) {
+    logline("Refused $method $path from " . ($origin || $host));
+    return reply($c, '403 Forbidden', 'text/plain', "Forbidden\n");
+  }
+
   if ($path eq '/alive') { $tabs{$tab} = time if $tab; $seen = 1; return reply($c, '200 OK', 'text/plain', 'ok') }
   if ($path eq '/bye')   { delete $tabs{$tab} if $tab;             return reply($c, '200 OK', 'text/plain', 'ok') }
   if ($path eq '/quit' && $method eq 'POST') { $quit = 'Quit was pressed'; return reply($c, '200 OK', 'text/plain', 'ok') }
