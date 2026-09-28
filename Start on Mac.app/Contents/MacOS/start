@@ -8,6 +8,7 @@
 # the moment the folder is usable, in log.txt beside the Start files, where anyone can find it.
 LOG="$HOME/Library/Logs/virtual-standardized-patient.log"
 /bin/mkdir -p "$HOME/Library/Logs" 2>/dev/null || LOG="${TMPDIR:-/tmp}/virtual-standardized-patient.log"
+[ -L "$LOG" ] && /bin/rm -f "$LOG"          # never write the log through a link
 exec >>"$LOG" 2>&1
 first=$(($(/usr/bin/wc -l < "$LOG") + 1))    # this run's first line, to copy into log.txt later
 echo "$(date '+%Y-%m-%d %H:%M:%S') Start on Mac: $0"

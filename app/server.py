@@ -33,31 +33,51 @@ QUIET_TAB  = 240   # a tab that has not been heard from, e.g. the browser was ki
 tabs, lock, state = {}, threading.Lock(), {"seen": False, "quit": False}
 # The log goes beside the Start files, where anyone can find it and send it. If the folder
 # cannot be written, the temporary folder instead.
-# A log.txt that is a link is not followed: it could point anywhere.
-LOG = os.path.join(TOP, "log.txt")
+# The log is opened once, and never through a link (O_NOFOLLOW): a link could point anywhere,
+# and one made later is not followed either, because the open file is kept.
+NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
+
+
+def open_log(p):
+    if os.path.islink(p):
+        raise OSError("the log is a link")
+    try:                                                    # keep the log small
+        if os.path.getsize(p) > 200_000:
+            os.replace(p, p + ".old")
+    except OSError:
+        pass
+    fd = os.open(p, os.O_WRONLY | os.O_APPEND | os.O_CREAT | NOFOLLOW, 0o644)
+    return os.fdopen(fd, "a", encoding="utf-8", buffering=1)
+
+
+LOG, LOGF, log_lock = os.path.join(TOP, "log.txt"), None, threading.Lock()
 try:
-    if os.path.islink(LOG):
-        raise OSError("log.txt is a link")
-    open(LOG, "a").close()
+    LOGF = open_log(LOG)
 except OSError:
     LOG = os.path.join(tempfile.gettempdir(), "virtual-standardized-patient.log")
-    if os.path.islink(LOG):
-        os.unlink(LOG)
+    try:
+        if os.path.islink(LOG):
+            os.unlink(LOG)
+        LOGF = open_log(LOG)
+    except OSError:
+        LOGF = None
 
 
 def log(msg):
     line = time.strftime("%Y-%m-%d %H:%M:%S ") + msg
     print(line, flush=True)
     try:
-        with open(LOG, "a", encoding="utf-8") as f:
-            f.write(line + "\n")
-    except OSError:
+        if LOGF:
+            with log_lock:
+                LOGF.write(line + "\n")
+    except (OSError, ValueError):
         pass
 
 
 def log_tail(n=150):
     try:
-        with open(LOG, encoding="utf-8", errors="replace") as f:
+        fd = os.open(LOG, os.O_RDONLY | NOFOLLOW)
+        with os.fdopen(fd, encoding="utf-8", errors="replace") as f:
             return "".join(f.readlines()[-n:])
     except OSError:
         return "(no log)\n"
@@ -120,11 +140,14 @@ class H(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):
         super().__init__(*a, directory=ROOT, **k)
 
-    def translate_path(self, path):
+    def send_head(self):
         # Serve only real files inside the app folder: a link that leads outside is not found.
-        p = super().translate_path(path)
+        p = self.translate_path(self.path)
         real, root = os.path.realpath(p), os.path.realpath(ROOT)
-        return p if real == root or real.startswith(root + os.sep) else os.path.join(root, "not-found")
+        if not (real == root or real.startswith(root + os.sep)):
+            self.send_error(404)
+            return None
+        return super().send_head()
 
     def do_HEAD(self):
         self.send_error(405)                         # the page never uses HEAD
@@ -224,11 +247,6 @@ def main():
     try:                                                    # those belong to someone else
         BEFORE = {m.get("name", "") for m in ollama("/api/ps").get("models", [])}
     except Exception:
-        pass
-    try:                                                    # keep the log small
-        if os.path.getsize(LOG) > 200_000:
-            os.replace(LOG, LOG + ".old")
-    except OSError:
         pass
     log(f"Starting version {version()} on {platform.platform()}, Python {platform.python_version()}, in {ROOT}")
     try:

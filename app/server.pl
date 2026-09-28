@@ -12,7 +12,7 @@
 # start, it opens a page in the browser with an error report to email or post on GitHub.
 use strict; use warnings;
 use IO::Socket::INET; use IO::Select; use Cwd 'abs_path'; use File::Basename 'dirname';
-use POSIX 'strftime'; use Fcntl qw(O_WRONLY O_CREAT O_EXCL);
+use POSIX 'strftime'; use Fcntl qw(O_WRONLY O_RDONLY O_CREAT O_EXCL O_APPEND O_NOFOLLOW);
 
 my $PORT   = 8756;
 my $URL    = "http://127.0.0.1:$PORT/";
@@ -32,19 +32,28 @@ my $root = dirname(abs_path($0));    # the app folder, served
 my $top  = dirname($root);           # the folder that was downloaded
 # The log goes beside the Start files, where anyone can find it and send it. If the folder
 # cannot be written, the temporary folder instead.
-# A log.txt that is a link is not followed: it could point anywhere.
-my $LOG  = "$top/log.txt";
-if (-l $LOG or !open(my $t, '>>', $LOG)) {
-  $LOG = ($ENV{TMPDIR} || '/tmp') . '/virtual-standardized-patient.log';
-  unlink $LOG if -l $LOG;
+# The log is opened once, and never through a link (O_NOFOLLOW): a link could point anywhere,
+# and one made later is not followed either, because the open file is kept.
+my ($LOG, $LOGFH);
+sub open_log {
+  my ($p) = @_;
+  return 0 if -l $p;
+  rename $p, "$p.old" if -f $p && -s $p > 200_000;          # keep the log small
+  sysopen(my $fh, $p, O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW, 0644) or return 0;
+  select((select($fh), $| = 1)[0]);
+  ($LOG, $LOGFH) = ($p, $fh);
+  return 1;
 }
-$LOG =~ s{//+}{/}g;
+open_log("$top/log.txt") or do {
+  (my $t = ($ENV{TMPDIR} || '/tmp') . '/virtual-standardized-patient.log') =~ s{//+}{/}g;
+  unlink $t if -l $t;
+  open_log($t);
+};
 my $srv;
 
 # Anything that goes wrong from here on ends in the problem page, not in silence.
 $SIG{__DIE__} = sub { return if $^S; fail("The launcher stopped with an error: $_[0]") };
 
-rename $LOG, "$LOG.old" if -s $LOG && -s $LOG > 200_000;     # keep the log small
 logline("Starting version " . version() . " on " . mac_version() . ", Perl $^V, in $root");
 
 # Patient models that were already loaded when the simulator started belong to someone else:
@@ -109,11 +118,11 @@ stop($quit);
 sub logline {
   my $line = strftime('%Y-%m-%d %H:%M:%S ', localtime) . join('', @_) . "\n";
   print $line if -t STDOUT;          # started from Terminal; otherwise STDOUT is the log already
-  if (open my $fh, '>>', $LOG) { print $fh $line; close $fh }
+  print $LOGFH $line if $LOGFH;
 }
 sub log_tail {
   my ($n) = @_;
-  open my $fh, '<', $LOG or return "(no log)\n";
+  sysopen(my $fh, $LOG // '', O_RDONLY | O_NOFOLLOW) or return "(no log)\n";
   my @l = <$fh>; close $fh;
   return join '', @l[($#l - $n + 1 < 0 ? 0 : $#l - $n + 1) .. $#l];
 }

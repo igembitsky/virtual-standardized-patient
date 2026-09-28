@@ -26,13 +26,25 @@ $lastTab  = 10    # after the last tab closes, so a reload does not stop it
 $quietTab = 240   # a tab that has not been heard from, e.g. the browser was killed
 # The log goes beside the Start files, where anyone can find it and send it. If the folder
 # cannot be written, the temporary folder instead.
-# A log.txt that is a link is not followed: it could point anywhere.
-$log    = Join-Path $top 'log.txt'
-try {
-  $it = Get-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue
-  if ($it -and ($it.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) { throw 'log.txt is a link' }
-  [System.IO.File]::AppendAllText($log, '')
-} catch { $log = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient.log' }
+# The log is opened once and kept open, and never through a link or junction: a link could
+# point anywhere, and one made later is not followed either.
+function Test-IsLink($p) {
+  $it = Get-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue
+  return [bool]($it -and ($it.Attributes -band [System.IO.FileAttributes]::ReparsePoint))
+}
+function Open-Log($p) {
+  if (Test-IsLink $p) { throw 'the log is a link' }
+  try { if ((Get-Item -LiteralPath $p -ErrorAction Stop).Length -gt 200000) { Move-Item -Force -LiteralPath $p "$p.old" } } catch {}
+  $fs = [System.IO.File]::Open($p, [System.IO.FileMode]::Append, [System.IO.FileAccess]::Write, [System.IO.FileShare]::ReadWrite)
+  $w = New-Object System.IO.StreamWriter($fs, (New-Object System.Text.UTF8Encoding $false))
+  $w.AutoFlush = $true
+  return $w
+}
+$log = Join-Path $top 'log.txt'; $logWriter = $null
+try { $logWriter = Open-Log $log } catch {
+  $log = Join-Path ([System.IO.Path]::GetTempPath()) 'virtual-standardized-patient.log'
+  try { $logWriter = Open-Log $log } catch {}
+}
 $types  = @{
   '.html'='text/html; charset=utf-8'; '.js'='application/javascript';
   '.css'='text/css'; '.json'='application/json'; '.txt'='text/plain; charset=utf-8';
@@ -73,9 +85,10 @@ function Stop-Patient {
 function Log($msg) {
   $line = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss ') + $msg
   Write-Host $line
-  try { Add-Content -LiteralPath $log -Value $line -Encoding UTF8 } catch {}
+  try { if ($logWriter) { $logWriter.WriteLine($line) } } catch {}
 }
 function Get-LogTail($n) {
+  if (Test-IsLink $log) { return '(no log)' }
   try { (Get-Content -LiteralPath $log -Tail $n -ErrorAction Stop) -join "`n" } catch { '(no log)' }
 }
 function Get-Version {
@@ -203,7 +216,6 @@ function Serve-Client($client) {
 # Anything that goes wrong from here on ends in the problem page, not in silence.
 trap { Log ($_ | Out-String); Fail "The launcher stopped with an error: $($_.Exception.Message)" }
 
-try { if ((Get-Item -LiteralPath $log -ErrorAction Stop).Length -gt 200000) { Move-Item -Force $log "$log.old" } } catch {}
 Log "Starting version $(Get-Version) on $(Get-Computer), in $root"
 try {
   $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Parse('127.0.0.1'), $port)
