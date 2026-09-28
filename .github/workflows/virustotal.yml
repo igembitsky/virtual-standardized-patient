@@ -1,0 +1,56 @@
+# VirusTotal checks the exact ZIP that participants download against many antivirus engines,
+# and gives a public report anyone can open. It runs when the program files change.
+# It needs a free VirusTotal API key in the repository secret VT_API_KEY. Without the key it
+# does nothing and says so. The ZIP becomes visible on VirusTotal; this repository is public.
+name: VirusTotal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - "Start on Mac.app/**"
+      - "Start on Windows.bat"
+      - "Start on Linux.desktop"
+      - ".github/workflows/virustotal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Scan the participant ZIP
+        env:
+          VT_API_KEY: ${{ secrets.VT_API_KEY }}
+        run: |
+          if [ -z "$VT_API_KEY" ]; then
+            echo "No VT_API_KEY secret yet, so no scan. Add a free VirusTotal API key to run it." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          # The same archive as GitHub's Download ZIP: .gitattributes leaves out the same files.
+          git archive --format=zip --prefix=virtual-standardized-patient-main/ -o participant.zip HEAD
+          sha=$(sha256sum participant.zip | cut -d' ' -f1)
+          id=$(curl -sf -H "x-apikey: $VT_API_KEY" -F "file=@participant.zip" \
+                https://www.virustotal.com/api/v3/files | jq -r .data.id)
+          for i in $(seq 1 40); do
+            r=$(curl -sf -H "x-apikey: $VT_API_KEY" "https://www.virustotal.com/api/v3/analyses/$id")
+            [ "$(echo "$r" | jq -r .data.attributes.status)" = "completed" ] && break
+            sleep 15
+          done
+          stats=$(echo "$r" | jq -c .data.attributes.stats)
+          url="https://www.virustotal.com/gui/file/$sha"
+          {
+            echo "### VirusTotal: the participant ZIP"
+            echo ""
+            echo "Result: \`$stats\`"
+            echo ""
+            echo "Full report: $url"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+          # Report only. Some engines flag any script that starts PowerShell with a hidden window,
+          # so a person reads a non-zero result; the run does not fail on its own.
