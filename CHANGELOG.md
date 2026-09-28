@@ -9,6 +9,7 @@ Two small safety fixes from a second independent audit.
 - The log file is opened once and never through a link, so a prepared link cannot make the
   simulator write to, or show, another file.
 - The Linux server answers "not found" directly for a file outside its folder.
+- Only your own user account can read the log file.
 
 ## 1.3, 28 September 2026
 
