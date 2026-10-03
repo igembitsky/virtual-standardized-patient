@@ -2,6 +2,13 @@
 
 The version you have is shown at the bottom of the simulator's page.
 
+## Not released yet
+
+- A phone edition, for testing: the same program, with the model running in the phone's
+  browser. Open https://igembitsky.github.io/virtual-standardized-patient/phone/ on the phone.
+  It is not part of the download for laptops. See
+  [For developers](docs/for-developers.md#the-phone-edition-test-version).
+
 ## 1.3.1, 28 September 2026
 
 Two small safety fixes from a second independent audit.

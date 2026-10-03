@@ -57,6 +57,35 @@ commit. The page's new-version notice links to that release.
   See [`bench/README.md`](../bench/README.md). It needs a logged-in `claude` command, which
   uses your Claude subscription.
 
+## The phone edition (test version)
+
+A second way to run the same program, on a phone, with no laptop and no Ollama. Open
+<https://igembitsky.github.io/virtual-standardized-patient/phone/> on the phone.
+
+- The model runs inside the browser on the phone's graphics chip, with
+  [WebLLM](https://github.com/mlc-ai/web-llm) and WebGPU. It needs Safari on iOS 26 or newer,
+  or Chrome on Android.
+- The learner chooses a model and downloads it once, from Hugging Face: **Standard**, Qwen3 4B,
+  2.3 GB, for phones with 8 GB of memory; or **Light**, Qwen3 1.7B, 1 GB. The browser keeps it.
+  After that the page and the model work with no internet. On an iPhone, **Add to Home Screen**
+  keeps it from being cleared after some days without use.
+- It is slower than a laptop, and the model has a 4,096-token context. In a long consultation
+  the oldest questions and answers, after the patient's first words, are left out of what the
+  model sees.
+- Standard is Qwen3 4B with its thinking turned off, not the `qwen3:4b-instruct` the bench tested.
+  Light is the model that did not pass the bench. Neither is benched in the browser yet.
+
+How it is built: `docs/phone/build.mjs` copies `app/index.html`, changes the lines that only make
+sense on a laptop (each change must match exactly, or the build stops), and adds
+`docs/phone/phone.js`. That file answers the page's requests to Ollama with WebLLM, and its
+requests to the launcher (`/alive`, `/quit`, `/log`) itself. `sw.js` keeps the page for offline
+use. GitHub Pages serves the `docs` folder, so a push to `main` publishes it.
+
+After a change to `app/index.html` or a case, run `node docs/phone/build.mjs` and commit the
+result. The **Phone edition** check fails when that was forgotten. To update WebLLM, replace
+`docs/phone/lib/web-llm.js` with `lib/index.js` from the new `@mlc-ai/web-llm` package and
+change the version in `phone.js`.
+
 ## Make it your own
 
 

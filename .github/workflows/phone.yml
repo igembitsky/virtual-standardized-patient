@@ -1,0 +1,21 @@
+# The phone edition (docs/phone) is built from app/index.html by docs/phone/build.mjs.
+# This fails when app/index.html changed and the phone edition was not built again.
+name: Phone edition
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  up-to-date:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: node docs/phone/build.mjs --check
