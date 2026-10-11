@@ -28,9 +28,11 @@ from datetime import datetime
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 APP = os.path.join(ROOT, "app")
-HTML = os.path.join(APP, "index.html")
-CASES = os.path.join(APP, "cases")
-OLLAMA = "http://127.0.0.1:11434"
+# The page, the cases and the model server can be another edition's (the web pilot runs this
+# harness against its built page, its own cases and a bridge to hosted models).
+HTML = os.environ.get("VSP_HTML", os.path.join(APP, "index.html"))
+CASES = os.environ.get("VSP_CASES", os.path.join(APP, "cases"))
+OLLAMA = os.environ.get("VSP_OLLAMA", "http://127.0.0.1:11434")
 CLAUDE_MIN = ["--no-session-persistence", "--output-format", "json",
               "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
               "--disable-slash-commands", "--setting-sources", ""]
@@ -280,7 +282,7 @@ def run_examiner(c, path, a):
     labels = [q["label"] for q in c["questions"]]
     # The standard script for this case, so every run asks the same words. A case without one
     # gets one written now and saved. --fresh writes a new one for this run only.
-    frozen = os.path.join(HERE, "scripts", c["id"] + ".json")
+    frozen = os.path.join(os.environ.get("VSP_SCRIPTS", os.path.join(HERE, "scripts")), c["id"] + ".json")
     if os.path.exists(frozen) and not a.fresh:
         plan = json.load(open(frozen)); script = "standard"
     else:
