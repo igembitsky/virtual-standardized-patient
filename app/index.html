@@ -1502,34 +1502,48 @@ async function handleTurn(text) {
    EXAMINATION. One standard list, the same for every patient, so the list itself
    gives nothing away. The case file's own words ("chest", "affect", "sinuses") map
    onto it. An examination the case file does not mention gets one fixed line.
+   A word marked ~ belongs to that examination only when the case's finding there uses
+   it: "capillary refill" opens Hydration when the hydration finding gives it, and
+   Peripheral pulses otherwise. A word marked = counts only when typed exactly, so
+   "full examination of the chest" still opens the chest.
    ------------------------------------------------------------ */
 const EXAMS = [
-  ["General", [["General appearance", "general, looks, appearance, inspection, inspect, observe, observation, overall, bmi, weight, height, how they look, look at patient, look at the patient, general look"], ["Hydration", "dehydrated, dehydration, mucous membranes, turgor, skin turgor, skin pinch, sunken eyes, fontanelle"]]],
+  ["General", [["General appearance", "general, looks, appearance, inspection, inspect, observe, observation, overall, bmi, weight, height, how they look, look at patient, look at the patient, general look"], ["Hydration", "dehydrated, dehydration, mucous membranes, turgor, skin turgor, skin pinch, sunken eyes, fontanelle, fluid status, volume status, hydration status, fluid balance, ~capillary refill, ~cap refill, ~crt"],
+    ["Rest of the examination", "=rest of exam, =rest of the exam, =the rest of the exam, =rest of examination, =the rest of the examination, =rest of the body, =remaining exam, =remaining examination, =remaining systems, =other systems, =all other systems, =all systems, =full exam, =full examination, =full physical, =full physical exam, =full physical examination, =complete exam, =complete examination, =complete physical, =physical exam, =physical examination, =head to toe, =everything else, =the rest, =otherwise"]]],
   ["Head and neck", [["Head and face", "head, face, scalp, facial symmetry, facial droop, facial weakness"], ["Eyes", "eye, pupils, sclera, conjunctiva, fundi, jaundice, icterus, ophthalmoscope, ophthalmoscopy, fundoscopy, funduscopy"],
-    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses, frontal, maxillary, nostrils, nasal"],
-    ["Mouth and throat", "mouth, throat, tonsils, teeth, tongue, oral thrush, thrush, pharynx, oropharynx, gums, lips, airway, breath smell, oral cavity"], ["Neck and thyroid", "neck, thyroid, jvp, jugular, neck veins, trachea, tracheal, meningism, neck stiffness, nuchal rigidity, kernig, brudzinski"],
+    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses, frontal, maxillary, nostrils, nasal, sinus tenderness, tender sinuses, facial tenderness, face tenderness, facial pain"],
+    ["Mouth and throat", "mouth, throat, tonsils, teeth, tongue, oral thrush, thrush, pharynx, oropharynx, gums, lips, airway, breath smell, oral cavity, oral mucosa, buccal mucosa, mucosa, inside the mouth"], ["Neck and thyroid", "neck, thyroid, jvp, jugular, neck veins, trachea, tracheal, meningism, neck stiffness, nuchal rigidity, kernig, brudzinski"],
     ["Lymph nodes", "lymph, nodes, glands, neck glands, axilla, axillae, axillary, lymphadenopathy"]]],
   ["Chest", [["Chest and lungs", "chest, lungs, lung, breathing, respiratory, breath sounds, auscultation, auscultate, percussion, percuss"], ["Heart", "cardiac, heart sounds, murmur"], ["Breasts", "breast"]]],
-  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys, costovertebral, cva, renal angle, kidney punch, renal punch"],
+  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys, costovertebral, cva, renal angle, kidney punch, renal punch, cva tenderness, costovertebral angle, costovertebral angle tenderness, renal angle tenderness, flank tenderness, loin, loins, loin tenderness"],
     ["Rectal", "rectum, dre, pr, pr exam, per rectum, digital rectal"], ["Pelvic and genital", "pelvic, genital, vaginal, speculum, bimanual, testes, urethral meatus, urethra"]]],
-  ["Limbs and skin", [["Arms and hands", "arms, hands, wrists, upper limbs"], ["Legs and feet", "legs, feet, foot, right foot, left foot, calves, calf, calf tenderness, ankles, toes, oedema, edema, lower limbs"],
-    ["Peripheral pulses", "pulses, pulse, radial pulse, radial, dorsalis pedis, pedal pulses, foot pulses, femoral pulse, perfusion, capillary refill, cap refill, crt"], ["Skin", "rash, colour, color, diaphoresis, sweating, sweaty, clammy, bruising, bruise, bruises, pallor, cyanosis"], ["Nails", "clubbing, fingertips, fingernails"],
+  ["Limbs and skin", [["Arms and hands", "arms, hands, wrists, upper limbs, =fingers, =finger"], ["Legs and feet", "legs, feet, foot, right foot, left foot, calves, calf, calf tenderness, ankles, toes, oedema, edema, lower limbs"],
+    ["Peripheral pulses", "pulses, pulse, radial pulse, radial, dorsalis pedis, pedal pulses, foot pulses, femoral pulse, perfusion, capillary refill, cap refill, crt"], ["Skin", "rash, colour, color, diaphoresis, sweating, sweaty, clammy, bruising, bruise, bruises, pallor, cyanosis"], ["Nails", "clubbing, fingertips, fingernails, ~fingers, ~finger"],
     ["Joints and muscles", "joints, musculoskeletal, range of motion, muscles"]]],
-  ["Nervous system and mind", [["Nervous system", "neuro, neurological, reflexes, cranial nerves, power, sensation, gcs, glasgow, glasgow coma scale, level of consciousness, consciousness"],
-    ["Gait and balance", "gait, walk, balance, romberg"], ["Mental state", "affect, mood, orientation, speech, facial expression, demeanour, demeanor, mental status"],
-    ["Depression screening", "phq, phq-9, phq9, questionnaire"], ["Cognition screening", "memory, mini mental, moca"]]]
+  ["Nervous system and mind", [["Nervous system", "neuro, neurological, reflexes, cranial nerves, power, sensation, gcs, glasgow, glasgow coma scale, level of consciousness, consciousness, conscious level, avpu, ~pupils, ~pupil"],
+    ["Gait and balance", "gait, walk, balance, romberg"], ["Mental state", "affect, mood, orientation, speech, facial expression, demeanour, demeanor, mental status, ~gcs, ~glasgow, ~glasgow coma scale, ~level of consciousness, ~conscious level, ~consciousness, ~avpu"],
+    ["Depression screening", "phq, phq-9, phq9, questionnaire, phq score, phq-9 score, phq9 score, depression screen, depression score"], ["Cognition screening", "memory, mini mental, moca"]]]
 ];
-const EXAM_ITEMS = EXAMS.flatMap(([group, items]) => items.map(([name, syn]) =>
-  ({ group, name, words: [name.toLowerCase(), ...syn.split(",").map(w => w.trim().toLowerCase())] })));
+const EXAM_ITEMS = EXAMS.flatMap(([group, items]) => items.map(([name, syn]) => {
+  const all = syn.split(",").map(w => w.trim().toLowerCase());
+  return { group, name, words: [name.toLowerCase(), ...all.filter(w => !/^[~=]/.test(w))],
+    exact: all.filter(w => w[0] === "=").map(w => w.slice(1)), maybe: all.filter(w => w[0] === "~").map(w => w.slice(1)) };
+}));
 
 function examSetup(c) {
-  app.exams = EXAM_ITEMS.map(it => ({ ...it, finding: null }));
+  app.exams = EXAM_ITEMS.map(it => ({ ...it, words: it.words.slice(), finding: null }));
   app.examMiss = c.examine.otherwise || null;
   Object.entries(c.examine).forEach(([key, text]) => {
     if (key === "otherwise") return;
     const hit = examFind(key);
     if (hit) hit.finding = text;
     else app.exams.push({ group: "This case", name: key.charAt(0).toUpperCase() + key.slice(1), words: [key], finding: text });
+  });
+  // the ~ words join an examination whose finding uses one of them, and win over the same word elsewhere
+  app.exams.forEach(it => {
+    const said = it.finding ? plainWords(it.finding) : "";
+    it.strong = (it.maybe || []).some(w => wordHit(said, w)) ? it.maybe : [];
+    it.words.push(...it.strong);
   });
 }
 /* Deterministic. An exact word first, then a word that starts with what was typed,
@@ -1538,18 +1552,22 @@ function examFind(q) {
   q = q.toLowerCase().replace(/[^a-z0-9 -]/g, "").replace(/\s+/g, " ").trim();
   if (!q) return null;
   const L = app.exams;
-  return L.find(it => it.words.includes(q)) ||
+  return L.find(it => (it.strong || []).includes(q)) ||
+         L.find(it => it.words.includes(q) || (it.exact || []).includes(q)) ||
          L.find(it => it.words.some(w => w.startsWith(q))) ||
          (q.length >= 3 ? L.find(it => it.words.some(w => w.includes(q))) : null) ||
          firstNamed(L, q);
 }
-/* For a phrase such as "skin inspection" or "cardiac auscultation", the part named first wins. */
+/* For a phrase such as "skin inspection" or "cardiac auscultation", the part named first wins.
+   A word of three letters (gcs, cva, phq) counts only as a whole word: "gcs pupils", "cva tenderness". */
 function firstNamed(L, q) {
-  let best = null, at = Infinity, len = 0;
+  let best = null, at = Infinity, len = 0, strong = false;
+  const padded = " " + q + " ";
   for (const it of L) for (const w of it.words) {
-    if (w.length < 4) continue;
-    const i = q.indexOf(w);
-    if (i >= 0 && (i < at || (i === at && w.length > len))) { best = it; at = i; len = w.length; }
+    if (w.length < 3) continue;
+    const i = w.length < 4 ? padded.indexOf(" " + w + " ") : q.indexOf(w);
+    const s = (it.strong || []).includes(w);
+    if (i >= 0 && (i < at || (i === at && (w.length > len || (w.length === len && s && !strong))))) { best = it; at = i; len = w.length; strong = s; }
   }
   return best;
 }

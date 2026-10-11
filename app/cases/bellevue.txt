@@ -87,7 +87,7 @@ general: Well appearing. Sitting on a chair, no distress, engaged but slightly n
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Let her tell the story in her own words | tell me more, tell me about, in your own words, from the beginning, what brings you, going on
+Let her tell the story in her own words | tell me more, tell me about, in your own words, from the beginning, what brings you, going on, tell me a bit more, tell me a little more, more about it, starting from, from the start, start at the beginning
 Where the pain is | where, whereabouts, which part, location, outside, inside, deep, entrance, opening, vulva
 Quality of the pain | describe, what is it like, sharp, dull, burning, raw, quality, kind of pain, feel like, feels like, sort of pain, type of pain
 How bad the pain is and how it affects her | how bad, severity, scale, out of ten, bother*, affect*, stop*
@@ -117,7 +117,7 @@ Masturbation | masturbat*, touch yourself, on your own, by yourself, pleasure yo
 Whether she feels lubricated enough | lubricat*, wet enough, dry, dryness, moist*, natural lubrication
 Libido and desire | libido, desire, interest in sex, sex drive, want to have sex
 Protection and sexually transmitted infections | condom*, protect*, sti, std, sexually transmitted, infection*, trichomon*, tested
-Birth control | birth control, contracept*, pill*, loestrin, prevent pregnancy, get pregnant, avoid pregnancy
+Birth control | birth control, contracept*, pill*, loestrin, prevent pregnancy, get pregnant, avoid pregnancy, avoid getting pregnant, avoiding getting pregnant, prevent getting pregnant, stop you getting pregnant, preventing pregnancy, family planning, iud, the coil
 Safety at home and abuse | safe, abuse*, hurt you, violence, forced, afraid of, threaten*
 
 [ANSWER]
@@ -125,7 +125,7 @@ most likely: Inhibited arousal leading to inadequate lubrication
 also accepted: vaginismus, vulvodynia, vulvovaginitis, medication side effect, hypothyroidism
 tests: this case asks for a management plan rather than tests. Offer or refer to pelvic floor physical therapy. Validate the pain and discuss foreplay and other arousal techniques. Review lubricant options and how and when to use them. Offer or refer to a sex therapist. Discuss changing the SSRI to another antidepressant with a different side effect profile. Discuss changing the oral contraceptive pill to another contraceptive with a different side effect profile.
 pass diagnosis words: arousal, lubricat*, vaginismus, vulvodynia, vulvovagin*, vaginitis, medication side effect, hypothyroid*
-pass test words: pelvic floor, physical therap*, physiotherap*, lubricant*, sex therap*, foreplay, antidepressant*, ssri, zoloft, sertraline, contracept*, loestrin
+pass test words: pelvic floor, physical therap*, physiotherap*, lubricant*, sex therap*, foreplay, antidepressant*, ssri, zoloft, sertraline, contracept*, loestrin, birth control
 teaching point: Pain at the entrance since her very first time, described as rubbed raw and burning, helped by KY jelly and by being more aroused, in a woman who says she does not get wet enough and who takes an SSRI and a low dose oral contraceptive pill. That is inhibited arousal with inadequate lubrication, and the two medicines may be part of it. The diagnosis is made almost entirely by asking, because the internal examination last week was normal and no examination is done today.
 miss note: The sexual history is the case. Whether she reaches orgasm, how often, whether she feels lubricated enough, and what she uses are the questions that separate inadequate arousal from vaginismus, vulvodynia and infection. Most students never ask them.
 
