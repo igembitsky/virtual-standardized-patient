@@ -88,6 +88,7 @@ If you get your antibiotics you do fine and there is no impact. If you don't get
 ears: The right ear drum shows otitis media.
 sinuses: Some tenderness over the eyes and forehead when you press the sinuses.
 neck: Nothing to report.
+lymph nodes: Nothing to report.
 chest: Rhonchi in the lower lung fields.
 heart: Heart sounds normal.
 abdomen: Normal.
@@ -100,16 +101,16 @@ Asked the chief complaint | what brings you, what brings, how can i help, what c
 Long history of infections | infection*, how often, how many times, before, previously, recurrent, past, ever had, sinusitis, pneumonia*, bronchitis, a lot, tend to get, first time
 Infections during childhood | child*, childhood, kid, as a kid, growing up, young, teen*, first time, tubes, when you were little, little one, younger
 Short of breath | breath*, short of breath, breathing, dyspn*, wind*, winded
-Impact on your life | impact, affect*, interfer*, day to day, your life, cope, coping, stop* you, held you back, hold you back, miss work, time off
+Impact on your life | impact, affect*, interfer*, day to day, your life, cope, coping, stop* you, held you back, hold you back, miss work, time off, in the way of, got in the way, get in the way, gets in the way, getting in the way, held back, kept you from, keep you from, keeps you from
 Your concerns and what you think is going on | worry*, worried, concern*, what do you think, why do you think, afraid, scared, reckon, causing
-Summarised the history back to the patient | so to summar*, let me summar*, let me recap, so what i'm hearing, if i understand, so far you, let me make sure i, recap*, summar*, got that right, did i miss, let me check, check i've got
+Summarised the history back to the patient | so to summar*, let me summar*, let me recap, so what i'm hearing, if i understand, so far you, let me make sure i, recap*, summar*, got that right, did i miss, let me check, check i've got, got it right, go over what, let me go over, make sure i've got, make sure i have got, make sure i understood
 
 [ANSWER]
 most likely: Sinusitis due to an underlying primary immunodeficiency, common variable immunodeficiency
 also accepted: IgA deficiency, primary immunodeficiency without a named type, granulomatosis with polyangiitis, Wegener's granulomatosis, vasculitis, cystic fibrosis, ciliary dyskinesia, sinusitis alone, otitis media
 tests: immunoglobulin levels, T cell and B cell counts, functional response to vaccination measured by titres, ANCA, ESR
 pass diagnosis words: cvid, common variable, immunodefic*, immune deficiency, immune deficient, hypogammaglobulin*, agammaglobulin*, immunocompromis*
-pass test words: immunoglobulin*, igg, iga, igm, titer*, titre*, b cell*, t cell*, vaccine response, anca
+pass test words: immunoglobulin*, igg, iga, igm, titer*, titre*, b cell*, t cell*, vaccine response, anca, lymphocyte subset*, flow cytometry, anti neutrophil, antineutrophil
 teaching point: The sinus infection is real, but it is the pattern that matters. Sinus and ear infections two or three times a year, three pneumonias in ten years despite the pneumonia vaccine, bronchiectasis, daily watery diarrhoea and easy bruising, in an adult whose childhood was healthy and whose infections only began at 17 or 18. On examination an adult with otitis media, clubbing from the bronchiectasis, and a flat purpuric rash. That pattern is common variable immunodeficiency, and the vasculitis of granulomatosis with polyangiitis is the differential worth naming beside it.
 miss note: The question about childhood was the one worth asking. A healthy child who begins getting infections at 17 or 18 has an acquired antibody problem, not a lifelong one. The pneumonia vaccine that did not work is the second clue, and it is only offered if you ask about vaccines.
 
