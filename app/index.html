@@ -1504,18 +1504,18 @@ async function handleTurn(text) {
    onto it. An examination the case file does not mention gets one fixed line.
    ------------------------------------------------------------ */
 const EXAMS = [
-  ["General", [["General appearance", "general, looks, appearance, inspection, inspect, observe, observation, overall, bmi, weight, height"], ["Hydration", "dehydrated, mucous membranes, turgor"]]],
-  ["Head and neck", [["Head and face", "head, face, scalp"], ["Eyes", "eye, pupils, sclera, conjunctiva, fundi, jaundice, icterus"],
-    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses, frontal, maxillary"],
-    ["Mouth and throat", "mouth, throat, tonsils, teeth, tongue"], ["Neck and thyroid", "neck, thyroid"],
-    ["Lymph nodes", "lymph, nodes, glands"]]],
-  ["Chest", [["Chest and lungs", "chest, lungs, lung, breathing, respiratory, breath sounds, auscultation, auscultate"], ["Heart", "cardiac, heart sounds, murmur"], ["Breasts", "breast"]]],
-  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys, costovertebral, cva, renal angle"],
-    ["Rectal", "rectum, dre, pr, pr exam, per rectum, digital rectal"], ["Pelvic and genital", "pelvic, genital, vaginal, speculum, bimanual, testes"]]],
-  ["Limbs and skin", [["Arms and hands", "arms, hands, wrists, upper limbs"], ["Legs and feet", "legs, feet, calves, ankles, oedema, edema, lower limbs"],
-    ["Peripheral pulses", "pulses, perfusion, capillary refill"], ["Skin", "rash, colour, color"], ["Nails", "clubbing, fingertips, fingernails"],
+  ["General", [["General appearance", "general, looks, appearance, inspection, inspect, observe, observation, overall, bmi, weight, height, how they look, look at patient, look at the patient, general look"], ["Hydration", "dehydrated, dehydration, mucous membranes, turgor, skin turgor, skin pinch, sunken eyes, fontanelle"]]],
+  ["Head and neck", [["Head and face", "head, face, scalp, facial symmetry, facial droop, facial weakness"], ["Eyes", "eye, pupils, sclera, conjunctiva, fundi, jaundice, icterus, ophthalmoscope, ophthalmoscopy, fundoscopy, funduscopy"],
+    ["Ears", "ear, ear drum, otoscope, hearing"], ["Nose and sinuses", "nose, sinus, sinuses, frontal, maxillary, nostrils, nasal"],
+    ["Mouth and throat", "mouth, throat, tonsils, teeth, tongue, oral thrush, thrush, pharynx, oropharynx, gums, lips, airway, breath smell, oral cavity"], ["Neck and thyroid", "neck, thyroid, jvp, jugular, neck veins, trachea, tracheal, meningism, neck stiffness, nuchal rigidity, kernig, brudzinski"],
+    ["Lymph nodes", "lymph, nodes, glands, neck glands, axilla, axillae, axillary, lymphadenopathy"]]],
+  ["Chest", [["Chest and lungs", "chest, lungs, lung, breathing, respiratory, breath sounds, auscultation, auscultate, percussion, percuss"], ["Heart", "cardiac, heart sounds, murmur"], ["Breasts", "breast"]]],
+  ["Abdomen and pelvis", [["Abdomen", "belly, tummy, stomach, liver, spleen, abdominal"], ["Back and flanks", "back, spine, flank, kidneys, costovertebral, cva, renal angle, kidney punch, renal punch"],
+    ["Rectal", "rectum, dre, pr, pr exam, per rectum, digital rectal"], ["Pelvic and genital", "pelvic, genital, vaginal, speculum, bimanual, testes, urethral meatus, urethra"]]],
+  ["Limbs and skin", [["Arms and hands", "arms, hands, wrists, upper limbs"], ["Legs and feet", "legs, feet, foot, right foot, left foot, calves, calf, calf tenderness, ankles, toes, oedema, edema, lower limbs"],
+    ["Peripheral pulses", "pulses, pulse, radial pulse, radial, dorsalis pedis, pedal pulses, foot pulses, femoral pulse, perfusion, capillary refill, cap refill, crt"], ["Skin", "rash, colour, color, diaphoresis, sweating, sweaty, clammy, bruising, bruise, bruises, pallor, cyanosis"], ["Nails", "clubbing, fingertips, fingernails"],
     ["Joints and muscles", "joints, musculoskeletal, range of motion, muscles"]]],
-  ["Nervous system and mind", [["Nervous system", "neuro, neurological, reflexes, cranial nerves, power, sensation"],
+  ["Nervous system and mind", [["Nervous system", "neuro, neurological, reflexes, cranial nerves, power, sensation, gcs, glasgow, glasgow coma scale, level of consciousness, consciousness"],
     ["Gait and balance", "gait, walk, balance, romberg"], ["Mental state", "affect, mood, orientation, speech, facial expression, demeanour, demeanor, mental status"],
     ["Depression screening", "phq, phq-9, phq9, questionnaire"], ["Cognition screening", "memory, mini mental, moca"]]]
 ];

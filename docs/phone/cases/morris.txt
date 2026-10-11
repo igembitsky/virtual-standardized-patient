@@ -93,14 +93,14 @@ pelvic: Not done in this room. The patient says "The nurse told me someone would
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Where the pain is | where, whereabouts, point, show me, which part, location, spread*, move*, radiat*, go anywhere
+Where the pain is | where, whereabouts, point, show me, which part, location, spread*, move*, radiat*, go anywhere, travel anywhere, does it travel, spread anywhere, does it spread
 Quality of the pain | describe, what is it like, sharp, dull, burning, crampy, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words
 Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, wave*, whole time, ease off, eases off, on and off, off and on, comes back, steady
 What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, eases, helps, set it off, sets it off, hurt more, position
 Colour of the urine | urine, water, wee, pass water, urinat*, pee, peed, peeing, bladder, blood in your urine
 Bowels and stools | stool*, bowel*, motion*, faeces, feces, poo, poop, constipat*, open your bowels, toilet, number two, black, dark, blood in your stool*, bleed*
 Fever or chills | fever, chill*, temperature, hot, shiver*, shaking, rigor, sweat*
-Had this pain before | before, previous, past, ever had, first time, similar, episode*, last time
+Had this pain before | before, previous, past, ever had, first time, similar, episode*, last time, earlier bouts, earlier times, those earlier, bouts, episodes
 Asked about a rectal or pelvic exam | rectal, rectum, pelvic, back passage, internal exam*, pr exam, per rectum
 
 [ANSWER]

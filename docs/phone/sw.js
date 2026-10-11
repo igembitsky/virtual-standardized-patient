@@ -2,7 +2,7 @@
 // The patient model is not here: WebLLM keeps it in the browser's storage by itself.
 // Online, every file comes fresh from the network, and the copy here is updated.
 // Offline, or after 6 seconds with no answer, the copy here is used.
-const CACHE = "vsp-phone-78ae9c6003ce";
+const CACHE = "vsp-phone-b44c3e46ef51";
 const KEEP = ["./","index.html","phone.js","lib/web-llm.js","manifest.webmanifest","icon-180.png","icon-192.png","icon-512.png","cases/index.json","cases/bellevue.txt","cases/davis.txt","cases/graham.txt","cases/lewis.txt","cases/morris.txt","cases/samuels.txt","cases/springfield.txt","cases/travis.txt"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(KEEP.map(f => new Request(f, { cache: "reload" })))).then(() => self.skipWaiting()));

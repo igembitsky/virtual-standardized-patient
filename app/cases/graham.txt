@@ -95,7 +95,7 @@ rectal: Not done yet. The patient says "The nurse told me someone would be in to
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Where the pain is | where, whereabouts, point, show me, which part, location, where did it start, where did the pain start, where it started, where was it, where was the pain, initially, at first, same place, always been, moved, move around, moving around
+Where the pain is | where, whereabouts, point, show me, which part, location, where did it start, where did the pain start, where it started, where was it, where was the pain, initially, at first, same place, always been, moved, move around, moving around, same spot, somewhere else, first came on
 Quality of the pain | describe, what is it like, sharp, dull, burning, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words, what's it like, into words
 Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, whole time, ease off, eases off, on and off, off and on, comes back, go away
 What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, helps, set it off, sets it off, hurt more, position
