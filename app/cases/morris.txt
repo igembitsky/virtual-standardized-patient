@@ -107,8 +107,8 @@ Asked about a rectal or pelvic exam | rectal, rectum, pelvic, back passage, inte
 most likely: Diverticulitis with perforation
 also accepted: pancreatitis, constipation, gastritis, perforated appendix with situs inversus
 tests: complete blood count (CBC), amylase, lipase, electrolytes, abdominal CT
-pass diagnosis words: diverticulitis, perforated diverticul*, diverticular perforation, complicated diverticular*, diverticular disease with perforation, perforated diverticular*, diverticular perforat*, diverticular abscess
-pass test words: ct, computed tomography, cat scan, tomography
+pass diagnosis words: diverticulitis, perforated diverticul*, diverticular perforation, diverticular disease with perforation, perforated diverticular*, diverticular perforat*
+pass test words: ct, computed tomography, cat scan, tomography, cbc, complete blood count, full blood count, fbc, blood count, white cell count, white count, wbc, amylase, lipase, electrolyte*, metabolic panel
 teaching point: A week of left lower abdominal pain that came in waves and is now constant, sharp and worse with movement, with a fever of 101 last night, nausea, a poor appetite and two days without a bowel movement. The abdomen is rigid and tender only in the left lower quadrant. That points to diverticulitis with perforation. Order a CBC, amylase, lipase, electrolytes and an abdominal CT.
 miss note: The earlier episodes are easy to miss: two or three milder bouts of crampy lower abdominal pain over two years that went away after a bowel movement. She only says "not like this" until you ask more.
 
@@ -121,4 +121,4 @@ id: doi:10.15766/mep_2374-8265.8139
 url: https://www.mededportal.org/doi/10.15766/mep_2374-8265.8139
 licence: Creative Commons Attribution (CC BY)
 copyright: Copyright 2011 Falcone and Ogilvie. Case materials copyright University of Pittsburgh School of Medicine, 2010.
-changes: The standardized patient training script was rewritten as instructions for a language model. The original can be played as Mark or Marsha; this file uses Marsha, keeps the original's menstrual history and leaves out the male only history. The pain the patient acts out on examination is served as text from this file rather than performed by touch, and examinations the original does not describe are left out. The quoted lines are the authors' own.
+changes: The standardized patient training script was rewritten as instructions for a language model. The original can be played as Mark or Marsha; this file uses Marsha, keeps the original's menstrual history and leaves out the male only history. The pain the patient acts out on examination is served as text from this file rather than performed by touch, and examinations the original does not describe are left out. The checklist scores the history items and asking about a rectal or pelvic exam. The source's physical examination items (washing hands, draping, gentle palpation, percussion, palpation of all four quadrants, listening to both lungs) and its three patient and physician interaction ratings are not scored, because the examination is given as text. The other diagnoses to consider are the source's differential. The quoted lines are the authors' own.

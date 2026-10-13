@@ -37,8 +37,8 @@ It happens every night, and it has done every night for the month.
 Lying in bed is what makes it worse.
 You have tried everything. You don't watch TV in bed, you don't drink alcohol right before bed, and you have tried reading to help you fall asleep. Nothing has worked.
 You feel tired most of the day now. That is why you have finally decided to talk to someone about it.
-If the doctor asks about your mood, your energy, your interest in things, your appetite, your weight or your concentration, say you can't really say. You mostly just feel tired and not yourself. The forms you filled in before the visit will have the answers.
 You would like something for sleep.
+Your regular family doctor, Dr. Smith, is away. The doctor today is filling in, and you have never met them before. You emailed your doctor the night before about your sleep, and this video visit was set up.
 Besides the trouble sleeping you have no health issues.
 You are not sure what is causing this. If asked why you think you are not sleeping, say "I'm not really sure. Maybe because the bed just feels a bit bigger now since they died."
 You live alone. You have been widowed for just over a year. Your partner died more than a year ago. The trouble sleeping started only a month ago.
@@ -55,8 +55,7 @@ You live in a remote rural area and you cannot easily get in to the clinic witho
 (only if asked) You have no thoughts of suicide and no thoughts of harming yourself. You have no thoughts of harming anyone else.
 If the doctor asks about your mood, or whether you feel sad, down, or depressed, say "I don't know. I just thought I was having trouble sleeping." Do not bring up depression yourself.
 If the doctor tells you that you are depressed, disagree at first, in your own words, and ask how they can know that. You only accept it if the doctor explains the screening form you filled in and what your score means. If they start to explain it, ask what the test is and what the result means.
-You drink three glasses of wine a week, never more.
-(only if asked) If the doctor asks whether your drinking has changed: yes, it has gone up. Before your partner died you drank much less. You have drunk three glasses a week for less than a year.
+You drink three glasses of wine a week, never more. That is definitely more than you used to drink before your partner died, when you drank only occasionally. You have drunk three glasses a week for less than a year.
 You have never smoked cigarettes and you have never used any recreational drugs.
 You take no medicines at all, nothing on prescription and nothing over the counter.
 You have no allergies to medicines and no allergies to anything in the environment.
@@ -71,13 +70,13 @@ You are on Medicare.
 
 [EXAMINE]
 otherwise: This is a video call, so you cannot examine the patient. You can ask them to look at something, or to press somewhere and tell you what they feel.
-general: Alert, low energy in the voice, wearing sleepwear, sitting at the computer. Quiet, irritable, tired.
+general: Alert, low energy in the voice, wearing sleepwear, poorly groomed, sitting at the computer. Quiet, irritable, tired.
 affect: Sad affect, irritable tone, normal speech and judgement, good eye contact.
 depression screening: The screening forms the medical assistant collected before the visit are in the telemedicine system. The PHQ-9 depression screening scores 15.
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Asked about depression as a cause of the sleeping trouble | depress*, sad, feeling down, low mood, feeling blue, hopeless, mood, spirits, low, blue, down
+Identified depression as a possible cause of the sleeping trouble | depress*, mdd, mood disorder
 Asked about thoughts of suicide or self harm | suicid*, kill yourself, end your life, harm yourself, hurt yourself, self harm, better off dead, hurting yourself, harming yourself, worth living, end it all, wish you were dead
 Screened for a history of mania | mania, manic, bipolar, racing thoughts, high energy, elated, spending sprees, grandiose, full of energy, wound up, less sleep, barely need*, mile a minute, top of the world, talking fast, hardly need*
 Asked about alcohol and substance use | alcohol, drink*, wine, beer, liquor, drug*, smok*, tobacco, cigarette*, marijuana
@@ -85,11 +84,11 @@ Asked whether there were other questions or concerns | anything else, other conc
 
 [ANSWER]
 most likely: Major depressive disorder, moderate
-also accepted: adjustment disorder with depressed mood, grief
+also accepted: alcohol use disorder, thyroid disease
 tests: PHQ-9 depression screening downloaded from the telemedicine system, a suicide and self harm risk assessment, a screen for a history of mania, an alcohol and substance use history
 pass diagnosis words: depress*, mdd, major depressive
 pass test words: phq*, patient health questionnaire, depression screen*, depression questionnaire
-teaching point: The challenge is what you offer this patient for the insomnia. The insomnia is the complaint, not the problem. A month of trouble falling asleep in someone widowed just over a year, living alone in a small town with little support, with a low energy voice, a sad affect and a PHQ-9 of 15, is moderate major depressive disorder. Ask about suicide and self harm, screen for mania, and take an alcohol history before you treat. Then use shared decision making: counselling near their home, because the drive to the clinic is an hour, or a connection to the clinic's behavioral health team, or a first line antidepressant such as an SSRI. Give a clear follow up plan and say when you will speak again. Say all of it compassionately and without stigma.
+teaching point: The challenge is what you offer this patient for the insomnia. The insomnia is the complaint, not the problem. A month of trouble falling asleep in someone widowed just over a year, living alone in a small town with little support, with a low energy voice, a sad affect and a PHQ-9 of 15, is moderate major depressive disorder. Alcohol use disorder is unlikely with three glasses of wine a week, and thyroid disease is unlikely with no family history and medical care up to date. Ask about suicide and self harm, screen for mania, and take an alcohol history before you treat. Choose the treatment by the level of depression the PHQ-9 shows. Then use shared decision making: counseling near their home, because the drive to the clinic is an hour, or a connection to the clinic's behavioral health team, or a first line antidepressant such as an SSRI. Give a clear follow up plan and say when you will speak again. Say all of it compassionately and without stigma.
 miss note: The death of the partner is the fact that turns this case, and Lou will drop it into an answer rather than announce it. Lou will not use the word depression and will disagree if you simply assert it. The PHQ-9 score of 15 is the thing that makes the diagnosis believable to them, so download it and explain it.
 
 [CREDIT]
@@ -101,4 +100,4 @@ id: doi:10.15766/mep_2374-8265.10867
 url: https://www.mededportal.org/doi/10.15766/mep_2374-8265.10867
 licence: Creative Commons Attribution (CC BY)
 copyright: Copyright 2019 Cantone, Palmer, Dodson, and Biagioli.
-changes: The standardized patient training script was rewritten as instructions for a language model. The visit is typed rather than spoken over video, so the checklist items about the camera, the microphone and the telemedicine interface are not scored. The PHQ-9 score of 15, which the learner downloads from the telemedicine system in the original, is served from the examination lookup here. All spoken lines are the authors' own.
+changes: The standardized patient training script was rewritten as instructions for a language model. The visit is typed rather than spoken over video, so the checklist items about the camera, the microphone and the telemedicine interface are not scored. The source's interpersonal items (rapport, no interruptions, plain language, empathy, next steps, summary with teach back) and its management items (a treatment plan matched to the PHQ-9 level, shared decision making, a clear follow up plan) are not scored as checklist items; the management is in the teaching point. The source gives 12 minutes to read the scenario and hold the visit, with no written note; here the visit is 12 minutes and a 10 minute note follows, in which the diagnosis and the tests are marked. The other diagnoses to consider are the source's differential. The PHQ-9 score of 15, which the learner downloads from the telemedicine system in the original, is served from the examination lookup here. All spoken lines are the authors' own.

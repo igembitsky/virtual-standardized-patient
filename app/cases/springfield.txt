@@ -60,6 +60,8 @@ You know it is probably nothing serious, but it is really affecting you at work.
 (only if asked) You have no trouble with heat or cold otherwise.
 (only if asked) There has been no change to your skin, your hair or your nails.
 (only if asked) Your weight has not changed.
+(only if asked) You have no palpitations. Your heart does not race or pound.
+(only if asked) You have never had any thyroid problems.
 (only if asked) You have no stomach or bowel trouble, and your bowels never changed with your periods.
 (only if asked) No burning when you pass water, and you do not have to go more often or in a hurry.
 (only if asked) There is no change in your vaginal discharge.
@@ -92,7 +94,7 @@ You know it is probably nothing serious, but it is really affecting you at work.
 [EXAMINE]
 otherwise: This is a video call, so you cannot examine the patient. You can ask them to look at something, or to press somewhere and tell you what they feel.
 # The source has no physical examination. This is a video visit.
-general: Well appearing woman, sitting up, in no distress, at home on a video call. No vital signs were taken, because this is a telehealth visit.
+general: Well appearing overweight woman, sitting up, in no distress, at home on a video call. No vital signs were taken, because this is a telehealth visit.
 
 [QUESTIONS]
 Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
@@ -116,8 +118,8 @@ also accepted: hyperthyroidism, malignancy, anxiety attack, pregnancy, infection
 tests: TSH or thyroid function tests, FSH level, pregnancy test, LH level, estrogen level, cancer labs such as CA-125
 pass diagnosis words: menopaus*, perimenopaus*, postmenopaus*, peri-menopaus*, climacteric, change of life, hypoestrogen*, vasomotor
 pass test words: tsh, thyroid stimulating, fsh, follicle stimulating, pregnancy test, hcg, thyroid function*, thyroid panel, thyroid test*, tft*
-teaching point: She is 51, has had no period for six or seven months, and has hot flashes that start in the chest and spread, vaginal dryness, irritability, and broken sleep. Her mother went through menopause at 50. That is menopause, and it is a clinical diagnosis. Check TSH and a pregnancy test to rule out a thyroid problem and pregnancy. FSH supports it but does not make it. Then treat: lifestyle changes such as dressing in layers, lowering the room temperature, weight loss and avoiding triggers, an SSRI or SNRI if she wants a non hormonal drug, or hormone replacement with estrogen and progesterone because her uterus is intact, with a discussion of risks and benefits, and vaginal estrogen for the dryness. Say out loud that her symptoms are severe enough to treat.
-miss note: The missed periods and the vaginal dryness are the two facts worth having, and she offers neither. Hot flashes on their own could be a thyroid problem or anxiety. Six or seven months without a period at 51, with dryness and irritability, is menopause.
+teaching point: She is 51, has had no period for six or seven months, and has hot flashes that start in the chest and spread, vaginal dryness, irritability, and broken sleep. Her mother went through menopause at 50. That is perimenopause, the transition to menopause: menopause itself is defined by 12 months without a period, and she is at six or seven. It is a clinical diagnosis. Check TSH and a pregnancy test to rule out a thyroid problem and pregnancy. FSH can help, but the diagnosis can be made clinically. Then treat: lifestyle changes such as dressing in layers, lowering the room temperature, weight loss and avoiding triggers, an SSRI or SNRI if she wants a non hormonal drug, or hormone replacement with estrogen and progesterone because her uterus is intact, with a discussion of risks and benefits, and vaginal estrogen for the dryness. Say out loud that her symptoms are severe enough to treat.
+miss note: The missed periods and the vaginal dryness are the two facts worth having, and she offers neither. Hot flashes on their own could be a thyroid problem or anxiety. Six or seven months without a period at 51, with dryness and irritability, is perimenopause; menopause needs 12 months without a period.
 
 [CREDIT]
 authors: Reid HW, Branford K, Reynolds T, Baldwin M, Dotters-Katz S
@@ -128,4 +130,4 @@ id: doi:10.15766/mep_2374-8265.11146
 url: https://www.mededportal.org/doi/10.15766/mep_2374-8265.11146
 licence: Creative Commons Attribution (CC BY)
 copyright: Copyright 2021 Reid et al. The standardized patient case is dated March 2020.
-changes: The standardized patient training script was rewritten as instructions for a language model. There is no physical examination in this case, so only the general appearance is served from this file. All spoken lines are the authors' own.
+changes: The standardized patient training script was rewritten as instructions for a language model. There is no physical examination in this case, so only the general appearance is served from this file; the word overweight comes from the source's example note. The negatives for thyroid disease and palpitations come from the source's scoring criteria. The checklist is the history points of the source's note scoring, plus the introduction from its interpersonal ratings. The source's other interpersonal and communication ratings are not scored, and the note is marked only on the diagnosis and the tests, not on the source's points for the telehealth examination, the reasons for each differential and the management. The other diagnoses to consider are the source's differential. All spoken lines are the authors' own.

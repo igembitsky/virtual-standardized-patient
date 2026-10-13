@@ -42,7 +42,7 @@ Your head hurt even more, and you felt a lot of pressure in your facial sinuses 
 Your right ear hurts inside, like a pressure.
 First you took some decongestant. Then yesterday your temperature still popped up to 102.
 When you blow your nose all this thick yellow to greenish stuff comes out. A moderate amount.
-It just feels like a typical sinus infection. You don't want it to go into your lungs, so you want antibiotics before it spreads there.
+It just feels like a typical sinus infection. You don't want it to go into your lungs. Right now you are not short of breath at all and you don't feel it in your lungs, so you want antibiotics before it spreads there.
 It came on gradually. It has been there all the time for three days and it is not getting better. Nothing makes it worse, nothing makes it better.
 Bending forward or lying down makes no difference.
 The pain is an achy pain. It is in your sinuses, your head and your right ear. It does not go anywhere else.
@@ -92,7 +92,7 @@ lymph nodes: Nothing to report.
 chest: Rhonchi in the lower lung fields.
 heart: Heart sounds normal.
 abdomen: Normal.
-skin: Small flat red spots scattered over the lower legs. The patient says "Isn't that weird, it's so flat that you can't even feel it!"
+skin: Small flat red spots scattered over the lower legs. They blanch when pressed and cannot be felt. The patient says "Isn't that weird, it's so flat that you can't even feel it!"
 nails: Clubbing of the fingers.
 general: Well groomed, in a gown, sitting comfortably on the examination table. Breathes comfortably and can do everything asked without getting short of breath.
 
@@ -106,13 +106,13 @@ Your concerns and what you think is going on | worry*, worried, concern*, what d
 Summarised the history back to the patient | so to summar*, let me summar*, let me recap, so what i'm hearing, if i understand, so far you, let me make sure i, recap*, summar*, got that right, did i miss, let me check, check i've got, got it right, go over what, let me go over, make sure i've got, make sure i have got, make sure i understood
 
 [ANSWER]
-most likely: Sinusitis due to an underlying primary immunodeficiency, common variable immunodeficiency
-also accepted: IgA deficiency, primary immunodeficiency without a named type, granulomatosis with polyangiitis, Wegener's granulomatosis, vasculitis, cystic fibrosis, ciliary dyskinesia, sinusitis alone, otitis media
-tests: immunoglobulin levels, T cell and B cell counts, functional response to vaccination measured by titres, ANCA, ESR
-pass diagnosis words: cvid, common variable, immunodefic*, immune deficiency, immune deficient, hypogammaglobulin*, agammaglobulin*, immunocompromis*
+most likely: Sinusitis due to an underlying primary immunodeficiency (common variable immunodeficiency); second on the differential, granulomatosis with polyangiitis
+also accepted: cystic fibrosis, ciliary dyskinesia
+tests: immunoglobulin levels, T cell and B cell counts, functional response to vaccination measured by titers, ANCA, ESR
+pass diagnosis words: cvid, common variable, immunodefic*, immune deficiency, immune deficient, hypogammaglobulin*, agammaglobulin*, iga deficien*
 pass test words: immunoglobulin*, igg, iga, igm, titer*, titre*, b cell*, t cell*, vaccine response, anca, lymphocyte subset*, flow cytometry, anti neutrophil, antineutrophil
-teaching point: The sinus infection is real, but it is the pattern that matters. Sinus and ear infections two or three times a year, three pneumonias in ten years despite the pneumonia vaccine, bronchiectasis, daily watery diarrhoea and easy bruising, in an adult whose childhood was healthy and whose infections only began at 17 or 18. On examination an adult with otitis media, clubbing from the bronchiectasis, and a flat purpuric rash. That pattern is common variable immunodeficiency, and the vasculitis of granulomatosis with polyangiitis is the differential worth naming beside it.
-miss note: The question about childhood was the one worth asking. A healthy child who begins getting infections at 17 or 18 has an acquired antibody problem, not a lifelong one. The pneumonia vaccine that did not work is the second clue, and it is only offered if you ask about vaccines.
+teaching point: The sinus infection is real, but it is the pattern that matters. Sinus and ear infections two or three times a year, three pneumonias in ten years despite the pneumonia vaccine, bronchiectasis, daily watery diarrhea and easy bruising, in an adult whose childhood was healthy and whose infections only began at 17 or 18. On examination an adult with otitis media, clubbing from the bronchiectasis, and a flat purpuric rash. That pattern is common variable immunodeficiency; the authors also give full credit for IgA deficiency, the other specific type they name. The second diagnosis the authors require is granulomatosis with polyangiitis: a systemic disease of the upper and lower airways with otitis media and a purpuric rash (general vasculitis earns only part of the credit). Treat the sinusitis with antibiotics. Then test for the immunodeficiency with immunoglobulin levels, T cell and B cell counts and vaccine titers, and for vasculitis with ANCA and ESR.
+miss note: The question about childhood was the one worth asking. She was a healthy child and her infections began at 17 or 18, so the recurrent infections began after childhood. The pneumonias despite the pneumonia vaccine are the second clue: a poor response to immunization.
 
 [CREDIT]
 authors: Barilla-LaBarca ML, Rodriguez M, Connors K, Wanamaker T, Cavuoto Petrizzo M
@@ -123,4 +123,4 @@ id: doi:10.15766/mep_2374-8265.10837
 url: https://www.mededportal.org/doi/10.15766/mep_2374-8265.10837
 licence: Creative Commons Attribution (CC BY 4.0)
 copyright: Copyright 2019 Barilla-LaBarca, Rodriguez, Connors, Wanamaker and Cavuoto Petrizzo.
-changes: The standardized patient training script was rewritten as instructions for a language model. The printed examination cards, the moulage and the simulated lung sounds are served as text from this file rather than shown or heard. All spoken lines are the authors' own.
+changes: The standardized patient training script was rewritten as instructions for a language model. The printed examination cards, the moulage and the simulated lung sounds are served as text from this file rather than shown or heard. The ear card does not say which side; this file puts the otitis media in the right ear, where she has her ear pain. The checklist scores the source's history items. The source's eight hypothesis driven examination items (skin, nose, ears, mouth, neck lymph nodes, lungs, spleen, nails), its examination technique items and its communication and professionalism ratings (including telling the patient what to expect in the examination, empathy and avoiding jargon) are not scored, because the examination is given as text. The note passes when it names a primary immunodeficiency; the source's rubric gives full credit only to a named type (CVID or IgA deficiency), and the second diagnosis is not marked. The other diagnoses to consider are the source's third differential, diseases that impair airway clearance. All spoken lines are the authors' own.
