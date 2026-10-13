@@ -42,7 +42,13 @@
    "question": "How have your spirits been lately? Have you been feeling low or blue?",
    "target": "(only if asked) Your mood is low.",
    "expect": "reveal",
-   "credits": "Asked about depression as a cause of the sleeping trouble"
+   "credits": ""
+  },
+  {
+   "question": "Sometimes trouble sleeping like this can come from depression. Do you think you might be depressed?",
+   "target": "If the doctor asks about your mood, or whether you feel sad, down, or depressed, say \"I don't know. I just thought I was having trouble sleeping.\" Do not bring up depression yourself.",
+   "expect": "reveal",
+   "credits": "Identified depression as a possible cause of the sleeping trouble"
   },
   {
    "question": "Sometimes when people feel this worn out, they have thoughts that life isn't worth living, or of hurting themselves or someone else. Has anything like that crossed your mind?",
@@ -64,7 +70,7 @@
   },
   {
    "question": "Is that more or less than you used to drink, say a year or two ago?",
-   "target": "(only if asked) If the doctor asks whether your drinking has changed: yes, it has gone up. Before your partner died you drank much less. You have drunk three glasses a week for less than a year.",
+   "target": "You drink three glasses of wine a week, never more. That is definitely more than you used to drink before your partner died, when you drank only occasionally. You have drunk three glasses a week for less than a year.",
    "expect": "reveal",
    "credits": ""
   },

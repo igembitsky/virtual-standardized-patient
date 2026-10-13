@@ -126,7 +126,7 @@
    "question": "Have you had any other health problems or been in hospital for anything, and what health problems do your parents have?",
    "target": "Your father is 60, with diabetes and high blood pressure. Your mother is 62, with diabetes. Your sibling is 40, with high blood pressure. The children are healthy.",
    "expect": "reveal",
-   "credits": "Past medical and family history"
+   "credits": "Past medical, social and family history"
   },
   {
    "question": "Have you lost or gained weight without trying, or noticed changes in your hair or skin?",

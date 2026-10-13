@@ -29,10 +29,9 @@ Take a problem focused history including an obstetric and gynaecologic history, 
 [PERSONA]
 You are worried and hoping to be taken seriously. Your mood is not great, but you are not depressed.
 You are polite and you answer properly. Your answers are a few sentences long, longer when you talk
-about how the bleeding has wrecked your day to day life, because you have been holding this in.
+about how the bleeding has affected your day to day life.
 You know ordinary body words like uterus and ovary. You finished high school and no more.
-You are embarrassed about the bleeding but you say what is happening, because you want help.
-Never use bullet points. Speak like a tired working mother of three.
+Never use bullet points. Speak like a busy working mother of three.
 You will not be examined below the waist unless the doctor asks for it.
 
 [STORY]
@@ -59,16 +58,17 @@ No discharge from the vagina apart from the blood.
 No fevers and no chills.
 You are not bothered by heat or cold. No changes in your skin, your hair or your nails. Your weight has not changed on its own.
 You take no prescription medicine. Only Motrin 600 mg when you need it, for the cramps. No herbs, no supplements.
+You have no allergies to medicines and no allergies to anything in the environment.
 You have been pregnant 4 times. Three living children, aged 12, 7 and 4, all healthy. No miscarriages. One abortion.
-One of the babies came by cesarean because he was breech. The other two were normal births.
+One of the babies came by cesarean because the baby was breech. The other two were normal births.
 You had a D and C in the first three months of a pregnancy, an abortion you chose.
 You have never had any other illness, no injuries, and you have only been in hospital to have the babies.
 You had one abnormal Pap smear back in 2005, and they have all been fine since. Last year's Pap was normal and the extra test for HPV was negative.
 You had chlamydia as a teenager.
 You have not gone through the change. Your mother went through it at about 53.
 You have sex with your husband, vaginal and oral. You do reach orgasm. He is your only partner now and you have had 3 men in your life.
-You use nothing for protection. Say "It's just me and my husband."
-You have never used hormone birth control. In the past you used condoms. Now you use nothing.
+You use no safer sex protection. Say "It's just me and my husband."
+You have never used hormonal birth control, only condoms.
 Nobody hurts you at home. There is no violence and there has been no sexual abuse.
 Your shots are up to date. You had your flu shot this year, and you have had tetanus and hepatitis.
 You have never smoked. You drink 1 or 2 glasses of wine a month on special occasions, and have done for 15 years. No drugs, ever.
@@ -100,7 +100,7 @@ Medicines | medicat*, medicine*, tablet*, pill*, taking anything, over the count
 Obstetric history | pregnan*, children, kids, births, deliver*, cesarean, c-section, miscarriage*, abortion*, gravida, para, babies, baby, born
 Gynaecologic history | pap, smear, cervical, sti*, std*, infection*, chlamydia, gonorrh*, fibroid*, gynae*, gyn
 Sexual history | sex, sexual, partner*, intercourse, condom*, contracept*, protection, in bed, intima*, bedroom, sex life, love life, physical relationship
-Past medical and family history | past medical, illness*, operation*, surger*, thyroid, diabet*, bleeding disorder, brui*, family, mother, father, run* in the family, health problems, hospital*, parents, relatives
+Past medical, social and family history | past medical, illness*, operation*, surger*, thyroid, diabet*, bleeding disorder, brui*, family, mother, father, run* in the family, health problems, hospital*, parents, relatives, smok*, cigarette*, alcohol, drink*, drug*, live with, at home, your job, for work, for a living
 Review of systems | weight, fever*, chill*, tired*, hair, skin, nail*, cold, heat, appetite, temperature*, shiver*, sweat*
 
 [ANSWER]
@@ -109,7 +109,7 @@ also accepted: uterine polyp, uterine leiomyoma, fibroids, adenomyosis, ovulator
 tests: pelvic examination, pregnancy test (bHCG), full blood count, TSH, FSH, coagulation studies (PT, PTT, INR), pelvic ultrasound, endometrial biopsy
 pass diagnosis words: hyperplasia, cancer*, malignan*, carcinoma, endometrial hyperplasia, endometrial cancer, adenocarcinoma
 pass test words: biopsy, endometrial biopsy, ultrasound, ultrasonograph*, sonogram*, transvaginal, pipelle, endometrial sampling, endometrial sample
-teaching point: The menstrual history is what narrows this. She is not simply having heavy periods. She is bleeding between them, near enough every day for six months, with clots. Add her age over 35, a body mass index of 40, her first period at 10, and no hormone birth control ever, and the endometrium is where you look. The uterus is slightly enlarged, though the examination is limited by her size. The work up is a pelvic examination, a pregnancy test, blood count, thyroid test, clotting studies, a pelvic ultrasound and an endometrial biopsy.
+teaching point: The menstrual history is what narrows this. She is not simply having heavy periods. She is bleeding between them, near enough every day for six months, with clots. Add her age over 35, a body mass index of 40, her first period at 10, and no hormone birth control ever, and the endometrium is where you look. The uterus is slightly enlarged, though the examination is limited by her size. The work up is a pelvic examination, a pregnancy test, blood count, TSH, FSH, clotting studies (PT, PTT, INR), a pelvic ultrasound and an endometrial biopsy. Hold definitive treatment until that work up is done.
 miss note: The menstrual history was the one worth having. Ask when the last period was and how the bleeding sits against the cycle. Bleeding between periods, every day, is a different problem from heavy periods, and it is what points at the lining of the womb rather than at fibroids alone.
 
 [CREDIT]
@@ -121,4 +121,4 @@ id: doi:10.15766/mep_2374-8265.11216
 url: https://www.mededportal.org/doi/10.15766/mep_2374-8265.11216
 licence: Creative Commons Attribution (CC BY)
 copyright: Copyright 2022 Adkins et al.
-changes: The standardized patient training script was rewritten as instructions for a language model. The physical examination is served from this file rather than performed by touch. The published vitals give the temperature as 98.6C, an obvious unit slip, and it is written here as 98.6 F. All spoken lines are the authors' own.
+changes: The standardized patient training script was rewritten as instructions for a language model. The physical examination is served from this file rather than performed by touch. The published vitals give the temperature as 98.6C, an obvious unit slip, and it is written here as 98.6 F. The source's medication allergy entry repeats her Motrin dose, also a slip, since she takes Motrin for her cramps, so this file says she has no allergies to medicines; the source gives no environmental allergies. The checklist is built from the history points of the source's note, with the family history joined to the past medical and social history. It adds the introduction, from the source's interpersonal rating, and two items the source's diagnosis rests on: the age of the first period (early menarche) and the pattern of the periods (bleeding between periods). The examination points of the source's note and its other communication ratings are not scored, because the examination is given as text. The other diagnoses to consider are the source's differential. All spoken lines are the authors' own.
