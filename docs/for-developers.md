@@ -16,9 +16,10 @@
 | `CHANGELOG.md` | The versions, and what changed in each |
 | `VERSION` | The latest version number. The page reads it from GitHub and links to that release |
 | `docs/` | The install pages, and `VERIFICATION.md`, what was measured and how |
+| `docs/decisions/` | Decision records: what was decided, why, and what was given up |
 | `bench/` | The evaluation harness: a Claude student and examiner against the real patient, with a judge. See [`docs/benchmark.html`](benchmark.html) for results |
 
-`.gitattributes` leaves `docs/`, `bench/`, `tests/`, `.github/` and `VERSION` out of GitHub's
+`.gitattributes` leaves `docs/`, `bench/`, `tests/`, `.github/`, `VERSION`, `SECURITY.md` and `CITATION.cff` out of GitHub's
 **Download ZIP**, so participants get only what they need to run it.
 
 What each server does:
@@ -56,6 +57,10 @@ commit. The page's new-version notice links to that release.
 - To test a change to a case, to `systemPrompt()`, or to the model, run `python3 bench/eval.py`.
   See [`bench/README.md`](../bench/README.md). It needs a logged-in `claude` command, which
   uses your Claude subscription.
+
+**The web version.** The hosted web version (a separate, private repository) copies the
+program's logic from `app/index.html` when it is built. A change to that file reaches the web
+version at its next build, so keep the page working in both.
 
 ## Make it your own
 

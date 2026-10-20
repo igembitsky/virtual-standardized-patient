@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Virtual Standardized Patient: phone version moved</title>
+<style>
+:root{--ground:#EFF1EE;--panel:#fff;--ink:#151A17;--body:#333B36;--green:#0B6B4F;--line:#D9DFD8}
+@media (prefers-color-scheme:dark){:root{--ground:#131614;--panel:#1B1F1C;--ink:#EAEEE8;--body:#C7CFC9;--green:#5CC79E;--line:#2B322D}}
+body{margin:0;background:var(--ground);color:var(--body);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:48px 16px}
+h1{color:var(--ink);font-size:26px;line-height:1.25;margin:0 0 12px}
+.btn{display:block;text-align:center;background:var(--green);color:#fff;text-decoration:none;font-weight:600;padding:14px 16px;border-radius:10px;margin:20px 0 10px}
+.btn.ghost{background:transparent;color:var(--green);border:1px solid var(--line)}
+.note{font-size:15px;border-top:1px solid var(--line);margin-top:28px;padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+  <h1>The phone test version has moved</h1>
+  <p>On a phone or tablet, use the web version of the Virtual Standardized Patient Simulator.
+     Nothing to install.</p>
+  <a class="btn" href="https://virtual-patient-staging.onrender.com">Open the web version</a>
+  <a class="btn ghost" href="https://github.com/igembitsky/virtual-standardized-patient">The offline version for laptops</a>
+  <p class="note" id="clean">If you opened the test version before, this page deletes the files it kept on this device.</p>
+</main>
+<script>
+// Delete what the test version kept: its own copy of the page, and the AI model (up to 3.3 GB).
+(async () => {
+  let freed = false;
+  try {
+    for (const r of await navigator.serviceWorker.getRegistrations())
+      if (new URL(r.scope).pathname.startsWith(location.pathname)) { await r.unregister(); freed = true; }
+  } catch {}
+  try {
+    for (const k of await caches.keys())
+      if (k.startsWith("vsp-phone-") || k.startsWith("webllm")) { await caches.delete(k); freed = true; }
+  } catch {}
+  try { ["vsp.phone.model", "vsp.phone.loading"].forEach(k => localStorage.removeItem(k));
+        Object.keys(localStorage).filter(k => k.startsWith("vsp.phone.ready.")).forEach(k => localStorage.removeItem(k)); } catch {}
+  if (freed) document.getElementById("clean").textContent = "The files the test version kept on this device are now deleted.";
+})();
+</script>
+</body>
+</html>

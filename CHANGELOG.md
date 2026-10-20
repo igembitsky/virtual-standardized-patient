@@ -2,6 +2,20 @@
 
 The version you have is shown at the bottom of the simulator's page.
 
+## Not released yet
+
+These changes are in the Download ZIP from the main branch. The page still shows 1.3.1.
+
+- **Fairer marking.** The marking now counts more of the words that clinicians use. For
+  example, "radial pulse", "JVP", "GCS", "skin turgor", and "rest of the examination" now find
+  the right examination. More natural ways to ask a checklist question earn credit.
+- **Cases closer to their sources.** Davis, Lewis, Morris, Samuels, and Springfield were checked
+  against their published sources, and the differences were fixed. Graham and Travis credit a
+  plan only when you state it.
+- **A web version for phones.** The README now explains the two versions: this offline version
+  for laptops, and a hosted web version for any phone or computer. An offline phone version was
+  tried and stopped. See [decision 0001](docs/decisions/0001-phone-version.md).
+
 ## 1.3.1, 28 September 2026
 
 Two small safety fixes from a second independent audit.

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Use it on a phone or tablet
+    url: https://virtual-patient-staging.onrender.com
+    about: The offline version runs on laptops only. The web version works on any phone or computer. Request access there.
+  - name: Report a security problem privately
+    url: https://github.com/igembitsky/virtual-standardized-patient/security/advisories/new
+    about: Please do not open a public issue for a security problem.
