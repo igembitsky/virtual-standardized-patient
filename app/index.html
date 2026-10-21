@@ -869,8 +869,9 @@ function parseCase(text, filename) {
       }
       case "ANSWER":
         if (key === "most likely") c.answer.top = val;
-        else if (key === "also accepted") c.answer.also = val.split(",").map(s => s.trim()).filter(Boolean);
-        else if (key === "tests") c.answer.tests = val.split(",").map(s => s.trim()).filter(Boolean);
+        // a comma inside brackets belongs to one item: "panel (sodium, potassium)" stays one test
+        else if (key === "also accepted") c.answer.also = val.split(/,(?![^()]*\))/).map(s => s.trim()).filter(Boolean);
+        else if (key === "tests") c.answer.tests = val.split(/,(?![^()]*\))/).map(s => s.trim()).filter(Boolean);
         else if (key === "pass diagnosis words") c.answer.dxWords = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
         else if (key === "pass test words") c.answer.txWords = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
         else if (key === "teaching point") c.answer.teach = val;
