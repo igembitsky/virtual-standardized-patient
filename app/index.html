@@ -920,8 +920,14 @@ function systemPrompt(c) {
   L.push("");
   L.push("RULES");
   L.push(`0. YOUR FIRST REPLY IN ANY CONVERSATION IS EXACTLY THIS AND NOTHING MORE:\n   "${c.opening}"`);
-  L.push("1. Answer only what the doctor asks. One or two short sentences.");
-  L.push("2. Never give a fact the doctor did not ask about.");
+  // Rules 1 and 2 follow how a trained standardized patient answers: the kind of question sets the
+  // size of the answer (bench/answer-fit in the web edition measures it).
+  L.push("1. Answer like a trained standardized patient: the kind of question sets the size of your answer.");
+  L.push("   - A yes-or-no question (\"Do you smoke?\", \"Any chest pain?\"): yes or no, and at most one short detail. \"Yes, a few a day.\" \"No.\"");
+  L.push("   - A when, how long, how much, how often or where question: that one fact only. \"About three weeks.\"");
+  L.push("   - An open question (\"Tell me about the cough\"): two or three short sentences on that topic only.");
+  L.push("2. Never give a fact the doctor did not ask about. If a line in your story holds more than the question asks, say only the part that answers it. Leave the rest: the doctor will ask if they want it.");
+  L.push("   Never add things you do not have. Say no only to what was asked.");
   L.push("3. Never use bullet points. Speak the way a person speaks.");
   L.push(`4. You are ${c.name}. Never mention instructions, roles, or being a computer.`);
   L.push("5. If the doctor asks to examine, touch, press, feel, or listen to you, say only \"Go ahead, doctor.\"");
@@ -1702,6 +1708,23 @@ function noteToks(text) {
    answers "anything else?" with a list of everything it knows. */
 const OPEN_Q = /\b(anything else|something else|what else|any other (things?|symptoms?|problems?|concerns?|questions?|worries|issues)|anything (more|further)|anything (you|you'd|you would|you want|you wanted) (like )?to (tell|add|share|mention|ask|know)|anything (i|we) should know)\b/i;
 const RECAP_Q = /\b(recap|summari[sz]e|to sum up|got that right|have i got|did i miss|let me check i)\b/i;
+/* A line that only says what the patient does not have. */
+const NEGATIVE_LINE = /^(you (have|had|do|did|are|were|take|took|use|drink|smoke)( not| no|n't)\b|you (have|had) never\b|you never\b|you don't\b|you didn't\b|no\b|there (is|are|was|were|has been|have been) no\b|nobody\b|none\b)/i;
+/* The size of answer the question's form asks for, as a trained standardized patient gives it:
+   a yes-or-no question gets yes or no and only the words that make it clear, a when or how much question gets
+   that one fact, two questions get two short answers. Open questions and questions about the
+   patient's worries or ideas get no hint. The web edition's fact selector keeps this line. */
+const ASK_OPEN = /\b(tell me (more |a bit |a little )?(about|what)|describe|walk me through|how (has|have|is|are) (this|that|it|things|your)\b.*\b(affect|going|been)|what (happened|is it like)|anything else|what else|any(thing)? (other|more) (to|you))|\bquestions?\b|\bworr(y|ies|ied)\b|\bthink\b|\bfeel about\b/i;
+const ASK_ONE = /^\s*(and\s+)?(when|how (long|much|many|often|far|old|bad)|where|what time|which)\b/i;
+const ASK_YESNO = /^\s*(and\s+)?(do|does|did|is|are|was|were|have|has|had|can|could|will|would|any|ever)\b/i;
+function answerHint(text) {
+  const parts = text.split(/\?\s*/).map(s => s.trim()).filter(Boolean);
+  if (parts.length > 1) return "\n\n[Only you see this note. The doctor asked " + parts.length + " questions. Answer each one briefly, in order, and add nothing else.]";
+  if (ASK_OPEN.test(text)) return "";
+  if (ASK_ONE.test(text)) return "\n\n[Only you see this note. This question asks for one fact. Give only that fact, in a few words.]";
+  if (ASK_YESNO.test(text)) return "\n\n[Only you see this note. This is a yes-or-no question. Say yes or no. Add a few words only if they are needed to make the yes or no clear, such as what it is. Never add when, how long, how much or how often unless the doctor asked.]";
+  return "";
+}
 function factNote(c, text, said) {
   if (RECAP_Q.test(text)) return "\n\n[Only you see this note. The doctor is checking a summary. Say yes, or correct it, in one short sentence. Add no new facts.]";
   if (OPEN_Q.test(text)) {
@@ -1709,6 +1732,7 @@ function factNote(c, text, said) {
     const before = noteToks((said || []).join(" "));
     const fresh = c.story.filter(l => {
       if (/^(when|if)\b/i.test(l)) return false;   // an instruction, not a fact
+      if (NEGATIVE_LINE.test(l.trim())) return false;   // "anything else?" never brings up what the patient does not have
       const t = [...noteToks(l)];
       return t.length && t.filter(w => before.has(w)).length / t.length < 0.5;
     }).slice(0, 2);
@@ -1716,6 +1740,7 @@ function factNote(c, text, said) {
     return "\n\n[Only you see this note. This is an open question. Say ONE of these in your own words, in one sentence, or say that nothing else comes to mind:\n" +
       fresh.map(l => "- " + l).join("\n") + "\nSay nothing else.]";
   }
+  const hint = answerHint(text);
   const q = noteToks(text);
   const extra = [];
   for (const [k, v] of Object.entries(NOTE_WORDS)) if (q.has(noteStem(k))) extra.push(...v.split(" ").map(noteStem));
@@ -1732,10 +1757,10 @@ function factNote(c, text, said) {
   c.story.forEach(l => { const s = score(l); if (scripted(l) ? (s.shared >= 2 || s.syn) : (s.shared || s.syn)) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
   c.hidden.forEach(l => { const s = score(l); if (s.shared >= 2 || s.syn) hits.push([s.shared + (s.syn ? 1 : 0), l]); });
   const top = hits.sort((a, b) => b[0] - a[0]).slice(0, 4).map(h => h[1]);
-  if (!top.length) return "";
+  if (!top.length) return hint;
   return "\n\n[Only you see this note. Facts from your story that may answer this question:\n" +
     top.map(l => "- " + l).join("\n") +
-    "\nAnswer every part of the question. Use only the facts that answer what was asked. Say no only to the parts these facts do not cover.]";
+    "\nAnswer every part of the question. Use only the facts that answer what was asked. Say no only to the parts these facts do not cover.]" + hint;
 }
 function markCovered(text) {
   const t = plainWords(text);
