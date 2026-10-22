@@ -1708,25 +1708,28 @@ function noteToks(text) {
    answers "anything else?" with a list of everything it knows. */
 const OPEN_Q = /\b(anything else|something else|what else|any other (things?|symptoms?|problems?|concerns?|questions?|worries|issues)|anything (more|further)|anything (you|you'd|you would|you want|you wanted) (like )?to (tell|add|share|mention|ask|know)|anything (i|we) should know)\b/i;
 const RECAP_Q = /\b(recap|summari[sz]e|to sum up|got that right|have i got|did i miss|let me check i)\b/i;
-/* A line that only says what the patient does not have. */
-const NEGATIVE_LINE = /^(you (have|had|do|did|are|were|take|took|use|drink|smoke)( not| no|n't)\b|you (have|had) never\b|you never\b|you don't\b|you didn't\b|no\b|there (is|are|was|were|has been|have been) no\b|nobody\b|none\b)/i;
+/* A line that only says what the patient does not have, or one the case keeps for a direct question. */
+const NEGATIVE_LINE = /^((you|he|she|they|the baby|the child)\W+(\w+\W+){0,2}(no|not|never)\b|(you|he|she|they)\W+(\w+\W+){0,1}\w+n't\b|no\b|there (is|are|was|were|has been|have been) no\b|nobody\b|none\b)|\bunless (the doctor )?asks?\b|\bunless asked\b/i;
 /* The size of answer the question's form asks for, as a trained standardized patient gives it:
-   a yes-or-no question gets yes or no and only the words that make it clear, a when or how much question gets
+   a yes-or-no question gets yes or no with what it is or how much (never when, how long or why), a when or how much question gets
    that one fact, two questions (or one about two things) get two short answers. Open questions and questions about the
    patient's worries or ideas get no hint. The web edition's fact selector keeps this line. */
 const ASK_OPEN = /\b(tell me (more |a bit |a little )?(about|what)|describe|walk me through|how (has|have|is|are) (this|that|it|things|your)\b.*\b(affect|going|been)|what (happened|is it like)|anything else|what else|any(thing)? (other|more) (to|you))|\bquestions?\b|\bworr(y|ies|ied)\b|\bthink\b|\bfeel about\b/i;
-const ASK_ONE = /^\s*(and\s+)?(when|how (long|much|many|often|far|old|bad)|where|what time|which)\b/i;
+const ASK_LEAD = String.raw`^\s*((and|so|ok|okay|right|now|on a scale of \d+ to \d+|out of 10|from 1 to 10)\W+)*`;
+const ASK_ONE = new RegExp(ASK_LEAD + String.raw`(when|how (long|much|many|often|far|old|bad|severe)|where|what time|which)\b`, "i");
 const ASK_MANY = /\S.*\b(and|or)\b.*\S/i;
-const ASK_YESNO = /^\s*(and\s+)?(do|does|did|is|are|was|were|have|has|had|can|could|will|would|any|ever)\b/i;
+const ASK_YESNO = new RegExp(ASK_LEAD + String.raw`(do|does|did|is|are|was|were|have|has|had|can|could|will|would|any|ever)\b`, "i");
 function answerHint(text) {
   const parts = text.split(/\?\s*/).map(s => s.trim()).filter(Boolean);
+  // the question itself is the last sentence: "I ask all mothers this. Have you ever had a test?"
+  const last = (parts[parts.length - 1] || text).split(/[.!]\s+/).pop();
   if (parts.length > 1) return "\n\n[Only you see this note. The doctor asked " + parts.length + " questions. Answer each one briefly, in order, and add nothing else.]";
-  if (ASK_OPEN.test(text)) return "";
+  if (ASK_OPEN.test(last)) return "";
   // "When did it start, and did it come on all at once?" or "Any weakness, or trouble talking?"
   // asks about more than one thing in one question
-  if (ASK_MANY.test(text)) return "\n\n[Only you see this note. The doctor asked about more than one thing. Answer each one briefly, in order, and add nothing else.]";
-  if (ASK_ONE.test(text)) return "\n\n[Only you see this note. This question asks for one fact. Give only that fact, in a few words.]";
-  if (ASK_YESNO.test(text)) return "\n\n[Only you see this note. This is a yes-or-no question. Say yes or no. Add a few words only if they are needed to make the yes or no clear, such as what it is. Never add when, how long, how much or how often unless the doctor asked.]";
+  if (ASK_MANY.test(last)) return "\n\n[Only you see this note. The doctor asked about more than one thing. Answer each one briefly, in order, and add nothing else.]";
+  if (ASK_ONE.test(last)) return "\n\n[Only you see this note. This question asks for one fact. Give only that fact, in a few words.]";
+  if (ASK_YESNO.test(last)) return "\n\n[Only you see this note. This is a yes-or-no question. Say yes or no, with what it is or how much, if your facts say. Never add when, how long or why unless the doctor asked.]";
   return "";
 }
 function factNote(c, text, said) {
