@@ -12,6 +12,11 @@ These changes are in the Download ZIP from the main branch. The page still shows
 - **Cases closer to their sources.** Davis, Lewis, Morris, Samuels, and Springfield were checked
   against their published sources, and the differences were fixed. Graham and Travis credit a
   plan only when you state it.
+- **The patient answers only what you ask.** Like a trained standardized patient, the patient
+  answers a yes-or-no question with yes or no, a "how long" question with the time, and an open
+  question with two or three sentences on its topic. It no longer adds facts you did not ask
+  about, and "anything else?" no longer brings up a list of things the patient does not have. In
+  the web version's test, replies with an unasked fact fell from 43% to 5%.
 - **A web version for phones.** The README now explains the two versions: this offline version
   for laptops, and a hosted web version for any phone or computer. An offline phone version was
   tried and stopped. See [decision 0001](docs/decisions/0001-phone-version.md).
