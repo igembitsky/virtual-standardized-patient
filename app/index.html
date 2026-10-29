@@ -754,11 +754,14 @@ const CFG = {
   model: "qwen3:4b-instruct",
   fallbackModels: ["qwen3:4b-instruct", "qwen3:4b", "llama3.1:8b", "granite4.1:3b"],
   storeKey: "vsp.encounters.v1",
-  // New versions. The page asks GitHub for VERSION once at start, one small text file, nothing
-  // sent. A newer number shows a link to that version's release page. Nothing is downloaded or
-  // installed by the program: the person downloads the new version by hand.
-  version: "1.3.1",
-  versionUrl: "https://raw.githubusercontent.com/igembitsky/virtual-standardized-patient/main/VERSION",
+  // New versions. Once at start, the page asks the project's web server for the newest version
+  // number and sends only this version number, so the team can count starts per version (no
+  // cookie, no ID, no address kept). If that server does not answer, the page asks GitHub for
+  // VERSION instead. A newer number shows a link to that version's release page. Nothing is
+  // downloaded or installed by the program: the person downloads the new version by hand.
+  version: "1.3.2",
+  versionUrl: "https://virtual-patient-staging.onrender.com/api/offline/version?v=",
+  versionFallback: "https://raw.githubusercontent.com/igembitsky/virtual-standardized-patient/main/VERSION",
   releaseUrl: "https://github.com/igembitsky/virtual-standardized-patient/releases/tag/v"
 };
 const WANTED = CFG.model;   // downloaded on first run if none of the models above is there
@@ -1114,7 +1117,9 @@ async function quitApp() {
      </div>`;
 }
 /* ---- new versions -------------------------------------------------------
-   One request to GitHub for VERSION, 3 second limit, nothing sent. A newer number
+   One request for the newest version number, 3 second limit: to the project's web server
+   with this version number (a count of starts per version, nothing else), else to GitHub
+   for VERSION. A newer number
    shows a notice in the header with a link to that version's release page, where the
    person downloads it by hand. The program never downloads or installs anything itself.
    Offline, nothing shows. */
@@ -1125,13 +1130,16 @@ function cmpVersion(a, b) {
 }
 async function checkForUpdate() {
   if (location.protocol === "file:") return;
-  let latest = "";
-  try {
-    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 3000);
-    const r = await fetch(CFG.versionUrl, { cache: "no-store", signal: ctl.signal });
-    clearTimeout(t);
-    if (r.ok) latest = (await r.text()).trim();
-  } catch { return; }
+  const ask = async url => {
+    try {
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 3000);
+      const r = await fetch(url, { cache: "no-store", signal: ctl.signal, credentials: "omit", referrerPolicy: "no-referrer" });
+      clearTimeout(t);
+      return r.ok ? (await r.text()).trim() : "";
+    } catch { return ""; }
+  };
+  let latest = await ask(CFG.versionUrl + encodeURIComponent(CFG.version));
+  if (!/^\d+(\.\d+)*$/.test(latest)) latest = await ask(CFG.versionFallback);
   if (!/^\d+(\.\d+)*$/.test(latest) || cmpVersion(latest, CFG.version) <= 0) return;
   showUpdate(latest);
 }

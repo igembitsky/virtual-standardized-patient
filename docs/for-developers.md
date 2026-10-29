@@ -14,13 +14,21 @@
 | `app/cases/` | Eight case files |
 | `app/server.pl`, `app/server.ps1`, `app/server.py` | The same small web server three times, in the language each system already has: Perl on a Mac, PowerShell on Windows, Python on Linux |
 | `CHANGELOG.md` | The versions, and what changed in each |
-| `VERSION` | The latest version number. The page reads it from GitHub and links to that release |
+| `VERSION` | The latest version number. The pilot web server reads it once an hour and answers the page's start-up check (`/api/offline/version`); the page reads it from GitHub when that server does not answer |
 | `docs/` | The install pages, and `VERIFICATION.md`, what was measured and how |
 | `docs/decisions/` | Decision records: what was decided, why, and what was given up |
 | `bench/` | The evaluation harness: a Claude student and examiner against the real patient, with a judge. See [`docs/benchmark.html`](benchmark.html) for results |
 
 `.gitattributes` leaves `docs/`, `bench/`, `tests/`, `.github/`, `VERSION`, `SECURITY.md` and `CITATION.cff` out of GitHub's
-**Download ZIP**, so participants get only what they need to run it.
+**Download ZIP** and out of the release ZIP, so participants get only what they need to run it.
+
+**Releases.** The install pages link to
+`releases/latest/download/virtual-standardized-patient.zip`, so GitHub counts every download
+(Download ZIP from the Code button is not counted). When a release is published,
+`.github/workflows/release.yml` builds that ZIP with `git archive` from the release tag, with the
+same top folder as Download ZIP (`virtual-standardized-patient-main`), and attaches it. To
+release: change `VERSION`, `CFG.version` in `app/index.html` and `CHANGELOG.md`, push, then
+`gh release create v<version> --title <version> --notes-file <notes>`.
 
 What each server does:
 

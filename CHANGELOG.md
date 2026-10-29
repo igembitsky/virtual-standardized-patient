@@ -2,9 +2,14 @@
 
 The version you have is shown at the bottom of the simulator's page.
 
-## Not released yet
+## 1.3.2, 29 October 2026
 
-These changes are in the Download ZIP from the main branch. The page still shows 1.3.1.
+- **One download link.** The install pages now link straight to the ZIP of the newest release.
+  You no longer need the Code button.
+- **A count of starts.** At start, the page asks the project's web server for the newest version
+  number and sends only its own version number. The team counts starts per version. No address,
+  ID or cookie is kept, and your questions never leave your computer. If the server does not
+  answer, the page asks GitHub, as before.
 
 - **Fairer marking.** The marking now counts more of the words that clinicians use. For
   example, "radial pulse", "JVP", "GCS", "skin turgor", and "rest of the examination" now find

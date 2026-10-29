@@ -1,0 +1,38 @@
+# When a release is published, attach the ZIP a participant downloads. The install pages link to
+# releases/latest/download/virtual-standardized-patient.zip, so GitHub counts every download
+# (the Code button's Download ZIP is not counted). The ZIP is git archive of the release tag,
+# with the same top folder as Download ZIP, so every step and picture on the install pages fits.
+name: Release ZIP
+
+on:
+  release:
+    types: [published]
+
+permissions: {}
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write   # to attach the file to the release, nothing else
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+      - name: Build the ZIP and check what it holds
+        run: |
+          git archive --format=zip --prefix=virtual-standardized-patient-main/ -o virtual-standardized-patient.zip HEAD
+          got=$(unzip -Z1 virtual-standardized-patient.zip | cut -d/ -f2 | sort -u | grep -v '^$' | LC_ALL=C sort | tr '\n' '|')
+          echo "$got"
+          [ "$got" = "CHANGELOG.md|LICENSE|README.md|Start on Linux.desktop|Start on Mac.app|Start on Windows.bat|app|" ]
+          want=$(grep -o 'version: "[0-9.]*"' app/index.html | grep -o '[0-9.]*')
+          [ "v$want" = "$TAG" ] || { echo "app/index.html says $want, the tag is $TAG"; exit 1; }
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+      - name: Attach it to the release
+        run: gh release upload "$TAG" virtual-standardized-patient.zip --clobber --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
