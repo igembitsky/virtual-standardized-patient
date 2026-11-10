@@ -58,11 +58,11 @@ def write_fresh(d):
     def one(f):
         c = load_case(os.path.join(CASES, f))
         labels = [q["label"] for q in c["questions"]]
-        plan = claude("opus", PLAN_SYS, "CASE FILE\n" + c["raw"] +
+        plan = claude(os.environ.get("VSP_PLANNER", "opus"), PLAN_SYS, "CASE FILE\n" + c["raw"] +
                       "\n\nCHECKLIST LABELS, use exactly one of these or \"\" in credits:\n" +
                       "\n".join("- " + l for l in labels), PLAN_SCHEMA)
         json.dump({"case": c["id"], **plan}, open(os.path.join(d, c["id"] + ".json"), "w"), indent=1)
-    with ThreadPoolExecutor(4) as ex:
+    with ThreadPoolExecutor(int(os.environ.get("VSP_WORKERS", "4"))) as ex:
         list(ex.map(one, sorted(f for f in os.listdir(CASES) if f.endswith(".txt"))))
 
 if __name__ == "__main__":

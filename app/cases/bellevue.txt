@@ -86,17 +86,17 @@ Your father is 65 with high blood pressure. Your mother is 62 and had breast can
 general: Well appearing. Sitting on a chair, no distress, engaged but slightly nervous when answering questions.
 
 [QUESTIONS]
-Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
+Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr, medical student, student doctor, nursing student, clinical officer, one of the doctors, one of the nurses
 Let her tell the story in her own words | tell me more, tell me about, in your own words, from the beginning, what brings you, going on, tell me a bit more, tell me a little more, more about it, starting from, from the start, start at the beginning
 Where the pain is | where, whereabouts, which part, location, outside, inside, deep, entrance, opening, vulva
 Quality of the pain | describe, what is it like, sharp, dull, burning, raw, quality, kind of pain, feel like, feels like, sort of pain, type of pain
 How bad the pain is and how it affects her | how bad, severity, scale, out of ten, bother*, affect*, stop*
 When the pain started | start*, began, begin*, onset, how long, since when, always, first notic*, when did
-When during sex it hurts | penetration, penetrat*, beginning, throughout, afterward*, after sex, entry, whole time
+When during sex it hurts | penetration, penetrat*, beginning, throughout, afterward*, after sex, entry, whole time, at what point, goes in, all the way through, once you have finished, when does it hurt, during or after, start of sex
 Whether it happens with every partner | all partners, other partners, previous partner*, every partner, only with him, past partner*, before your, people you were with, other people, past relationship*
 Any change since having the baby | baby, birth, deliver*, childbirth, postpartum, daughter, little girl, little boy, had your
 Any change with the menstrual cycle | period*, cycle, menstrual, time of the month, menses
-What makes it better or worse | better, worse, relieve*, ease, aggravat*, help the pain, lubricant*, lubricat*, ky, jelly
+What makes it better or worse | better, worse, relieve*, ease, aggravat*, help the pain, lubricant*, lubricat*, ky, jelly, any different, in the mood, aroused, turned on
 Bleeding with intercourse | bleed*, spotting, blood
 Discharge, odour or itching | discharge, itch*, odour, odor, smell*, dryness, irritat*
 Pain or burning passing water | urinat*, urine, pee, water, bladder
@@ -104,7 +104,7 @@ Hot flashes | hot flash*, hot flush*, night sweat*
 Medicines she takes | medicat*, medicine*, tablet*, taking anything, zoloft, sertraline, prescription, over the counter
 Obstetric history, pregnancies and births | pregnan*, births, deliveries, gravida, miscarr*, children, kids
 Gynecologic history, periods and smears | periods start*, menarche, first period, pap, smear, gynecolog*, gynaecolog*, women's health, womb, cervix, procedure*
-Social history, work, home, tobacco and alcohol | work, job, live with, smok*, tobacco, alcohol, drink*, drug*, exercise
+Social history, work, home, tobacco and alcohol | work, job, live with, smok*, tobacco, alcohol, drink*, drug*, exercise, at home with you, who is at home, for a living, occupation, live alone
 Sex of her partners | men or women, women or men, male or female, partners men, sex of your partner*, men women, women or both, both men, guys or girls
 Age at first sex | first had sex, sexual debut, how old were you, first time you had sex, started having sex
 Number of lifetime partners | how many partners, lifetime partners, number of partners, how many people

@@ -157,7 +157,10 @@ def patient_say(model, messages, note=""):
     txt = re.sub(r"<think>[\s\S]*?</think>", "", d["message"]["content"]).strip()
     return txt, round(time.time() - t0, 1)
 
-def claude(model, system, prompt, schema, timeout=600):
+# A planner or judge at a high effort level can need more than ten minutes for one step.
+CLAUDE_TIMEOUT = int(os.environ.get("VSP_CLAUDE_TIMEOUT", "600"))
+
+def claude(model, system, prompt, schema, timeout=CLAUDE_TIMEOUT):
     cmd = ["claude", "-p", "--model", model, *CLAUDE_MIN, "--json-schema", json.dumps(schema),
            "--system-prompt", system, "--tools", ""]
     p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=timeout)

@@ -105,8 +105,9 @@ def gate_md(sc):
     for k, bar in G.items():
         higher = dict((a, c) for a, _, c in MEASURES)[k]
         p = sc["overall"][k]; r = rate(p)
-        ok = r is None or (r >= bar - 1e-9 if higher else r <= bar + 1e-9)
-        L.append(f"| {names[k]} | {'at least' if higher else 'at most'} {round(bar * 100)}% | {cell(p)} | {'pass' if ok else 'FAIL'} |")
+        ok = r is not None and (r >= bar - 1e-9 if higher else r <= bar + 1e-9)
+        # a measure with no data is not a pass: the run did not test it
+        L.append(f"| {names[k]} | {'at least' if higher else 'at most'} {round(bar * 100)}% | {cell(p)} | {'no data' if r is None else 'pass' if ok else 'FAIL'} |")
     L += ["", f"A case counts a patient measure only with {gates()['rules']['case_min_replies']} or more replies for it.",
           "", "| Case | Result |", "|---|---|"]
     for c, m in sc["cases"].items():

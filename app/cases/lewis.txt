@@ -75,10 +75,10 @@ affect: Sad affect, irritable tone, normal speech and judgement, good eye contac
 depression screening: The screening forms the medical assistant collected before the visit are in the telemedicine system. The PHQ-9 depression screening scores 15.
 
 [QUESTIONS]
-Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
+Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr, medical student, student doctor, nursing student, clinical officer, one of the doctors, one of the nurses
 Identified depression as a possible cause of the sleeping trouble | depress*, mdd, mood disorder
-Asked about thoughts of suicide or self harm | suicid*, kill yourself, end your life, harm yourself, hurt yourself, self harm, better off dead, hurting yourself, harming yourself, worth living, end it all, wish you were dead
-Screened for a history of mania | mania, manic, bipolar, racing thoughts, high energy, elated, spending sprees, grandiose, full of energy, wound up, less sleep, barely need*, mile a minute, top of the world, talking fast, hardly need*
+Asked about thoughts of suicide or self harm | suicid*, kill yourself, end your life, harm yourself, hurt yourself, self harm, better off dead, hurting yourself, harming yourself, worth living, end it all, wish you were dead, ending your life, ending it all, take your own life, taking your own life, not want to be alive, not wanting to be alive, do not want to live, ending their life, hurting themselves, harming themselves, thoughts of ending
+Screened for a history of mania | mania, manic, bipolar, racing thoughts, high energy, elated, spending sprees, grandiose, full of energy, wound up, less sleep, barely need*, mile a minute, top of the world, talking fast, hardly need*, so hyper, hyper, talking very fast, spending a lot more, your normal self
 Asked about alcohol and substance use | alcohol, drink*, wine, beer, liquor, drug*, smok*, tobacco, cigarette*, marijuana
 Asked whether there were other questions or concerns | anything else, other concerns, other questions, further questions, additional questions, questions for me, like to ask, want to ask, anything worrying, anything you want
 

@@ -98,7 +98,7 @@ general: Well groomed, in a gown, sitting comfortably on the examination table. 
 
 [QUESTIONS]
 Asked the chief complaint | what brings you, what brings, how can i help, what can i do for you, going on today, tell me more, bringing you in, brought you, brings you
-Long history of infections | infection*, how often, how many times, before, previously, recurrent, past, ever had, sinusitis, pneumonia*, bronchitis, a lot, tend to get, first time
+Long history of infections | infection*, how often, how many times, before, previously, recurrent, past, ever had, sinusitis, pneumonia*, bronchitis, a lot, tend to get, first time, first started, first start, how old were you, how many years, since childhood, as a child
 Infections during childhood | child*, childhood, kid, as a kid, growing up, young, teen*, first time, tubes, when you were little, little one, younger
 Short of breath | breath*, short of breath, breathing, dyspn*, wind*, winded
 Impact on your life | impact, affect*, interfer*, day to day, your life, cope, coping, stop* you, held you back, hold you back, miss work, time off, in the way of, got in the way, get in the way, gets in the way, getting in the way, held back, kept you from, keep you from, keeps you from

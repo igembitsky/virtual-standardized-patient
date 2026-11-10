@@ -8,7 +8,10 @@ These changes are in the Download ZIP from the main branch. The page still shows
 
 - **Fairer marking.** The marking now counts more of the words that clinicians use. For
   example, "radial pulse", "JVP", "GCS", "skin turgor", and "rest of the examination" now find
-  the right examination. More natural ways to ask a checklist question earn credit.
+  the right examination. More natural ways to ask a checklist question earn credit. A test on
+  10 November 2026 with new test scripts found more missed words: "goitre", "ankle swelling",
+  "cardiovascular", "back passage", "anything else" and others now find the right examination,
+  and 7 cases count more ways to ask a question.
 - **Cases closer to their sources.** Davis, Lewis, Morris, Samuels, and Springfield were checked
   against their published sources, and the differences were fixed. Graham and Travis credit a
   plan only when you state it.

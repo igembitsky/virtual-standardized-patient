@@ -94,10 +94,10 @@ back: A gentle punch over the mid back, at the angle of the ribs and the spine, 
 rectal: Not done yet. The patient says "The nurse told me someone would be in to do that after you spoke with me."
 
 [QUESTIONS]
-Introduced yourself by name and role | i am dr, i'm dr, i am doctor, i'm doctor, my name is, my name's, this is dr, i am nurse, i'm nurse, my name
-Where the pain is | where, whereabouts, point, show me, which part, location, where did it start, where did the pain start, where it started, where was it, where was the pain, initially, at first, same place, always been, moved, move around, moving around, same spot, somewhere else, first came on
+Introduced yourself by name and role | i am dr, i'm dr, i am doctor, i'm doctor, my name is, my name's, this is dr, i am nurse, i'm nurse, my name, medical student, student doctor, nursing student, clinical officer, one of the doctors, one of the nurses
+Where the pain is | where, whereabouts, point, show me, which part, location, where did it start, where did the pain start, where it started, where was it, where was the pain, initially, at first, same place, always been, moved, move around, moving around, same spot, somewhere else, first came on, one spot, that spot, somewhere different, begin somewhere, started somewhere
 Quality of the pain | describe, what is it like, sharp, dull, burning, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words, what's it like, into words
-Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, whole time, ease off, eases off, on and off, off and on, comes back, go away
+Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, whole time, ease off, eases off, on and off, off and on, comes back, go away, steady, in waves, let up, lets up, build up, builds up
 What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, helps, set it off, sets it off, hurt more, position
 Colour of the urine | urine, water, wee, pass water, urinat*, pee, peed, peeing, toilet, bathroom, blood in your urine
 Colour of the stools | stool*, bowel, motion*, feces, faeces, poo, poop, toilet, number two, black, color, colour

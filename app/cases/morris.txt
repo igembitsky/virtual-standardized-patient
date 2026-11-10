@@ -92,11 +92,11 @@ rectal: Not done in this room. The patient says "The nurse told me someone would
 pelvic: Not done in this room. The patient says "The nurse told me someone would be in to do that after you spoke with me."
 
 [QUESTIONS]
-Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
-Where the pain is | where, whereabouts, point, show me, which part, location, spread*, move*, radiat*, go anywhere, travel anywhere, does it travel, spread anywhere, does it spread
+Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr, medical student, student doctor, nursing student, clinical officer, one of the doctors, one of the nurses
+Where the pain is | where, whereabouts, point, show me, which part, location, spread*, move*, radiat*, go anywhere, travel anywhere, does it travel, spread anywhere, does it spread, shoot*, anywhere else, through to your back, different spot, a different place, first came on
 Quality of the pain | describe, what is it like, sharp, dull, burning, crampy, quality, kind of pain, feel like, feels like, sort of pain, type of pain, what kind, put it into words, into words, stabbing, cramp*, gnawing, throbbing, colicky
 Constant or comes and goes | constant, come and go, comes and goes, all the time, intermittent, wave*, whole time, ease off, eases off, on and off, off and on, comes back, steady
-What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, eases, helps, set it off, sets it off, hurt more, position
+What makes it better or worse | better, worse, relieve, ease, aggravat*, help the pain, easier, eases, helps, set it off, sets it off, hurt more, position, more comfortable, comfortable, way of lying, lying or sitting, lying still, takes the edge off, edge off
 Colour of the urine | urine, water, wee, pass water, urinat*, pee, peed, peeing, bladder, blood in your urine
 Bowels and stools | stool*, bowel*, motion*, faeces, feces, poo, poop, constipat*, open your bowels, toilet, number two, black, dark, blood in your stool*, bleed*
 Fever or chills | fever, chill*, temperature, hot, shiver*, shaking, rigor, sweat*
@@ -107,7 +107,7 @@ Asked about a rectal or pelvic exam | rectal, rectum, pelvic, back passage, inte
 most likely: Diverticulitis with perforation
 also accepted: pancreatitis, constipation, gastritis, perforated appendix with situs inversus
 tests: complete blood count (CBC), amylase, lipase, electrolytes, abdominal CT
-pass diagnosis words: diverticulitis, perforated diverticul*, diverticular perforation, diverticular disease with perforation, perforated diverticular*, diverticular perforat*
+pass diagnosis words: diverticulitis, perforated diverticul*, diverticular perforation, diverticular disease with perforation, perforated diverticular*, diverticular perforat*, perforated colonic diverticul*, perforated sigmoid diverticul*, perforation of a diverticul*, perforation of the diverticul*, perforation of diverticul*
 pass test words: ct, computed tomography, cat scan, tomography, cbc, complete blood count, full blood count, fbc, blood count, white cell count, white count, wbc, amylase, lipase, electrolyte*, metabolic panel
 teaching point: A week of left lower abdominal pain that came in waves and is now constant, sharp and worse with movement, with a fever of 101 last night, nausea, a poor appetite and two days without a bowel movement. The abdomen is rigid and tender only in the left lower quadrant. That points to diverticulitis with perforation. Order a CBC, amylase, lipase, electrolytes and an abdominal CT.
 miss note: The earlier episodes are easy to miss: two or three milder bouts of crampy lower abdominal pain over two years that went away after a bowel movement. She only says "not like this" until you ask more.

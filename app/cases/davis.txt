@@ -87,19 +87,19 @@ general: Well appearing woman sitting up, in no distress, but anxious and worrie
 pelvic: The doctor must ask for this examination. Normal external genitalia. Blood in the vault and some blood at the external os. The uterus is anteverted and slightly enlarged, but the examination is limited by her body habitus. No masses beside the uterus.
 
 [QUESTIONS]
-Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr
+Introduced yourself by name and role | i am dr, my name is, i'm dr, this is dr, medical student, student doctor, nursing student, clinical officer, one of the doctors, one of the nurses
 Where the bleeding is coming from | vagina*, where, coming from, source, front, back passage, bladder
 How heavy the bleeding is | how many pads, how many tampons, pad*, tampon*, soak*, heavy, through, clot*, flood*, lump*, clump*
 When it started and how it has changed | start*, began, begin, when did, how long, getting worse, chang*, first notic*
-Last menstrual period | last period, lmp, last menstrual, when was your last, last bleed
+Last menstrual period | last period, lmp, last menstrual, when was your last, last bleed, most recent period, recent period, period begin, period start*, last had a period, recent proper period, last proper period, period began
 Pattern and length of the periods | regular, irregular, cycle, how often, every, how many days, last for, in between, between period*, days between, bleeding between, bleed between, bleeds between, spotting between, between the heavy
 Age of the first period | menarche, first period, how old were you, started your periods
-Associated symptoms | discharge, urin*, burning, pass water, bowel*, poo, stool*, diarrh*, constipat*, pain with sex, bleeding after sex, pee, sting*
-What makes it better or worse | better, worse, helps, help the, reliev*, motrin, ibuprofen, aggravat*, taken anything, ease, easier, set it off, sets it off
+Associated symptoms | discharge, urin*, burning, pass water, bowel*, poo, stool*, diarrh*, constipat*, pain with sex, bleeding after sex, pee, sting*, make love, bleed more afterwards, bleed after, hurt during sex
+What makes it better or worse | better, worse, helps, help the, reliev*, motrin, ibuprofen, aggravat*, taken anything, ease, easier, set it off, sets it off, some relief, gives you relief, anything you've tried, anything you have tried
 Medicines | medicat*, medicine*, tablet*, pill*, taking anything, over the counter, birth control, hormone*
 Obstetric history | pregnan*, children, kids, births, deliver*, cesarean, c-section, miscarriage*, abortion*, gravida, para, babies, baby, born
 Gynaecologic history | pap, smear, cervical, sti*, std*, infection*, chlamydia, gonorrh*, fibroid*, gynae*, gyn
-Sexual history | sex, sexual, partner*, intercourse, condom*, contracept*, protection, in bed, intima*, bedroom, sex life, love life, physical relationship
+Sexual history | sex, sexual, partner*, intercourse, condom*, contracept*, protection, in bed, intima*, bedroom, sex life, love life, physical relationship, sexually, guard against, use anything to, protect yourself, protect yourselves
 Past medical, social and family history | past medical, illness*, operation*, surger*, thyroid, diabet*, bleeding disorder, brui*, family, mother, father, run* in the family, health problems, hospital*, parents, relatives, smok*, cigarette*, alcohol, drink*, drug*, live with, at home, your job, for work, for a living
 Review of systems | weight, fever*, chill*, tired*, hair, skin, nail*, cold, heat, appetite, temperature*, shiver*, sweat*
 
