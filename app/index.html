@@ -1728,7 +1728,7 @@ const NEGATIVE_LINE = /^((you|he|she|they|the baby|the child)\W+(\w+\W+){0,2}(no
    patient's worries or ideas get no hint. The web edition's fact selector keeps this line. */
 const ASK_OPEN = /\b(tell me (more |a bit |a little )?(about|what)|describe|walk me through|how (has|have|is|are) (this|that|it|things|your)\b.*\b(affect|going|been)|what (happened|is it like)|anything else|what else|any(thing)? (other|more) (to|you))|\bquestions?\b|\bworr(y|ies|ied)\b|\bthink\b|\bfeel about\b/i;
 const ASK_LEAD = String.raw`^\s*((and|so|ok|okay|right|now|on a scale of \d+ to \d+|out of 10|from 1 to 10)\W+)*`;
-const ASK_ONE = new RegExp(ASK_LEAD + String.raw`(when|how (long|much|many|often|far|old|bad|severe)|where|what time|which|who|whom)\b`, "i");
+const ASK_ONE = new RegExp(ASK_LEAD + String.raw`(when|how (long|much|many|often|far|old|bad|severe)|where|what time|which|(who|whom) (are you|might you be|is (he|she|this|that)))\b`, "i");
 // "Which medicines is he on?", "Any other illnesses?": a question about a whole group wants every one
 const ASK_GROUP = /\b(which|what|any|other)\b.*\b(medicines|medications|tablets|pills|drugs|illnesses|conditions|operations|surgeries|allergies)\b|\b(which|what) (medicines?|medications?|tablets|pills|drugs) (is|are|does|do|did) (he|she|you|they) (on|take|taking|use|using)\b|\bwhat (other )?(medicines?|medications?) (is|are) (he|she|you|they) on\b/i;
 const ASK_MANY = /\S.*\b(and|or)\b.*\S/i;
