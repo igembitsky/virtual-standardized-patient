@@ -123,9 +123,14 @@ An automated test checks that the patient keeps to its case. The results are on
 
 - **Nothing leaves your computer.** Your questions go only to Ollama, on your own computer at
   `127.0.0.1:11434`. Saved encounters stay in your browser.
-- **One small request.** The page asks GitHub for one file, `VERSION`, to see if a new version
-  exists. Nothing is sent with it. Search `app/index.html` for `fetch(` to see every request.
-- **No account, no sign-in, no cookies, no analytics.**
+- **One small request, and one count.** At start, the page asks the project's web server for the
+  newest version number, to see if a new version exists. It sends only its own version number, for
+  example 1.3.2. The server counts the starts for each version, so the team knows how many people
+  use the simulator. It keeps no address, no ID and no cookie, and never sees your questions or
+  encounters. If the server does not answer, the page asks GitHub for the file `VERSION` instead.
+  Search `app/index.html` for `fetch(` to see every request.
+- **No account, no sign-in, no cookies.** The download link and GitHub count downloads, as GitHub
+  does for every project.
 - **The launcher installs nothing.** It uses a program your system already has: Perl on a Mac,
   PowerShell on Windows, Python on Linux.
 - **This computer only.** The launcher listens on `127.0.0.1`. Other computers on your network

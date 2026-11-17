@@ -25,15 +25,11 @@ Ollama is the free program that runs the AI model on your computer.
 
 ## 2. Download the simulator
 
-1. Go to [github.com/igembitsky/virtual-standardized-patient](https://github.com/igembitsky/virtual-standardized-patient).
-2. Press the green **Code** button.
-3. Press **Download ZIP**.
-
-   <img src="screenshots/github-download-zip.png" width="420" alt="On GitHub, 1: the green Code button, 2: Download ZIP in the menu that opens">
-
-4. Open your **Downloads** folder. Right-click the ZIP file and choose **Extract Here**. A
+1. Download the simulator: **[virtual-standardized-patient.zip](https://github.com/igembitsky/virtual-standardized-patient/releases/latest/download/virtual-standardized-patient.zip)**. It is a small file,
+   under 1 MB. This link always gives the newest version.
+2. Open your **Downloads** folder. Right-click the ZIP file and choose **Extract Here**. A
    folder named `virtual-standardized-patient-main` appears.
-5. Move that folder to your **Desktop**.
+3. Move that folder to your **Desktop**.
 
 ## 3. Start the simulator
 

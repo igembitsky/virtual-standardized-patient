@@ -4,7 +4,7 @@ The version you have is shown at the bottom of the simulator's page.
 
 ## Not released yet
 
-These changes are in the Download ZIP from the main branch. The page still shows 1.3.1.
+These changes are on the main branch. They come to the download link with the next release. The page still shows 1.3.2.
 
 - **The patient keeps track of the conversation.** A clinical reviewer found a patient's wife who
   asked "Is it a stroke, doctor?" three times after the doctor said stroke, and a patient who gave
@@ -32,6 +32,15 @@ These changes are in the Download ZIP from the main branch. The page still shows
 - **A web version for phones.** The README now explains the two versions: this offline version
   for laptops, and a hosted web version for any phone or computer. An offline phone version was
   tried and stopped. See [decision 0001](docs/decisions/0001-phone-version.md).
+
+## 1.3.2, 29 October 2026
+
+- **One download link.** The install pages now link straight to the ZIP of the newest release.
+  You no longer need the Code button.
+- **A count of starts.** At start, the page asks the project's web server for the newest version
+  number and sends only its own version number. The team counts starts per version. No address,
+  ID or cookie is kept, and your questions never leave your computer. If the server does not
+  answer, the page asks GitHub, as before.
 
 ## 1.3.1, 28 September 2026
 
