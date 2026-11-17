@@ -804,7 +804,7 @@ const app = {
 function parseCase(text, filename) {
   const c = {
     file: filename, id: filename.replace(/\.txt$/i, ""),
-    name: "", age: "", occupation: "", setting: "", complaint: "", opening: "",
+    name: "", age: "", occupation: "", setting: "", complaint: "", opening: "", waiting: "",
     vitals: [], abnormal: [], consultMins: 15, noteMins: 5, task: "",
     persona: "", story: [], hidden: [], examine: {}, questions: [],
     answer: {}, credit: {}
@@ -831,6 +831,8 @@ function parseCase(text, filename) {
         else if (key === "setting") c.setting = val;
         else if (key === "complaint") c.complaint = val;
         else if (key === "opening") c.opening = val;
+        // who the learner meets, when a relative answers for the patient ("Nguyen and his wife, Lan, are waiting.")
+        else if (key === "waiting") c.waiting = val;
         break;
       case "VITALS":
         if (key === "abnormal") c.abnormal = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
@@ -899,14 +901,19 @@ function caseIsValid(c) {
 /* ============================================================
    2. THE PROMPT SENT TO THE MODEL
    ============================================================ */
-function systemPrompt(c) {
+// spent: the case's own questions that are done (spentCues). Their lines leave the instructions, so
+// the model is not told again to ask them (a note that only said "do not ask" was not enough).
+function systemPrompt(c, spent, when) {
   const L = [];
   L.push("You are role-playing a patient in a teaching clinic. You are not an assistant.");
   L.push(`You are ${c.name}${c.age ? ", age " + c.age : ""}${c.occupation ? ", " + c.occupation : ""}.`);
   if (c.setting) L.push(`The setting is: ${c.setting}.`);
+  // A model knows no date of its own: without this line a patient told a doctor it was 2024, which in a
+  // stroke case looks like confusion (reviewer, 2026-11-16).
+  if (!CASE_DATE.test(c.setting || "")) L.push(`Today is ${todayText(when ? new Date(when) : new Date())}.`);
   L.push("");
   L.push("HOW YOU ARE");
-  L.push(c.persona.trim());
+  L.push(withoutCues(c.persona, spent).trim());
   L.push("");
   L.push("WHAT YOU KNOW (say a thing ONLY when the doctor asks about that thing)");
   c.story.forEach(s => L.push("- " + s));
@@ -935,6 +942,8 @@ function systemPrompt(c) {
   L.push("7. To an open question such as \"anything else?\", give one more line from WHAT YOU KNOW, or say nothing else comes to mind. Never a line from WHAT YOU DO NOT VOLUNTEER.");
   L.push("8. If the doctor asks about something that is nowhere in your story, in neither list above, the answer is no. Add no details. If it IS in a list, never start with no. Give that fact.");
   L.push("9. Answer each part of a two-part question, in order.");
+  L.push("10. If the doctor asks for a medical detail your story does not give (which type, a dose, a test result, the name of a medicine), say you do not know. Never make one up.");
+  L.push("11. Answer only what the doctor just said. Never go back to an earlier question. Ask each question you are told to ask only once, and never after the doctor has already talked about it.");
   return L.join("\n");
 }
 
@@ -1408,7 +1417,8 @@ $("#startBtn").onclick = () => startConsult();
 
 function startConsult() {
   const c = app.current;
-  app.messages = [{ role: "system", content: systemPrompt(c) }, ...seedTurns(c)];
+  app.when = Date.now();
+  app.messages = [{ role: "system", content: systemPrompt(c, [], app.when) }, ...seedTurns(c)];
   app.visible = [];
   app.covered = new Set();
   app.notes = "";
@@ -1480,7 +1490,9 @@ async function handleTurn(text) {
   try {
     // the note goes with this one question only; the history keeps the plain question
     const said = app.messages.filter(m => m.role === "assistant").map(m => m.content);
+    const asked = app.messages.filter(m => m.role === "user").map(m => m.content);
     const send = app.messages.slice(0, -1).concat({ role: "user", content: text + factNote(c, text, said) });
+    send[0] = { role: "system", content: systemPrompt(c, spentCues(c, said, asked), app.when) };
     const full = await askModel(send, t => { node.textContent = t; $("#log").scrollTop = $("#log").scrollHeight; });
     app.messages.push({ role: "assistant", content: full });
     app.visible.push({ role: "patient", text: full });
@@ -1716,8 +1728,12 @@ const NEGATIVE_LINE = /^((you|he|she|they|the baby|the child)\W+(\w+\W+){0,2}(no
    patient's worries or ideas get no hint. The web edition's fact selector keeps this line. */
 const ASK_OPEN = /\b(tell me (more |a bit |a little )?(about|what)|describe|walk me through|how (has|have|is|are) (this|that|it|things|your)\b.*\b(affect|going|been)|what (happened|is it like)|anything else|what else|any(thing)? (other|more) (to|you))|\bquestions?\b|\bworr(y|ies|ied)\b|\bthink\b|\bfeel about\b/i;
 const ASK_LEAD = String.raw`^\s*((and|so|ok|okay|right|now|on a scale of \d+ to \d+|out of 10|from 1 to 10)\W+)*`;
-const ASK_ONE = new RegExp(ASK_LEAD + String.raw`(when|how (long|much|many|often|far|old|bad|severe)|where|what time|which)\b`, "i");
+const ASK_ONE = new RegExp(ASK_LEAD + String.raw`(when|how (long|much|many|often|far|old|bad|severe)|where|what time|which|who|whom)\b`, "i");
+// "Which medicines is he on?", "Any other illnesses?": a question about a whole group wants every one
+const ASK_GROUP = /\b(which|what|any|other)\b.*\b(medicines|medications|tablets|pills|drugs|illnesses|conditions|operations|surgeries|allergies)\b|\b(which|what) (medicines?|medications?|tablets|pills|drugs) (is|are|does|do|did) (he|she|you|they) (on|take|taking|use|using)\b|\bwhat (other )?(medicines?|medications?) (is|are) (he|she|you|they) on\b/i;
 const ASK_MANY = /\S.*\b(and|or)\b.*\S/i;
+// "is it A or B?": a be-verb question with two short choices and no comma
+const ASK_CHOICE = new RegExp(ASK_LEAD + String.raw`(is|was|are|were)\b[^,;]*?\b[\w'-]+(\s+[\w'-]+){0,2}\s+or\s+[\w'-]+(\s+[\w'-]+){0,2}\s*\??\s*$`, "i");
 const ASK_YESNO = new RegExp(ASK_LEAD + String.raw`(do|does|did|is|are|was|were|have|has|had|can|could|will|would|any|ever)\b`, "i");
 function answerHint(text) {
   const parts = text.split(/\?\s*/).map(s => s.trim()).filter(Boolean);
@@ -1725,6 +1741,10 @@ function answerHint(text) {
   const last = (parts[parts.length - 1] || text).split(/[.!]\s+/).pop();
   if (parts.length > 1) return "\n\n[Only you see this note. The doctor asked " + parts.length + " questions. Answer each one briefly, in order, and add nothing else.]";
   if (ASK_OPEN.test(last)) return "";
+  // "Is it type 1 or type 2?" asks which one, not two things. If the story does not say, the patient
+  // does not know (a reviewer's "type 2 or type 1?" got an invented answer, 2026-11-16).
+  if (ASK_GROUP.test(last) && !/\b(and|or)\b.*\b(and|or)\b/i.test(last)) return "\n\n[Only you see this note. The doctor asks about all of these. Name each one your facts give, briefly. Add nothing else.]";
+  if (ASK_CHOICE.test(last)) return "\n\n[Only you see this note. The doctor asks which one it is. Say which, if your facts say. If they do not say, say you do not know. Add nothing else.]";
   // "When did it start, and did it come on all at once?" or "Any weakness, or trouble talking?"
   // asks about more than one thing in one question
   if (ASK_MANY.test(last)) return "\n\n[Only you see this note. The doctor asked about more than one thing. Answer each one briefly, in order, and add nothing else.]";
@@ -1732,7 +1752,12 @@ function answerHint(text) {
   if (ASK_YESNO.test(last)) return "\n\n[Only you see this note. This is a yes-or-no question. Say yes or no, with what it is or how much, if your facts say. Never add when, how long or why unless the doctor asked.]";
   return "";
 }
-function factNote(c, text, said) {
+// "Do you have any questions?", "Any other questions?": the doctor asks for the patient's questions, not
+// for more of the story (the probes of 2026-11-17 got "I live in Santo Domingo with his father").
+const THEIR_Q = /\b(any (other |more |further )?questions?|questions? for me|anything (else )?(you )?(want|would like|wanted|'d like) to ask( me)?|is there anything you('d| would)? like to ask)\b/i;
+const THEIR_Q_NOTE = "\n\n[Only you see this note. The doctor asks if you have any questions. Ask one question you have not asked yet, from your instructions or about what the doctor told you, or say you have no more questions. Do not tell facts from your story.]";
+function factNoteFor(c, text, said) {
+  if (THEIR_Q.test(text) && !/\?.*\?/.test(text)) return THEIR_Q_NOTE;
   if (RECAP_Q.test(text)) return "\n\n[Only you see this note. The doctor is checking a summary. Say yes, or correct it, in one short sentence. Add no new facts.]";
   if (OPEN_Q.test(text)) {
     // The page picks the line: two free story lines the patient has not said yet. Never a hidden one.
@@ -1769,6 +1794,123 @@ function factNote(c, text, said) {
     top.map(l => "- " + l).join("\n") +
     "\nAnswer every part of the question. Use only the facts that answer what was asked. Say no only to the parts these facts do not cover.]" + hint;
 }
+/* ---- statements ------------------------------------------------------------------------
+   The doctor tells, explains or reassures and asks nothing: "We will need a CT scan", "I understand",
+   "I think you have reflux". Given no question, a small model reaches for a scripted question or a
+   story line. A clinical reviewer saw that on 2026-11-16. The note asks for a short reaction. */
+const STATEMENT_NOTE = "\n\n[Only you see this note. The doctor said something to you. It is not a question. Answer as this person would, in one or two short sentences: say you understand, thank them, say how you feel, or ask about what they just said. Do not repeat what you said before. Do not tell facts from your story that the doctor did not ask for.]";
+const SAY_LEAD = /^\s*((ok|okay|so|well|alright|all right|right|now|look here|look|good|great|nice|fine|hmm|oh|ah|yes|yeah|no)\b[\s,.!-]*)*/i;
+const SAY_START = /^(i|i'm|im|i'll|ill|i've|ive|i'd|we|we'll|we're|we've|he|he's|she|she's|it|it's|its|this|that|that's|there|there's|they|they're|your|his|her|our|you're|youre|you'll|youll|you will|you need|you should|you must|you have to|don't|dont|please don't|please dont|thank|thanks|sorry|understood|sure|let's|lets|let me|nice|good|great|fine|ok|okay|alright)\b/i;
+const SAY_ASKS = /\b(tell me|describe|explain to me|can you|could you|would you|will you|do you|did you|have you|are you|is there|is it|how|what|when|where|which|who|whom|why|any|know|wonder\w*|ask)\b/i;
+const SAY_SHORT = /^(i see|i understand|understood|thank you|thanks|sorry|i am sorry|i'm sorry|nice|good|great|fine|ok|okay|alright|all right|sure|no worries|don't worry|dont worry|go on)\b/i;
+const SAY_VERB = /\b(is|are|was|were|will|would|has|have|had|looks?|seems?|needs?|might|may|can|could|should|must|am|be|being|been|'s|'re|'ll)\b/i;
+function isStatement(text) {
+  const t = String(text || "").trim();
+  if (!t || t.includes("?") || SAY_ASKS.test(t) || OPEN_Q.test(t) || RECAP_Q.test(t)) return false;
+  const rest = t.replace(SAY_LEAD, "").trim();
+  if (!rest) return true;                                   // "Okay." "Nice."
+  if (SAY_SHORT.test(rest)) return true;
+  // a clinical topic typed without a question mark ("Your medications", "His age") is a request
+  if (rest.split(/\s+/).length < 3 || !SAY_VERB.test(rest)) return false;
+  return SAY_START.test(rest);
+}
+
+/* ---- the case's own questions ----------------------------------------------------------
+   A case tells the patient to ask things: "Near the end, if the doctor has not told you what they
+   think is going on, ask "...", "If the doctor has not already talked about it, ask "...", "If the
+   doctor talks about a scan, ask "...". A small model cannot keep track of whether that happened:
+   on 2026-11-16 a wife asked "Is it a stroke, doctor?" three times after the doctor said stroke.
+   The page keeps track instead: a question that is done leaves the instructions (withoutCues). */
+function personaCues(c) {
+  const out = [];
+  for (const line of String(c.persona || "").split("\n")) {
+    const kind = /^\s*near the end\b/i.test(line) ? "end" : /\bhas not (already )?talked about\b/i.test(line) ? "topic" : "event";
+    for (const m of line.matchAll(/\basks?\b[^"]{0,12}"([^"]+)"/gi)) out.push({ q: m[1].trim(), kind });
+  }
+  return out;
+}
+// the doctor said what they think is going on: the case's "Explained" checklist item, or a statement
+// that names the diagnosis
+function cueDxWords(c) {
+  const a = c.answer || {};
+  return new Set([...noteToks([a.top || "", ...(a.also || []), ...(a.dxWords || [])].join(" "))]
+    .filter(w => w.length >= 4 && !CUE_GENERIC.has(w)));
+}
+const CUE_GENERIC = new Set(["acute", "chronic", "severe", "mild", "with", "from", "disease", "disorder", "syndrome",
+  "infection", "primary", "secondary", "left", "right", "new", "onset", "possible", "likely", "early", "late"]);
+// The patient has asked a case question when one of its own questions is close to it as a whole:
+// "Can you give me something stronger for the stomach?" is not "Is it the stomach, doctor, or something else?"
+const CUE_STOP = new Set("is it a an the doctor doc musawo sir madam you me my i to of or and be will can could would do does did he she they we our your his her please so oh well just".split(" "));
+const cueWords = t => new Set((String(t).toLowerCase().match(/[\p{L}\p{N}']+/gu) || []).filter(w => !CUE_STOP.has(w)));
+function cueSaid(q, reply) {
+  const parts = s => String(s).split(/(?<=[.!?])\s+/);
+  // a question of three words or more: "A stroke?" is a reaction to news, not the case's question
+  const asks = parts(reply).filter(x => x.trim().endsWith("?") && x.trim().split(/\s+/).length >= 3).map(cueWords);
+  return parts(q).map(cueWords).filter(w => w.size).some(cw => asks.some(a => {
+    const both = [...cw].filter(w => a.has(w)).length;
+    return both / (cw.size + a.size - both) >= 0.5;
+  }));
+}
+// The doctor tells what is going on: a message that is not a question and names the case's diagnosis, or
+// says what they think with the name of an illness. "I will take some blood" and "I think your name is
+// Hung" are not that (independent review, 2026-11-17).
+const CUE_ILLNESS = /\b(stroke|heart attack|attack|infection|infected|cancer|tumou?r|ulcer|pneumonia|malaria|tuberculosis|tb|dengue|meningitis|sepsis|an(a)?emia|depression|diabetes|asthma|reflux|gerd|fracture|broken|clot|bleeding|disease|illness|syndrome|poisoning|poisoned|virus|bacteria|appendicitis|hypertension|pre-?eclampsia|eclampsia|malnutrition|dehydration|shock|failure|kidney|kidneys)\b/i;
+const CUE_DISCLOSE = /\b(i think|i believe|i suspect|i am worried|i'm worried|i am concerned|i'm concerned|it (looks|sounds|seems) like|(this|it) (is|looks like|could be|may be|might be|can be)|(he|she|you|they|your \w+|his \w+|her \w+) (has|have|had|may have|might have|could have|probably has|probably have)|most likely|the diagnosis|what is going on is|what's going on is)\b/i;
+function tellsCondition(c, t, dx) {
+  t = String(t || "");
+  if (t.includes("?")) return false;
+  const words = noteToks(t);
+  return [...words].some(w => dx.has(w)) || (CUE_DISCLOSE.test(t) && CUE_ILLNESS.test(t));
+}
+function spentCues(c, said, asked) {
+  const cues = personaCues(c);
+  if (!cues.length) return [];
+  const dx = cueDxWords(c);
+  const tells = (asked || []).filter(t => tellsCondition(c, t, dx));
+  const explained = tells.length > 0;
+  // the words of what the doctor told, for "has not talked about it": only illness and diagnosis words
+  const told = new Set();
+  tells.forEach(t => noteToks(t).forEach(w => { if (dx.has(w) || CUE_ILLNESS.test(w)) told.add(w); }));
+  return cues.filter(cue => {
+    const k = [...noteToks(cue.q)];
+    if ((said || []).some(r => cueSaid(cue.q, r))) return true;   // already asked
+    if (cue.kind === "end") return explained;
+    if (cue.kind === "topic") return k.some(w => told.has(w));
+    return false;
+  }).map(cue => cue.q);
+}
+// the persona without the sentences that tell the patient to ask a question that is done
+function withoutCues(persona, spent) {
+  let p = String(persona || "");
+  for (const q of spent || []) {
+    const at = p.indexOf('"' + q + '"');
+    if (at < 0) continue;
+    const start = Math.max(p.lastIndexOf(". ", at) + 2, p.lastIndexOf("\n", at) + 1, 0);
+    let end = p.indexOf('"', at + 1) + 1;
+    const stop = p.slice(end).search(/[.!?](\s|$)|\n/);
+    end = stop < 0 ? p.length : end + stop + (p[end + stop] === "\n" ? 0 : 1);
+    // the sentence after it that only times or closes the question goes too
+    const next = p.slice(end).match(/^\s*(A good moment is[^\n]*?[.!?]|Then (agree|wait)[^\n]*?[.!?])(?=\s|$)/);
+    if (next) end += next[0].length;
+    p = (p.slice(0, start) + p.slice(end)).replace(/[ \t]+\n/g, "\n").replace(/\n{2,}/g, "\n").replace(/^\s+(?=\S)/gm, "");
+  }
+  return p;
+}
+// a setting that names its own day ("10:00 on 3 March") keeps it: no second date
+const CASE_DATE = /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b|\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i;
+// the date the patient lives in: the day the consultation started, the same on the page and on the web server (UTC)
+function todayText(d = new Date()) {
+  const W = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const M = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  return `${W[d.getUTCDay()]}, ${d.getUTCDate()} ${M[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+/* The note for one turn. A statement gets a note to react to it, not facts. The case's own questions
+   that are done leave the instructions instead (systemPrompt with spentCues): a note that said "do not
+   ask this again" quoted the question, and the model asked it anyway. */
+function factNote(c, text, said) {
+  return isStatement(text) ? STATEMENT_NOTE : factNoteFor(c, text, said);
+}
+
 function markCovered(text) {
   const t = plainWords(text);
   app.current.questions.forEach(q => {

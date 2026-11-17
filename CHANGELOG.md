@@ -6,6 +6,15 @@ The version you have is shown at the bottom of the simulator's page.
 
 These changes are in the Download ZIP from the main branch. The page still shows 1.3.1.
 
+- **The patient keeps track of the conversation.** A clinical reviewer found a patient's wife who
+  asked "Is it a stroke, doctor?" three times after the doctor said stroke, and a patient who gave
+  the year as 2024. Now a question the case tells the patient to ask leaves the patient's
+  instructions once it is asked or once the doctor has named the condition. The patient knows
+  today's date (unless the case names its own day). When you tell the patient something ("We
+  will need a scan"), the patient reacts in a sentence or two and does not recite the story. "Is
+  it type 1 or type 2?" gets "I do not know" when the case does not say. "Any other questions?"
+  now asks for the patient's questions, not for more of the story. A case can name the relative
+  who answers for the patient (`waiting:` in [CASE]).
 - **Fairer marking.** The marking now counts more of the words that clinicians use. For
   example, "radial pulse", "JVP", "GCS", "skin turgor", and "rest of the examination" now find
   the right examination. More natural ways to ask a checklist question earn credit. A test on
