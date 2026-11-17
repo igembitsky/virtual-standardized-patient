@@ -1803,11 +1803,14 @@ const SAY_LEAD = /^\s*((ok|okay|so|well|alright|all right|right|now|look here|lo
 const SAY_START = /^(i|i'm|im|i'll|ill|i've|ive|i'd|we|we'll|we're|we've|he|he's|she|she's|it|it's|its|this|that|that's|there|there's|they|they're|your|his|her|our|you're|youre|you'll|youll|you will|you need|you should|you must|you have to|don't|dont|please don't|please dont|thank|thanks|sorry|understood|sure|let's|lets|let me|nice|good|great|fine|ok|okay|alright)\b/i;
 const SAY_ASKS = /\b(tell me|describe|explain to me|can you|could you|would you|will you|do you|did you|have you|are you|is there|is it|how|what|when|where|which|who|whom|why|any|know|wonder\w*|ask)\b/i;
 const SAY_SHORT = /^(i see|i understand|understood|thank you|thanks|sorry|i am sorry|i'm sorry|nice|good|great|fine|ok|okay|alright|all right|sure|no worries|don't worry|dont worry|go on)\b/i;
+// up to three capitalized words and a comma at the start: how the doctor addresses the patient
+const SAY_NAME = /^([A-Z][\p{L}'.-]*\s+){0,2}[A-Z][\p{L}'.-]*\s*,\s*/u;
 const SAY_VERB = /\b(is|are|was|were|will|would|has|have|had|looks?|seems?|needs?|might|may|can|could|should|must|am|be|being|been|'s|'re|'ll)\b/i;
 function isStatement(text) {
   const t = String(text || "").trim();
   if (!t || t.includes("?") || SAY_ASKS.test(t) || OPEN_Q.test(t) || RECAP_Q.test(t)) return false;
-  const rest = t.replace(SAY_LEAD, "").trim();
+  // a name first ("Mrs Nalwoga, I think ...", "Khun Kanokwan, this is ...") does not make it a question
+  const rest = t.replace(SAY_LEAD, "").trim().replace(SAY_NAME, "").replace(SAY_LEAD, "").trim();
   if (!rest) return true;                                   // "Okay." "Nice."
   if (SAY_SHORT.test(rest)) return true;
   // a clinical topic typed without a question mark ("Your medications", "His age") is a request

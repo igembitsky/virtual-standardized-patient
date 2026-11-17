@@ -4,7 +4,8 @@
 //   node bench/page.js app/index.html app/cases/graham.txt            prints the parsed case as JSON
 //   node bench/page.js app/index.html app/cases/graham.txt --check    reads a request on stdin:
 //     {"ask": ["question", ...], "said": [patient replies so far], "examine": ["part", ...],
-//      "notes": [{"dx": [...], "tx": [...]}]}
+//      "notes": [{"dx": [...], "tx": [...]}], "asked": [doctor messages so far], "when": ms}
+//   ("asked" adds "system": this turn's instructions, as the page builds them)
 //   and prints, in the same order:
 //     {"ask": [{"jargon": word|null, "credits": [labels]}], "examine": [{"name", "finding"}],
 //      "notes": [{"dxHit", "txHit", "pass"}]}
@@ -58,6 +59,10 @@ const out = {
     return { jargon: jw, note: jw ? "" : factNote(c, q, req.said || []),
              credits: c.questions.filter(x => app.covered.has(x.id)).map(x => x.label) };
   }),
+  // The instructions for this turn, as the page and the web server build them: the case's own
+  // questions that are done leave them, and the date is the day the encounter started.
+  // "asked" is every doctor message so far, this one included; "when" is the start in ms.
+  system: req.asked ? systemPrompt(c, spentCues(c, req.said || [], req.asked), req.when) : undefined,
   // The same line the page shows after "examine <part>".
   examine: (req.examine || []).map(q => {
     const it = examFind(q);

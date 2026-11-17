@@ -234,6 +234,7 @@ def run_student(c, path, a):
              {"role": "patient", "text": c["opening"], "opening": True}]
     asked, dx, tx, error = [], [], [], None
     t0 = time.time()
+    when = int(t0 * 1000)   # the encounter's start: the patient's date, as on the page
     for n in range(1, cap + 2):
         last = n >= cap
         prompt = (card + "\n\nTRANSCRIPT SO FAR\n" + fmt(turns) + f"\n\nTurn {min(n, cap)} of {cap}. " +
@@ -244,7 +245,9 @@ def run_student(c, path, a):
         if kind == "ask" and act.get("question"):
             q = act["question"].strip()
             said = [m["content"] for m in msgs if m["role"] == "assistant"]
-            chk = page_check(path, {"ask": [q], "said": said})["ask"][0]
+            asked_now = [m["content"] for m in msgs if m["role"] == "user"] + [q]
+            pc = page_check(path, {"ask": [q], "said": said, "asked": asked_now, "when": when})
+            chk = pc["ask"][0]
             turns.append({"role": "doctor", "text": q})
             asked.append(q)
             if chk["jargon"]:
@@ -252,6 +255,7 @@ def run_student(c, path, a):
                 msgs += [{"role": "user", "content": q}, {"role": "assistant", "content": line}]
                 turns.append({"role": "patient", "text": line, "jargon": True}); continue
             msgs.append({"role": "user", "content": q})
+            if pc.get("system"): msgs[0] = {"role": "system", "content": pc["system"]}
             try: reply, sec = patient_say(a.patient_model, msgs, chk.get("note", ""))
             except Exception as e: error = "patient: " + str(e); break
             msgs.append({"role": "assistant", "content": reply})
@@ -309,6 +313,7 @@ def run_examiner(c, path, a):
     turns, error = [], None
     for s in range(0, len(probes), SESSION_MAX):
         msgs = opening_msgs(c)
+        when = int(time.time() * 1000)   # each session is a new encounter
         turns.append({"role": "session"})
         for i in range(s, min(s + SESSION_MAX, len(probes))):
             p, r = probes[i], chk["ask"][i]
@@ -320,7 +325,12 @@ def run_examiner(c, path, a):
                 turns.append({**base, "text": line, "jargon": r["jargon"]}); continue
             msgs.append({"role": "user", "content": p["question"]})
             said = [m["content"] for m in msgs if m["role"] == "assistant"]
-            note = page_check(path, {"ask": [p["question"]], "said": said})["ask"][0]["note"]
+            asked_now = [m["content"] for m in msgs if m["role"] == "user"]
+            pc = page_check(path, {"ask": [p["question"]], "said": said, "asked": asked_now, "when": when})
+            note = pc["ask"][0]["note"]
+            # the instructions for this turn: the case's questions that are done leave them,
+            # as on the page and the web server
+            if pc.get("system"): msgs[0] = {"role": "system", "content": pc["system"]}
             try: reply, sec = patient_say(a.patient_model, msgs, note)
             except Exception as e: error = "patient: " + str(e); break
             msgs.append({"role": "assistant", "content": reply})
