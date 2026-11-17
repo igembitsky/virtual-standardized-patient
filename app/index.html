@@ -1845,13 +1845,27 @@ const CUE_GENERIC = new Set(["acute", "chronic", "severe", "mild", "with", "from
 // "Can you give me something stronger for the stomach?" is not "Is it the stomach, doctor, or something else?"
 const CUE_STOP = new Set("is it a an the doctor doc musawo sir madam you me my i to of or and be will can could would do does did he she they we our your his her please so oh well just".split(" "));
 const cueWords = t => new Set((String(t).toLowerCase().match(/[\p{L}\p{N}']+/gu) || []).filter(w => !CUE_STOP.has(w)));
+const CUE_WH = new Set(["what", "why", "how", "when", "where", "which", "who", "whom", "whose"]);
+const CUE_FILL = /^\s*((and|but|so|please|then|oh|ok|okay|well|now|doctor|doc|musawo|sir|madam|thank you|thanks)\b[\s,.!]*)*/i;
+function cueKind(x) {
+  // "Please, tell me, what is happening to him?" is a what question too: a question word in the first four
+  const w = (String(x).replace(CUE_FILL, "").toLowerCase().match(/[a-z]+/g) || []).slice(0, 4).find(t => CUE_WH.has(t));
+  return w || "yes-no";
+}
 function cueSaid(q, reply) {
-  const parts = s => String(s).split(/(?<=[.!?])\s+/);
+  // "..." is a pause, not the end of a sentence: "Will PhilHealth... cover that?" is one question
+  const parts = s => String(s).replace(/\.{2,}|\u2026/g, " ").split(/(?<=[.!?])\s+/);
   // a question of three words or more: "A stroke?" is a reaction to news, not the case's question
-  const asks = parts(reply).filter(x => x.trim().endsWith("?") && x.trim().split(/\s+/).length >= 3).map(cueWords);
-  return parts(q).map(cueWords).filter(w => w.size).some(cw => asks.some(a => {
-    const both = [...cw].filter(w => a.has(w)).length;
-    return both / (cw.size + a.size - both) >= 0.5;
+  // the same kind of question ("What is a stroke?" asks what a word means; "Is it a stroke?" asks yes or
+  // no), and a shared word that is not a question word ("What will you do to me?" is not "What is
+  // happening to me?")
+  const one = x => ({ kind: cueKind(x), w: cueWords(x) });
+  const asks = parts(reply).filter(x => x.trim().endsWith("?") && x.trim().split(/\s+/).length >= 3).map(one);
+  return parts(q).map(one).filter(c => c.w.size).some(c => asks.some(a => {
+    if (a.kind !== c.kind) return false;
+    const shared = [...c.w].filter(w => a.w.has(w));
+    if (!shared.some(w => !CUE_WH.has(w))) return false;
+    return shared.length / (c.w.size + a.w.size - shared.length) >= 0.5;
   }));
 }
 // The doctor tells what is going on: a message that is not a question and names the case's diagnosis, or
