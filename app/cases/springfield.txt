@@ -117,7 +117,12 @@ most likely: Menopause or perimenopause
 also accepted: hyperthyroidism, malignancy, anxiety attack, pregnancy, infection, pheochromocytoma, alcohol abuse, dietary triggers such as spicy food
 tests: TSH or thyroid function tests, FSH level, pregnancy test, LH level, estrogen level, cancer labs such as CA-125
 pass diagnosis words: menopaus*, perimenopaus*, postmenopaus*, peri-menopaus*, climacteric, change of life, hypoestrogen*, vasomotor
-pass test words: tsh, thyroid stimulating, fsh, follicle stimulating, pregnancy test, hcg, thyroid function*, thyroid panel, thyroid test*, tft*
+test: TSH or thyroid function tests | tsh, thyroid stimulating, thyroid function*, thyroid panel, thyroid test*, tft*, thyroid, thyroid hormone*, t4, free t4, ft4, t3 | key
+test: FSH level | fsh, follicle stimulating, serum fsh | key
+test: pregnancy test | pregnancy test, pregnancy, hcg, beta hcg, b hcg, bhcg, upt, urine hcg, serum hcg | key
+test: LH level | lh, luteinizing, luteinising, serum lh | also
+test: estrogen level | estrogen, oestrogen, estradiol, oestradiol, e2 | also
+test: cancer labs such as CA-125 | ca 125, ca125, cancer antigen 125, cancer lab*, cancer marker*, tumor marker*, tumour marker* | also
 teaching point: She is 51, has had no period for six or seven months, and has hot flashes that start in the chest and spread, vaginal dryness, irritability, and broken sleep. Her mother went through menopause at 50. That is perimenopause, the transition to menopause: menopause itself is defined by 12 months without a period, and she is at six or seven. It is a clinical diagnosis. Check TSH and a pregnancy test to rule out a thyroid problem and pregnancy. FSH can help, but the diagnosis can be made clinically. Then treat: lifestyle changes such as dressing in layers, lowering the room temperature, weight loss and avoiding triggers, an SSRI or SNRI if she wants a non hormonal drug, or hormone replacement with estrogen and progesterone because her uterus is intact, with a discussion of risks and benefits, and vaginal estrogen for the dryness. Say out loud that her symptoms are severe enough to treat.
 miss note: The missed periods and the vaginal dryness are the two facts worth having, and she offers neither. Hot flashes on their own could be a thyroid problem or anxiety. Six or seven months without a period at 51, with dryness and irritability, is perimenopause; menopause needs 12 months without a period.
 

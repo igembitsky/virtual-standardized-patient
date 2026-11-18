@@ -112,7 +112,12 @@ most likely: Peritonitis due to a perforated ulcer
 also accepted: acute pancreatitis, gastritis (less likely), perforated appendix (less likely)
 tests: CBC, amylase, lipase, electrolytes, upright chest X-ray, abdominal CT
 pass diagnosis words: perforat*, ulcer, peritonitis, free air, viscus
-pass test words: chest x-ray, chest xray, chest x ray, chest radiograph, erect film, upright, ct, cat scan, computed tomography, tomography, cxr, chest film*, erect chest, standing chest
+test: CBC | fbc, cbc, full blood count, complete blood count, blood count, haemoglobin, hemoglobin, hb, hgb, white cell count, white count, wbc | also
+test: amylase | amylase, serum amylase | also
+test: lipase | lipase, serum lipase | also
+test: electrolytes | electrolyte*, lytes, metabolic panel, bmp, basic metabolic panel, cmp, comprehensive metabolic panel, chem 7, chem7, chem panel, chemistry, chemistries, sodium, potassium, u e, u es, ue, ues, u and e, u and es, urea and electrolytes | also
+test: upright chest X-ray | chest x ray, chest xray, chest xr, cxr, chest radiograph*, chest film, x ray chest, xray chest, x ray of the chest, x ray of chest, chest radiograph, chest film*, upright, upright cxr, upright chest*, erect film, erect chest, erect cxr, standing chest | key
+test: abdominal CT | ct, ct scan, computed tomography, tomography, cat scan, ct abdomen, abdominal ct, ct of the abdomen, ct abdomen and pelvis, ctap, ct a p | key
 teaching point: Sudden sharp upper abdominal pain at 10 pm, now constant, a 10 out of 10, going through to the back, and worse with any movement or a deep breath. She lies still with her knees bent, the whole abdomen is rigid and every maneuver hurts. With a pulse of 110, fast breathing and a temperature of 101.4, that is peritonitis, and a perforated ulcer is the most likely cause. Order a CBC, amylase, lipase and electrolytes, an upright chest X-ray and an abdominal CT. Acute pancreatitis is the main alternative.
 miss note: The Motrin comes out only if you ask about medicines beyond her prescriptions: she took 3 Motrin two days ago, on top of 45 years of smoking a pack a day.
 

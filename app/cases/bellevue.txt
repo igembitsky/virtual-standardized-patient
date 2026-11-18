@@ -125,7 +125,13 @@ most likely: Inhibited arousal leading to inadequate lubrication
 also accepted: vaginismus, vulvodynia, vulvovaginitis, medication side effect, hypothyroidism
 tests: this case asks for a management plan rather than tests. Offer or refer to pelvic floor physical therapy. Validate the pain and discuss foreplay and other arousal techniques. Review lubricant options and how and when to use them. Offer or refer to a sex therapist. Discuss changing the SSRI to another antidepressant with a different side effect profile. Discuss changing the oral contraceptive pill to another contraceptive with a different side effect profile.
 pass diagnosis words: arousal, lubricat*, vaginismus, vulvodynia, vulvovagin*, vaginitis, medication side effect, hypothyroid*
-pass test words: pelvic floor, physical therap*, physiotherap*, lubricant*, sex therap*, foreplay, antidepressant*, ssri, zoloft, sertraline, contracept*, loestrin, birth control
+test: Offer or refer to pelvic floor physical therapy | pelvic floor, physical therap*, physiotherap*, pelvic physio*, pelvic floor therap*, pelvic therap*, pfpt, pelvic pt | key
+test: validate the pain | validat*, acknowledg*, pain is real, her pain is real | also
+test: discuss foreplay and other arousal techniques | foreplay, arousal, arousal technique*, sexual arousal, sensate focus | key
+test: Review lubricant options and how and when to use them | lubricant*, lube, lubrication, lubricat*, water based, silicone based | key
+test: Offer or refer to a sex therapist | sex therap*, sexual therap*, sex counsel*, sexual health counsel*, sexologist | key
+test: Discuss changing the SSRI to another antidepressant with a different side effect profile | antidepressant*, ssri, zoloft, sertraline, bupropion, wellbutrin, mirtazapine | key
+test: Discuss changing the oral contraceptive pill to another contraceptive with a different side effect profile | contracept*, loestrin, birth control, ocp, ocps, oral contraceptive pill, the pill, pill, coc, combined pill, iud | key
 teaching point: Pain at the entrance since her very first time, described as rubbed raw and burning, helped by KY jelly and by being more aroused, in a woman who says she does not get wet enough and who takes an SSRI and a low dose oral contraceptive pill. That is inhibited arousal with inadequate lubrication, and the two medicines may be part of it. The diagnosis is made almost entirely by asking, because the internal examination last week was normal and no examination is done today.
 miss note: The sexual history is the case. Whether she reaches orgasm, how often, whether she feels lubricated enough, and what she uses are the questions that separate inadequate arousal from vaginismus, vulvodynia and infection. Most students never ask them.
 

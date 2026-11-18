@@ -108,7 +108,11 @@ most likely: Diverticulitis with perforation
 also accepted: pancreatitis, constipation, gastritis, perforated appendix with situs inversus
 tests: complete blood count (CBC), amylase, lipase, electrolytes, abdominal CT
 pass diagnosis words: diverticulitis, perforated diverticul*, diverticular perforation, diverticular disease with perforation, perforated diverticular*, diverticular perforat*, perforated colonic diverticul*, perforated sigmoid diverticul*, perforation of a diverticul*, perforation of the diverticul*, perforation of diverticul*
-pass test words: ct, computed tomography, cat scan, tomography, cbc, complete blood count, full blood count, fbc, blood count, white cell count, white count, wbc, amylase, lipase, electrolyte*, metabolic panel
+test: complete blood count (CBC) | fbc, cbc, full blood count, complete blood count, blood count, haemoglobin, hemoglobin, hb, hgb, white cell count, white count, wbc, white blood cell* | key
+test: amylase | amylase, serum amylase | key
+test: lipase | lipase, serum lipase | key
+test: electrolytes | electrolyte*, lytes, metabolic panel, bmp, basic metabolic panel, cmp, comprehensive metabolic panel, chem 7, chem7, chem panel, chemistry, chemistries, sodium, potassium, u e, u es, ue, ues, u and e, u and es, urea and electrolytes | key
+test: abdominal CT | ct, ct scan, computed tomography, tomography, cat scan, ct abdomen, abdominal ct, ct of the abdomen, ct abdomen and pelvis, ctap, ct a p | key
 teaching point: A week of left lower abdominal pain that came in waves and is now constant, sharp and worse with movement, with a fever of 101 last night, nausea, a poor appetite and two days without a bowel movement. The abdomen is rigid and tender only in the left lower quadrant. That points to diverticulitis with perforation. Order a CBC, amylase, lipase, electrolytes and an abdominal CT.
 miss note: The earlier episodes are easy to miss: two or three milder bouts of crampy lower abdominal pain over two years that went away after a bowel movement. She only says "not like this" until you ask more.
 

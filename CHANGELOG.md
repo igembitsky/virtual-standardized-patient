@@ -6,6 +6,14 @@ The version you have is shown at the bottom of the simulator's page.
 
 These changes are on the main branch. They come to the download link with the next release. The page still shows 1.3.2.
 
+- **Stricter marking of the tests.** A clinical reviewer asked that an unneeded test count against
+  the learner, because it shows a reasoning error, and that a pass needs at least two right tests.
+  A case now lists its tests one per line in [ANSWER] (`test: name | words | role`). The role is
+  `need` (the learner must name it), `key` (it confirms the diagnosis) or `also` (another good
+  test). The tests part passes when the learner names every `need` test, at least two different
+  listed tests, one of them `need` or `key`, and no test that the case does not list. The result
+  says which test was missing or not needed. A case with only `pass test words` keeps the old
+  rule. All eight cases here now have `test:` lines.
 - **The patient keeps track of the conversation.** A clinical reviewer found a patient's wife who
   asked "Is it a stroke, doctor?" three times after the doctor said stroke, and a patient who gave
   the year as 2024. Now a question the case tells the patient to ask leaves the patient's

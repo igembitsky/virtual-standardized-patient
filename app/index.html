@@ -879,6 +879,12 @@ function parseCase(text, filename) {
         else if (key === "tests") c.answer.tests = val.split(/,(?![^()]*\))/).map(s => s.trim()).filter(Boolean);
         else if (key === "pass diagnosis words") c.answer.dxWords = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
         else if (key === "pass test words") c.answer.txWords = val.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+        // "test: name | words | need, key or also", one line per test: see markTests()
+        else if (key === "test") {
+          const [name, words = "", role = ""] = val.split("|").map(s => s.trim());
+          (c.answer.testList = c.answer.testList || []).push({ name, role: /^(need|key)$/i.test(role) ? role.toLowerCase() : "also",
+            words: words.split(",").map(s => s.trim().toLowerCase()).filter(Boolean) });
+        }
         else if (key === "teaching point") c.answer.teach = val;
         else if (key === "miss note") c.answer.miss = val;
         break;
@@ -887,6 +893,10 @@ function parseCase(text, filename) {
         break;
     }
   }
+  // With "test:" lines, the pass test words are the words of the needed and key tests.
+  const tl = c.answer.testList;
+  if (tl && tl.length && !(c.answer.txWords && c.answer.txWords.length))
+    c.answer.txWords = tl.filter(t => t.role !== "also").flatMap(t => t.words);
   return c;
 }
 
@@ -897,7 +907,7 @@ function caseIsValid(c) {
   if (!c.story.length && !c.hidden.length) missing.push("[STORY] lines");
   if (!c.questions.length) missing.push("[QUESTIONS] lines");
   if (!c.answer.dxWords || !c.answer.dxWords.length) missing.push("[ANSWER] pass diagnosis words");
-  if (!c.answer.txWords || !c.answer.txWords.length) missing.push("[ANSWER] pass test words");
+  if (!c.answer.txWords || !c.answer.txWords.length) missing.push("[ANSWER] test: lines (or pass test words)");
   return missing;
 }
 
@@ -2008,7 +2018,7 @@ function openNote(timeUp) {
   app.phase = "note";
   $("#noteLede").innerHTML =
     (timeUp ? "The consultation clock ran out. " : "") +
-    `Three diagnoses, most likely first, then three tests.<br>` +
+    `Three diagnoses, most likely first, then up to three tests. Name only the tests this patient needs: a test that is not needed counts against you.<br>` +
     `<span style="color:var(--amber)">At 0:00 this is marked as it stands.</span>`;
   $("#noteCarry").textContent = app.notes.trim() || "You did not write any notes.";
   $("#dxSlots").innerHTML = [1,2,3].map(i =>
@@ -2031,14 +2041,14 @@ function mark() {
   const dx = [1,2,3].map(i => ($("#dx" + i) || {}).value || "").map(s => s.trim()).filter(Boolean);
   const tx = [1,2,3].map(i => ($("#tx" + i) || {}).value || "").map(s => s.trim()).filter(Boolean);
   const dxHit = hasAny(dx.join("\n"), c.answer.dxWords);
-  const txHit = hasAny(tx.join("\n"), c.answer.txWords);
+  const tm = markTests(c, tx), txHit = tm.pass;
   const pass = dxHit && txHit;
 
   const enc = {
     at: nowStamp(), caseId: c.id, caseName: c.name, caseFile: c.file,
     covered: app.covered.size, total: c.questions.length,
     coveredIds: [...app.covered],
-    dx, tx, pass, dxHit, txHit,
+    dx, tx, pass, dxHit, txHit, txNeed: tm.need, txExtra: tm.extra, txFew: tm.few, txKey: tm.key,
     notes: app.notes, transcript: app.visible,
     credit: c.credit, model: CFG.model
   };
@@ -2069,9 +2079,75 @@ function hasAny(text, words) {
   });
 }
 
+/* The tests part of the note. A case lists its tests in [ANSWER], one "test:" line each:
+   "need" tests the learner must name, "key" tests that confirm the diagnosis, "also" other good tests.
+   The tests pass when the learner names every need test, at least two different listed tests, one of
+   them a need or key test, and no test that the case does not list (a clinical reviewer, 2026-11-18:
+   an unneeded test shows a reasoning error). A case with no "test:" lines keeps the old rule: one
+   pass test word. Each box is split into clauses at , ; | and full stops; at each place in a clause
+   the longest matching word wins, so "CT angiography" is the CTA test, not the CT head.
+   "english" is the same boxes put into English, for a learner who writes in another language. */
+function markTests(c, boxes, english) {
+  const list = c.answer.testList || [];
+  if (!list.length) {
+    const hit = hasAny(boxes.concat(english || []).join("\n"), c.answer.txWords);
+    return { pass: hit, key: hit, named: [], need: [], extra: [], few: false };
+  }
+  const NEG = /(^| )(not|no|never|without|don t|do not|dont|isn t|isnt)( [a-z0-9]+){0,2} $/;
+  const res = list.map(g => g.words.map(w => {
+    const x = w.replace(/[^a-z0-9*]+/g, " ").trim(), stem = x.endsWith("*");
+    const core = (stem ? x.slice(0, -1).trim() : x).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return core && new RegExp(" " + core + (stem ? "[a-z0-9]*" : "(s|es|ed|ing)?") + "(?= )", "g");
+  }).filter(Boolean));
+  const groupsIn = clause => {
+    const t = plainWords(clause), hits = [];
+    res.forEach((rs, gi) => rs.forEach(re => {
+      re.lastIndex = 0;
+      for (let m; (m = re.exec(t)); re.lastIndex = m.index + 1) {
+        const s = m.index + 1, e = m.index + m[0].length;
+        if (!NEG.test(t.slice(0, s))) hits.push({ gi, s, e });
+      }
+    }));
+    return [...new Set(hits.filter(h => !hits.some(o => o.gi !== h.gi && o.s <= h.s && h.e <= o.e && o.e - o.s > h.e - h.s))
+      .map(h => h.gi))];
+  };
+  // A clause that matches no listed test is a test the patient does not need, when it orders
+  // something: not only words like "urgent" or "repeat at 3 hours", and not a "no" to a test. When
+  // another clause of the same box names a listed test, an unmatched clause counts only when it
+  // looks like a test of its own ("CT head, troponin"), not a note ("alcohol, more since widowed").
+  const FILL = / (urgent|urgently|stat|now|immediate|immediately|asap|repeat|repeated|repeating|serial|bedside|point|of|care|poc|if|available|possible|indicated|needed|required|and|or|also|a|an|the|test|tests|testing|check|please|order|request|do|get|send|for|to|with|plus|then|at|once|in|on|by|first|after|before|later|again|every|daily|h|hr|hrs|hour|hours|min|mins|minutes|day|days|week|weeks|e g|eg|etc|view|views)(?= )/g;
+  const TESTY = / (test|tests|level|levels|count|culture|cultures|panel|profile|screen|screening|serology|scan|scans|x ray|xray|film|ct|mri|ultrasound|us|usg|uss|echo|ecg|ekg|eeg|biopsy|smear|swab|stain|assay|antigen|antibody|antibodies|titre|titer|marker|markers|enzymes|gas|troponin|trop|crp|esr|lipid|lipids|cholesterol|hba1c|a1c|tsh|lft|lfts|rft|fbc|cbc|inr|aptt|d dimer|dimer|bnp|ldh|ck|cpk|urinalysis|dipstick|hcg|pcr|elisa|rdt|lp|puncture|endoscopy|doppler|spirometry|ferritin|b12|folate|vitamin|calcium|magnesium|albumin|bilirubin|glucose|sugar|ketones|lactate|procalcitonin|xpert|igm|igg|hiv|malaria|stool|sputum|urine|blood|amylase|lipase|transaminases?|phosphatase|[a-z]+(gram|graphy|scopy))(?= )/;
+  const NO = / (not|no|never|without|avoid|don t|dont)(?= )/;
+  const ordersSomething = clause => { const t = plainWords(clause); return !NO.test(t) && /[a-z]/.test(t.replace(FILL, " ").replace(FILL, " ").replace(/ [0-9]+(?= )/g, " ")); };
+  // split at , ; | new lines and full stops, but not inside brackets: "troponin (high sensitivity, at 3 hours)"
+  const parts = s => String(s || "").split(/[\n;|]+|,(?![^()]*\))|\.(?=\s|$)(?![^()]*\))/);
+  const named = new Set(), extra = [];
+  boxes.forEach((b, i) => {
+    const en = english && english[i] && english[i].toLowerCase() !== String(b).toLowerCase() ? english[i] : "";
+    const ps = parts(en || b).map(p => ({ p, g: groupsIn(p) }));
+    ps.forEach(x => x.g.forEach(k => named.add(k)));
+    if (en) parts(b).forEach(p => groupsIn(p).forEach(k => named.add(k)));
+    const hit = ps.some(x => x.g.length);
+    if (ps.some(x => !x.g.length && ordersSomething(x.p) && (!hit || TESTY.test(plainWords(x.p))))) extra.push(b);
+  });
+  const need = list.filter((g, i) => g.role === "need" && !named.has(i)).map(g => g.name);
+  const key = [...named].some(i => list[i].role !== "also"), few = named.size < 2;
+  return { pass: !need.length && key && !few && !extra.length, key, named: [...named].map(i => list[i].name), need, extra, few };
+}
+
 /* ============================================================
    10. THE RESULT
    ============================================================ */
+/* Why the tests part did not pass, from markTests(). An older encounter has none of these fields. */
+function testWhy(enc) {
+  if (enc.txHit) return [];
+  const out = [];
+  if ((enc.txNeed || []).length) out.push("This case needs: " + enc.txNeed.join(", ") + ".");
+  if ((enc.txExtra || []).length) out.push("Not needed for this patient: " + enc.txExtra.join(", ") + ".");
+  if (enc.txFew) out.push("Name at least two tests that this patient needs.");
+  else if (enc.txKey === false && !(enc.txNeed || []).length) out.push("None of your tests would confirm the diagnosis.");
+  return out;
+}
 function showResult(enc, c, fromHistory) {
   app.viewing = { enc, c };
   const asked = [], other = [];
@@ -2082,11 +2158,12 @@ function showResult(enc, c, fromHistory) {
     <div class="verdict ${enc.pass ? "pass" : ""}">
       <span class="big">${enc.pass ? "PASS" : "FAIL"}</span>
       <span>${enc.pass
-        ? "You named the right kind of diagnosis and asked for the right kind of test."
+        ? "You named the right kind of diagnosis and the right tests."
         : (!enc.dxHit && !enc.txHit) ? "Your diagnoses and your tests both missed."
-        : !enc.dxHit ? "Your tests were reasonable, but no diagnosis of the right kind."
-        : "Right kind of diagnosis, but no test that would confirm it."}</span>
+        : !enc.dxHit ? "Your tests were right, but no diagnosis was of the right kind."
+        : "Right kind of diagnosis, but the tests were not right."}</span>
     </div>
+    ${testWhy(enc).map(x => `<p class="sm">${esc(x)}</p>`).join("")}
 
     <div class="cols">
       <div>

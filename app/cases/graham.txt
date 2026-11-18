@@ -112,7 +112,14 @@ most likely: Ascending cholangitis
 also accepted: acute cholecystitis, perforated ulcer, acute pancreatitis, gastritis, perforated appendix, incarcerated hernia
 tests: complete blood count, liver function tests, amylase, lipase, electrolytes, right upper quadrant ultrasound, abdominal CT, ERCP if indicated
 pass diagnosis words: cholangit*, bile duct infection, infected bile duct, infection of the bile duct, infected obstructed, obstructed and infected, infection of the obstructed bile duct, infection of an obstructed bile duct, infected common bile duct, infection of the common bile duct, common bile duct infection, bile duct sepsis, biliary sepsis
-pass test words: ultrasound, ultrasonography, sonogram*, lft, lfts, liver function, liver enzymes, bilirubin, ct, computed tomography, ercp, cbc, complete blood count, full blood count, white count, amylase, lipase, fbc, white cell count, wbc, white blood cell*, ruq us, ruq usg, ruq scan, usg, us abdomen, abdominal us, cholangiopancreatograph*
+test: complete blood count | cbc, complete blood count, full blood count, fbc, blood count, white count, white cell count, wbc, white blood cell*, haemogram, hemogram | key
+test: liver function tests | lft, lfts, lft*, liver function, liver function test*, liver enzymes, liver enzyme*, liver panel, hepatic panel, hepatic function*, bilirubin, bili, alt, ast, alp, alkaline phosphatase, ggt, transaminase* | key
+test: amylase | amylase | key
+test: lipase | lipase | key
+test: electrolytes | electrolyte*, lytes, u e, u and e, sodium, potassium, bmp, basic metabolic*, chem 7, chem7, cmp, comprehensive metabolic* | also
+test: right upper quadrant ultrasound | ultrasound, ultrasonography, ultrasonograph*, sonogram*, sonograph*, ruq us, ruq usg, ruq uss, ruq scan, ruq ultrasound, usg, uss, us abdomen, abdominal us, abdominal ultrasound, gallbladder ultrasound | key
+test: abdominal CT | ct, computed tomography, computed tomograph*, ct scan, cat scan, ct abdomen, abdominal ct, ct abd*, cect | key
+test: ERCP if indicated | ercp, cholangiopancreatograph*, endoscopic retrograde* | key
 teaching point: Right upper quadrant pain after a meal, a high fever with shaking chills, and urine dark like tea point to a blocked and infected bile duct, which is ascending cholangitis. Fever, right upper quadrant pain and jaundice make Charcot's triad; here the jaundice shows as dark urine and lighter stools. The fast pulse, fast breathing and low blood pressure with the fever are signs of sepsis, and the two earlier milder attacks after meals point to gallstones. Check the blood count, liver tests, amylase and lipase, get a right upper quadrant ultrasound, and plan ERCP if it is indicated.
 miss note: Acute cholecystitis is the easy answer, but the shaking chills, the tea colored urine and the lighter stools say the bile duct is blocked and infected; he mentions the urine himself, but the lighter stools come out only if you ask about changes to his stools.
 

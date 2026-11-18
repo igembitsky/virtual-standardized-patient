@@ -8,7 +8,7 @@
 //   ("asked" adds "system": this turn's instructions, as the page builds them)
 //   and prints, in the same order:
 //     {"ask": [{"jargon": word|null, "credits": [labels]}], "examine": [{"name", "finding"}],
-//      "notes": [{"dxHit", "txHit", "pass"}]}
+//      "notes": [{"dxHit", "txHit", "pass", "txNeed", "txExtra", "txFew"}]}
 const fs = require("fs");
 const [,, html, casefile, mode] = process.argv;
 const src = fs.readFileSync(html, "utf8");
@@ -31,7 +31,7 @@ function between(start, end) {
 // The page keeps its state in `app` and redraws the dots. Stand-ins for both.
 var app = { current: null, covered: new Set(), exams: [], examMiss: null };
 function drawDots() {}
-eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("plainWords"), grab("jargonWord"), grab("noteStem"), grab("noteToks"), grab("factNote"), grab("markCovered"), grab("hasAny"),
+eval([grab("parseCase"), grab("systemPrompt"), grab("wordHit"), grab("plainWords"), grab("jargonWord"), grab("noteStem"), grab("noteToks"), grab("factNote"), grab("markCovered"), grab("hasAny"), grab("markTests"),
       grab("examSetup"), grab("examFind"), grab("firstNamed"),
       src.match(/const JARGON = \/[\s\S]*?\/i;\n/)[0].replace("const JARGON", "var JARGON"),
       between("const NOTE_STOP = ", "function noteStem(").replace(/\bconst (NOTE_STOP|NOTE_WORDS)\b/g, "var $1"),
@@ -69,11 +69,11 @@ const out = {
     if (!it) return { name: null, finding: `No examination matches "${q}".` };
     return { name: it.name, finding: it.finding || app.examMiss || `${it.name}: nothing abnormal.` };
   }),
-  // The page's mark(): a pass needs one pass word among the diagnoses and one among the tests.
+  // The page's mark(): one pass word among the diagnoses, and the tests as markTests() marks them.
   notes: (req.notes || []).map(n => {
     const dxHit = hasAny((n.dx || []).join("\n"), c.answer.dxWords);
-    const txHit = hasAny((n.tx || []).join("\n"), c.answer.txWords);
-    return { dxHit, txHit, pass: dxHit && txHit };
+    const tm = markTests(c, n.tx || []), txHit = tm.pass;
+    return { dxHit, txHit, pass: dxHit && txHit, txNeed: tm.need, txExtra: tm.extra, txFew: tm.few };
   })
 };
 process.stdout.write(JSON.stringify(out));
